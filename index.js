@@ -33,6 +33,7 @@ bot.on('message', async (msg) => {
             console.log(data)
             setTimeout(async () => {
                 await bot.sendMessage(chatId, 'Всю информацию вы получите в этом чате');
+                await bot.sendMessage(5106439090, "что от купили")
             }, 3000)
         } catch (e) {
             console.log(e);
