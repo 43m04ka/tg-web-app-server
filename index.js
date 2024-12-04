@@ -62,6 +62,10 @@ app.post('/web-data', async (req, res) => {
     }
 })
 
+app.get('https://2ae04a56-b56e-4cc1-b14a-e7bf1761ebd5.selcdn.net', res => {
+    console.log('sdflsjdfl');
+});
+
 const PORT = 8000;
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
