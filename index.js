@@ -56,7 +56,7 @@ app.post('/web-data', async (req, res) => {
                 message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
             }
         });
-        await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}` + user.username);
+        await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
 
         return res.status(200).json({queryId, products, totalPrice});
     } catch (e) {
