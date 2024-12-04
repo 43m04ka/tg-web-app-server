@@ -67,6 +67,6 @@ const PORT = 8000;
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
 
-app.get('/get-data', function(req, res){
+app.get('/web-data', function(req, res){
     res.sendStatus(200)
 });
