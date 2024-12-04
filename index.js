@@ -24,7 +24,7 @@ bot.on('message', async (msg) => {
 
         await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
-                keyboard: [
+                inline_keyboard: [
                     [{text: 'Магазин', web_app: {url: webAppURL+'/home'}}]
                 ]
             }
