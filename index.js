@@ -50,7 +50,7 @@ app.post('/web-data', async (req, res) => {
     try {
         await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
 
-        await bot.sendMessage(user.chat.id, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
+        await bot.sendMessage(user.id, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
 
         return res.status(200).json({queryId, products, totalPrice});
     } catch (e) {
