@@ -61,15 +61,15 @@ bot.on('message', async (msg) => {
 app.post('/web-data', async (req, res) => {
     //const method = req.method;
     //const {user, queryId, products = [], totalPrice} = req.body;
-    const data = req.body;
+    const {mainData} = req.body;
     try {
         //await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
 
         //await bot.sendMessage(queryId, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`);
 
-        return res.status(200).json({data});
+        return res.status(200).json({mainData});
     } catch (e) {
-        return res.status(500).json({data})
+        return res.status(500).json({})
     }
 })
 
