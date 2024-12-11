@@ -76,5 +76,5 @@ app.post('/web-data', async (req, res) => {
 start()
 
 app.get('/web-data', function(req, res){
-    res.sendStatus(200)
+    res.send({id:0, massage:'OK'})
 });
