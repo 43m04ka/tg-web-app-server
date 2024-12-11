@@ -1,12 +1,26 @@
+require('dotenv').config();
 const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
+const sequelize = require('./db.js')
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL  = 'https://vermillion-cobbler-e75220.netlify.app';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
+
+const PORT = process.env.PORT || 8000;
+
+const start = async () =>{
+    try {
+        await sequelize.authenticate()
+        await sequelize.sync()
+        app.listen(PORT, () => console.log('server started on PORT ' + PORT))
+    }catch(err){
+        console.log(err);
+    }
+}
 
 app.use(express.json());
 app.use(cors());
@@ -15,7 +29,6 @@ bot.setMyCommands([
     { command: "/start", description: "Каталог" }
 ]);
 
-console.log('123')
 bot.on('message', async (msg) => {
     console.log(msg);
     const chatId = msg.chat.id;
@@ -46,22 +59,21 @@ bot.on('message', async (msg) => {
 });
 
 app.post('/web-data', async (req, res) => {
-    const {user, queryId, products = [], totalPrice} = req.body;
+    //const method = req.method;
+    //const {user, queryId, products = [], totalPrice} = req.body;
+    const data = req.body;
     try {
-        await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
+        //await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
 
-        await bot.sendMessage(queryId, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`);
+        //await bot.sendMessage(queryId, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`);
 
-        return res.status(200).json({queryId, products, totalPrice});
+        return res.status(200).json({data});
     } catch (e) {
-        return res.status(500).json({})
+        return res.status(500).json({data})
     }
 })
 
-
-const PORT = 8000;
-
-app.listen(PORT, () => console.log('server started on PORT ' + PORT))
+start()
 
 app.get('/web-data', function(req, res){
     res.sendStatus(200)
