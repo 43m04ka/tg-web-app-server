@@ -67,7 +67,7 @@ app.post('/web-data', async (req, res) => {
 
         //await bot.sendMessage(queryId, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`);
 
-        return res.status(200).json({mainData});
+        return res.status(200).json(mainData);
     } catch (e) {
         return res.status(500).json({})
     }
