@@ -71,9 +71,9 @@ app.post('/basket', async (req, res) => {
     try {
         const chatId = user.id;
         const userDb = await UserModel.findOne({chatId:chatId});
-        console.log(userDb.basket.body)
-        console.log([mainData]);
-        userDb.basket.body = [ ...[mainData], ...userDb.basket.body];
+        let summa =[ ...[mainData], ...userDb.basket.body];
+        console.log(summa)
+        userDb.basket.body = summa;
         userDb.save();
         return res.status(200).json({body: userDb.basket.body});
     } catch (e) {
