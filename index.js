@@ -66,19 +66,30 @@ bot.on('message', async (msg) => {
 
 
 app.post('/basket', async (req, res) => {
-    const {method, mainData, user} = req.body;
+    const method = req.body.method;
     if(method ==='add'){
-    try {
-        const chatId = user.id;
-        const userDb = await UserModel.findOne({chatId:chatId});
-        let summa ={body :[ ...[mainData], ...userDb.basket.body]};
-        await console.log(userDb.basket.body)
-        userDb.basket = summa;
-        await userDb.save();
-        return res.status(200).json({body: userDb.basket.body});
-    } catch (e) {
-        return res.status(501).json({});
-    }}
+        try {
+            const {mainData, user} = req.body;
+            const chatId = user.id;
+            const userDb = await UserModel.findOne({chatId:chatId});
+            let summa ={body :[ ...[mainData], ...userDb.basket.body]};
+            await console.log(userDb.basket.body)
+            userDb.basket = summa;
+            await userDb.save();
+            return res.status(200).json({body: userDb.basket.body});
+        } catch (e) {
+            return res.status(501).json({});
+        }}
+    else if(method ==='get'){
+        try {
+            const {user} = req.body;
+            const chatId = user.id;
+            const userDb = await UserModel.findOne({chatId: chatId});
+            return res.status(200).json({body: userDb.basket.body});
+        }catch (e) {
+            return res.status(501).json({});
+        }
+    }
 })
 
 start()
@@ -88,7 +99,7 @@ app.get('/basket', async (req, res) =>{
         const {user} = req.body;
         const chatId = user.id;
         const userDb = await UserModel.findOne({chatId: chatId});
-        return res.send(userDb.basket.body);
+        return res.status(200).json({body: userDb.basket.body});
     }catch (e) {
         return res.status(501).json({});
     }
