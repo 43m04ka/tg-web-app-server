@@ -3,6 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
+const UserModel = require('./models.js');
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL  = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -25,17 +26,22 @@ const start = async () =>{
 app.use(express.json());
 app.use(cors());
 
-bot.setMyCommands([
-    { command: "/start", description: "Каталог" }
-]);
-
 bot.on('message', async (msg) => {
-    console.log(msg);
     const chatId = msg.chat.id;
     const text = msg.text;
     if(text === '/start') {
-
-        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
+        try{
+            await UserModel.create({chatId});
+            const db = await UserModel.findOne({chatId: chatId})
+            console.log(db)
+            db.basket = {body:[]};
+            db.save();
+        }
+        catch (err){
+            const db = await UserModel.findOne({chatId: chatId})
+            console.log(db)
+        }
+        return bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
                 inline_keyboard: [
                     [{text: 'Магазин', web_app: {url: webAppURL+'/home'}}]
@@ -49,7 +55,7 @@ bot.on('message', async (msg) => {
             console.log(data)
             setTimeout(async () => {
                 await bot.sendMessage(chatId, 'Заказ оформлен, ожидайте нашего сообщениия');
-                await bot.sendMessage(5106439090, "Что то купили")
+                return bot.sendMessage(5106439090, "Что то купили")
             }, 1000)
         } catch (e) {
             console.log(e);
@@ -58,23 +64,22 @@ bot.on('message', async (msg) => {
 
 });
 
-app.post('/web-data', async (req, res) => {
-    //const method = req.method;
-    //const {user, queryId, products = [], totalPrice} = req.body;
-    const {mainData} = req.body;
+app.post('/basket', async (req, res) => {
+    const {method, mainData, user} = req.body;
+    if(method ==='add'){
     try {
-        //await bot.sendMessage(5106439090, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')} - @` + user.username);
-
-        //await bot.sendMessage(queryId, ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`);
-
-        return res.status(200).json(mainData);
+        const chatId = user.id;
+        const userDb = await UserModel.findOne({chatId:chatId});
+        const basket = userDb.basket.body;
+        await bot.sendMessage(chatId, String(basket)+ String(mainData))
+        return res.status(200).json({});
     } catch (e) {
-        return res.status(500).json({})
-    }
+        return res.status(500).json({});
+    }}
 })
 
 start()
 
-app.get('/web-data', function(req, res){
+app.get('/web-data', async (req, res) =>{
     res.send({id:0, massage:'OK'})
 });
