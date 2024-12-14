@@ -66,10 +66,9 @@ bot.on('message', async (msg) => {
 
 
 app.post('/basket', async (req, res) => {
-    const method = req.body.method;
+    const {method, mainData, user} = req.body;
     if(method ==='add'){
     try {
-        const {mainData, user} = req.body;
         const chatId = user.id;
         const userDb = await UserModel.findOne({chatId:chatId});
         let summa ={body :[ ...[mainData], ...userDb.basket.body]};
@@ -80,20 +79,17 @@ app.post('/basket', async (req, res) => {
     } catch (e) {
         return res.status(501).json({});
     }}
-    else if(method ==='get'){
-        try {
-            const {user} = req.body;
-            const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId: chatId});
-            return res.status(200).json({body: userDb.basket.body});
-        }catch (e) {
-            return res.status(501).json({});
-        }
-    }
 })
 
 start()
 
 app.get('/basket', async (req, res) =>{
-
+    try {
+        const {user} = req.body;
+        const chatId = user.id;
+        const userDb = await UserModel.findOne({chatId: chatId});
+        return res.send(userDb.basket.body);
+    }catch (e) {
+        return res.status(501).json({});
+    }
 });
