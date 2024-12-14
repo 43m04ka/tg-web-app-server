@@ -64,15 +64,16 @@ bot.on('message', async (msg) => {
 
 });
 
+
 app.post('/basket', async (req, res) => {
     const {method, mainData, user} = req.body;
     if(method ==='add'){
     try {
         const chatId = user.id;
         const userDb = await UserModel.findOne({chatId:chatId});
-        const basket = userDb.basket.body;
-        await bot.sendMessage(chatId, String(basket)+ String(mainData))
-        return res.status(200).json({});
+        userDb.basket.body = [...userDb.basket.body, ...[mainData]];
+        userDb.safe();
+        return res.status(200).json({body: userDb.basket.body});
     } catch (e) {
         return res.status(500).json({});
     }}
