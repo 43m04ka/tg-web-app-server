@@ -71,6 +71,8 @@ app.post('/basket', async (req, res) => {
     try {
         const chatId = user.id;
         const userDb = await UserModel.findOne({chatId:chatId});
+        console.log(userDb.basket.body)
+        console.log([mainData]);
         userDb.basket.body = [...userDb.basket.body, ...[mainData]];
         userDb.safe();
         return res.status(200).json({body: userDb.basket.body});
