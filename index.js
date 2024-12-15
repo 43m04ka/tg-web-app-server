@@ -88,7 +88,7 @@ app.post('/basket', async (req, res) => {
             console.log(userDb.basket.body);
             return res.status(200).json(userDb.basket);
         }catch (e) {
-            return res.status(501).json({});
+            return res.status(502).json({});
         }
     }else if(method === 'del'){
         try {
@@ -97,12 +97,12 @@ app.post('/basket', async (req, res) => {
             const userDb = await UserModel.findOne({chatId: chatId});
             let userBasket = userDb.basket.body
             let deleteItem = [mainData];
-            const result = userBasket.filter(el_A => !deleteItem.includes(el_A));
+            const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
             userDb.basket = {body: result};
             userDb.save();
             return res.status(200).json({});
         }catch (e) {
-            return res.status(501).json({});
+            return res.status(503).json({});
         }
     }
 })
