@@ -28,6 +28,7 @@ app.use(cors());
 
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
+    console.log(msg);
     const text = msg.text;
     if(text === '/start') {
         try{
@@ -100,7 +101,7 @@ app.post('/basket', async (req, res) => {
             const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
             userDb.basket = {body: result};
             userDb.save();
-            return res.status(200).json({});
+            return res.status(200).json({body: result});
         }catch (e) {
             return res.status(503).json({});
         }
