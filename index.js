@@ -99,7 +99,7 @@ app.post('/basket', async (req, res) => {
             let userBasket = userDb.basket.body
             let deleteItem = [mainData];
             const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
-            userDb.basket = {body: result};
+            userDb.basket = {body: result || []};
             userDb.save();
             return res.status(200).json({body: result});
         }catch (e) {
