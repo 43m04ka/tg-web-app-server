@@ -106,6 +106,24 @@ app.post('/basket', async (req, res) => {
             return res.status(503).json({});
         }
     }
+    else if(method === 'buy'){
+        try {
+            const {user} = req.body;
+            const chatId = user.id;
+            const userDb = await UserModel.findOne({chatId: chatId});
+            let userBasket = userDb.basket.body
+            let games = ''
+            userBasket.map(el =>{
+                return games += el.title
+            })
+            bot.sendMessage(chatId, games)
+            userDb.basket = {body: []};
+            userDb.save();
+            return res.status(200).json({body: result});
+        }catch (e) {
+            return res.status(503).json({});
+        }
+    }
 })
 
 start()
