@@ -106,7 +106,7 @@ app.post('/basket', async (req, res) => {
         try {
             const {user} = req.body;
             const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId: chatId, tableName: 'users'});
+            const userDb = await UserModel.findOne({chatId: chatId});
             console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
         }catch (e) {
