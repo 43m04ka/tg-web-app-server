@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
-const UserModel = require('./models.js');
+const UserModel = require('./models.js').Users;
 // const DataModel = require('./models.js');
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
