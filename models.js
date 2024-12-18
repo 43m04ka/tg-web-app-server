@@ -7,4 +7,9 @@ const Users = sequelize.define('users', {
     basket: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-module.exports = Users;
+const Data = sequelize.define('data', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    body: {type: DataTypes.JSON, defaultValue: {}},
+})
+
+module.exports = {Users, Data};

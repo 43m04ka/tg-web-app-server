@@ -3,7 +3,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
-const UserModel = require('./models.js');
+const UserModel = require('./models.js').Users;
+const DataModel = require('./models.js').Data
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL  = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -30,6 +31,9 @@ bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     console.log(msg);
     const text = msg.text;
+    if(text==='bd'){
+        await DataModel.create({});
+    }
     if(text === '/start') {
         try{
             await UserModel.create({chatId});
@@ -71,6 +75,7 @@ app.post('/admin', async (req, res) => {
     if(method === 'login'){
         const login = req.body.data.login;
         const password = req.body.data.password;
+        console.log(login+password)
 
         if(login == 'root' && password == '0207'){
             return res.status(200).json({});
