@@ -66,6 +66,21 @@ bot.on('message', async (msg) => {
 });
 
 
+app.post('/admin', async (req, res) => {
+    const method = req.body.method;
+    if(method === 'login'){
+        const login = req.body.data.login;
+        const password = req.body.data.password;
+
+        if(login == 'root' && password == '0207'){
+            return res.status(200).json({});
+        }else{
+            return res.status(410).json({});
+        }
+    }
+});
+
+
 app.post('/basket', async (req, res) => {
     const method = req.body.method;
     if(method ==='add'){
