@@ -99,6 +99,7 @@ app.post('/basket', async (req, res) => {
             await userDb.save();
             return res.status(200).json({body: userDb.basket.body});
         } catch (e) {
+            console.log(e)
             return res.status(501).json({});
         }}
     else if(method ==='get'){
@@ -109,6 +110,7 @@ app.post('/basket', async (req, res) => {
             console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
         }catch (e) {
+            console.log(e)
             return res.status(502).json({});
         }
     }else if(method === 'del'){
@@ -123,6 +125,7 @@ app.post('/basket', async (req, res) => {
             userDb.save();
             return res.status(200).json({body: result});
         }catch (e) {
+            console.log(e)
             return res.status(503).json({});
         }
     }
@@ -141,6 +144,7 @@ app.post('/basket', async (req, res) => {
             userDb.save();
             return res.status(200).json({body: result});
         }catch (e) {
+            console.log(e)
             return res.status(503).json({});
         }
     }
