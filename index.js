@@ -3,8 +3,8 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
-const UserModel = require('./models.js').Users;
-const DataModel = require('./models.js').Data
+const UserModel = require('./models.js');
+// const DataModel = require('./models.js');
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL  = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -37,7 +37,7 @@ bot.on('message', async (msg) => {
     if(text === '/start') {
         try{
             await UserModel.create({chatId});
-            const db = await UserModel.findOne({chatId: chatId})
+            const db = await UserModel.findOne({chatId: chatId, tableName: 'users'})
             console.log(db)
             db.basket = {body:[]};
             db.save();
@@ -105,7 +105,7 @@ app.post('/basket', async (req, res) => {
         try {
             const {user} = req.body;
             const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId: chatId});
+            const userDb = await UserModel.findOne({chatId: chatId, tableName: 'users'});
             console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
         }catch (e) {
