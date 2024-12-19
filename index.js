@@ -32,7 +32,7 @@ bot.on('message', async (msg) => {
     console.log(msg);
     const text = msg.text;
     if(text==='bd'){
-        const dataDb = await DataModel.findOne({id:1})
+        const dataDb = await DataModel.findOne({id:0})
         dataDb.body = {body: [{id: 0, page: 'playstation', body: []}, {id: 1, page: 'xbox', body: []}]};
     }
     if(text === '/start') {
