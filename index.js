@@ -89,7 +89,7 @@ app.post('/admin', async (req, res) => {
         console.log(login+password)
 
         if(login == 'root' && password == '0207'){
-            const dataDb = await DataModel.findOne({id:1})
+            const dataDb = await DataModel.findOne({id:0})
             console.log(dataDb)
             return res.status(200).json(dataDb.body);
         }else{
