@@ -83,6 +83,17 @@ app.post('/admin', async (req, res) => {
         }else{
             return res.status(410).json({});
         }
+    }else if(method === 'get'){
+        const login = req.body.data.login;
+        const password = req.body.data.password;
+        console.log(login+password)
+
+        if(login == 'root' && password == '0207'){
+            const dataDb = DataModel.findOne({id:1})
+            return res.status(200).json(dataDb.body);
+        }else{
+            return res.status(410).json({});
+        }
     }
 });
 
