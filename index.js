@@ -38,7 +38,7 @@ bot.on('message', async (msg) => {
     if(text === '/start') {
         try{
             await UserModel.create({chatId});
-            const db = await UserModel.findOne({chatId: chatId, tableName: 'users'})
+            const db = await UserModel.findOne({chatId: chatId})
             console.log(db)
             db.basket = {body:[]};
             db.save();
@@ -89,8 +89,8 @@ app.post('/admin', async (req, res) => {
         console.log(login+password)
 
         if(login == 'root' && password == '0207'){
-            const dataDb = DataModel.findOne({id:1})
-            console.log(dataDb.body)
+            const dataDb = await DataModel.findOne({id:1})
+            console.log(dataDb)
             return res.status(200).json(dataDb.body);
         }else{
             return res.status(410).json({});
