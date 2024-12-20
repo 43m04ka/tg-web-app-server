@@ -38,7 +38,7 @@ bot.on('message', async (msg) => {
     }
     if(text === '/start') {
         try{
-            await UserModel.create({chatId});
+            await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({chatId: chatId})
             console.log(db)
             db.basket = {body:[]};
