@@ -33,7 +33,7 @@ bot.on('message', async (msg) => {
     const text = msg.text;
     if(text==='bd'){
         const dataDb = await DataModel.findOne({id:1})
-        dataDb.body = {body: [{id: 0, page: 'playstation', body: []}, {id: 1, page: 'xbox', body: []}]};
+        dataDb.body = {body: [{id: 0, page: 'playstation', body: [[], []]}, {id: 1, page: 'xbox', body: [[], []]}]};
         dataDb.save();
     }
     if(text === '/start') {
@@ -41,11 +41,13 @@ bot.on('message', async (msg) => {
             await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({chatId: chatId})
             console.log(db)
+            console.log(chatId)
             db.basket = {body:[]};
             db.save();
         }
         catch (err){
             const db = await UserModel.findOne({chatId: chatId})
+            console.log(chatId)
             console.log(db)
         }
         return bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
