@@ -77,17 +77,16 @@ bot.on('message', async (msg) => {
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
     if(method === 'login'){
-        console.log(req.body)
         const login = req.body.userData.login;
         const password = req.body.userData.password;
-        console.log(login+password)
-
         if(login == 'root' && password == '0207'){
             return res.status(200).json({});
         }else{
             return res.status(410).json({});
         }
     }else if(method === 'get'){
+
+        console.log(req.body)
         const login = req.body.userData.login;
         const password = req.body.userData.password;
         if(login == 'root' && password == '0207'){
@@ -104,7 +103,7 @@ app.post('/admin', async (req, res) => {
             const dataDb = await DataModel.findOne({id:1});
             dataDb.body = req.data;
             dataDb.save();
-            return res.status(200).json(dataDb.body);
+            return res.status(200).json(req.data);
         }else{
             return res.status(412).json({});
         }
