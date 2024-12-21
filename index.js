@@ -77,8 +77,8 @@ bot.on('message', async (msg) => {
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
     if(method === 'login'){
-        const login = req.body.data.login;
-        const password = req.body.data.password;
+        const login = req.body.userData.login;
+        const password = req.body.userData.password;
         console.log(login+password)
 
         if(login == 'root' && password == '0207'){
