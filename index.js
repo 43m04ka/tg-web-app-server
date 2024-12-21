@@ -7,19 +7,19 @@ const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
-const webAppURL  = 'https://vermillion-cobbler-e75220.netlify.app';
+const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
 
 const PORT = process.env.PORT || 8000;
 
-const start = async () =>{
+const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
         app.listen(PORT, () => console.log('server started on PORT ' + PORT))
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
 }
@@ -31,21 +31,20 @@ bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     console.log(msg);
     const text = msg.text;
-    if(text==='bd'){
-        const dataDb = await DataModel.findOne({id:1})
+    if (text === 'bd') {
+        const dataDb = await DataModel.findOne({id: 1})
         dataDb.body = {body: [{id: 0, page: 'playstation', body: [[], []]}, {id: 1, page: 'xbox', body: [[], []]}]};
         dataDb.save();
     }
-    if(text === '/start') {
-        try{
+    if (text === '/start') {
+        try {
             await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({chatId: chatId})
             console.log(db)
             console.log(chatId)
-            db.basket = {body:[]};
+            db.basket = {body: []};
             db.save();
-        }
-        catch (err){
+        } catch (err) {
             const db = await UserModel.findOne({chatId: chatId})
             console.log(chatId)
             console.log(db)
@@ -53,12 +52,12 @@ bot.on('message', async (msg) => {
         return bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'Магазин', web_app: {url: webAppURL+'/home'}}]
+                    [{text: 'Магазин', web_app: {url: webAppURL + '/home'}}]
                 ]
             }
         })
     }
-    if(msg?.web_app_data?.data) {
+    if (msg?.web_app_data?.data) {
         try {
             const data = JSON.parse(msg?.web_app_data?.data)
             console.log(data)
@@ -76,50 +75,52 @@ bot.on('message', async (msg) => {
 
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
-    if(method === 'login'){
-        const login = req.body.userData.login;
-        const password = req.body.userData.password;
-        if(login == 'root' && password == '0207'){
-            return res.status(200).json({});
-        }else{
-            return res.status(410).json({});
+    if (method === 'login') {
+        try {
+            const login = req.body.userData.login;
+            const password = req.body.userData.password;
+            if (login == 'root' && password == '0207') {
+                return res.status(200).json({});
+            } else {
+                return res.status(410).json({});
+            }
+        } catch (err) {
+            return res.status(510).json({});
         }
-    }else if(method === 'get'){
-
-        console.log(req.body)
-        const login = req.body.userData.login;
-        const password = req.body.userData.password;
-        if(login == 'root' && password == '0207'){
-            const dataDb = await DataModel.findOne({id:1})
-            console.log(dataDb)
+    } else if (method === 'get') {
+        try {
+            const dataDb = await DataModel.findOne({id: 1})
             return res.status(200).json(dataDb.body);
-        }else{
+        } catch (err) {
             return res.status(411).json({});
         }
-    }else if(method === 'set'){
-        const login = req.body.userData.login;
-        const password = req.body.userData.password;
-        if(login == 'root' && password == '0207'){
-            const dataDb = await DataModel.findOne({id:1});
-            dataDb.body = req.body.data;
-            dataDb.save();
-            console.log(dataDb.body)
-            return res.status(200).json(dataDb.body);
-        }else{
-            return res.status(412).json({});
+    } else if (method === 'set') {
+        try {
+            const login = req.body.userData.login;
+            const password = req.body.userData.password;
+            if (login == 'root' && password == '0207') {
+                const dataDb = await DataModel.findOne({id: 1});
+                dataDb.body = req.body.data;
+                dataDb.save();
+                console.log(dataDb.body)
+                return res.status(200).json(dataDb.body);
+            } else {
+                return res.status(412).json({});
+            }
+        } catch (err) {
+            return res.status(512).json({});
         }
     }
 });
 
-
 app.post('/basket', async (req, res) => {
     const method = req.body.method;
-    if(method ==='add'){
+    if (method === 'add') {
         try {
             const {mainData, user} = req.body;
             const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId:chatId});
-            let summa ={body :[ ...[mainData], ...userDb.basket.body]};
+            const userDb = await UserModel.findOne({chatId: chatId});
+            let summa = {body: [...[mainData], ...userDb.basket.body]};
             await console.log(userDb.basket.body)
             userDb.basket = summa;
             await userDb.save();
@@ -127,19 +128,19 @@ app.post('/basket', async (req, res) => {
         } catch (e) {
             console.log(e)
             return res.status(501).json({});
-        }}
-    else if(method ==='get'){
+        }
+    } else if (method === 'get') {
         try {
             const {user} = req.body;
             const chatId = user.id;
             const userDb = await UserModel.findOne({chatId: chatId});
             console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
-        }catch (e) {
+        } catch (e) {
             console.log(e)
             return res.status(502).json({});
         }
-    }else if(method === 'del'){
+    } else if (method === 'del') {
         try {
             const {user, mainData} = req.body;
             const chatId = user.id;
@@ -150,26 +151,25 @@ app.post('/basket', async (req, res) => {
             userDb.basket = {body: result || []};
             userDb.save();
             return res.status(200).json({body: result});
-        }catch (e) {
+        } catch (e) {
             console.log(e)
             return res.status(503).json({});
         }
-    }
-    else if(method === 'buy'){
+    } else if (method === 'buy') {
         try {
             const {user} = req.body;
             const chatId = user.id;
             const userDb = await UserModel.findOne({chatId: chatId});
             let userBasket = userDb.basket.body
             let games = ''
-            userBasket.map(el =>{
+            userBasket.map(el => {
                 return games += el.title
             })
             bot.sendMessage(chatId, games)
             userDb.basket = {body: []};
             userDb.save();
             return res.status(200).json({body: result});
-        }catch (e) {
+        } catch (e) {
             console.log(e)
             return res.status(503).json({});
         }
