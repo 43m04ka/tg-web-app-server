@@ -87,14 +87,25 @@ app.post('/admin', async (req, res) => {
             return res.status(410).json({});
         }
     }else if(method === 'get'){
-        const login = req.body.data.login;
-        const password = req.body.data.password;
+        const login = req.body.userData.login;
+        const password = req.body.userData.password;
         if(login == 'root' && password == '0207'){
             const dataDb = await DataModel.findOne({id:1})
             console.log(dataDb)
             return res.status(200).json(dataDb.body);
         }else{
-            return res.status(410).json({});
+            return res.status(411).json({});
+        }
+    }else if(method === 'set'){
+        const login = req.body.userData.login;
+        const password = req.body.userData.password;
+        if(login == 'root' && password == '0207'){
+            const dataDb = await DataModel.findOne({id:1});
+            dataDb.body = req.data;
+            dataDb.save();
+            return res.status(200).json(dataDb.body);
+        }else{
+            return res.status(412).json({});
         }
     }
 });
