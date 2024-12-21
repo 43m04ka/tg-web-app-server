@@ -101,9 +101,11 @@ app.post('/admin', async (req, res) => {
         const password = req.body.userData.password;
         if(login == 'root' && password == '0207'){
             const dataDb = await DataModel.findOne({id:1});
+            console.log(req.data)
             dataDb.body = req.data;
             dataDb.save();
-            return res.status(200).json(req.data);
+            console.log(dataDb.body)
+            return res.status(200).json(dataDb.body);
         }else{
             return res.status(412).json({});
         }
