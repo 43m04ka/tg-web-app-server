@@ -36,7 +36,7 @@ bot.on('message', async (msg) => {
         dataDb.body = {body: [{id: 0, page: 'playstation', body: [[], []]}, {id: 1, page: 'xbox', body: [[], []]} , {id: 2, page: 'service', body: [[], []]}]};
         dataDb.save();
     }
-    if (text === '/start') {
+    else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({chatId: chatId})
@@ -57,19 +57,6 @@ bot.on('message', async (msg) => {
             }
         })
     }
-    if (msg?.web_app_data?.data) {
-        try {
-            const data = JSON.parse(msg?.web_app_data?.data)
-            console.log(data)
-            setTimeout(async () => {
-                await bot.sendMessage(chatId, 'Заказ оформлен, ожидайте нашего сообщениия');
-                return bot.sendMessage(5106439090, "Что то купили")
-            }, 1000)
-        } catch (e) {
-            console.log(e);
-        }
-    }
-
 });
 
 
@@ -162,13 +149,15 @@ app.post('/basket', async (req, res) => {
             const userDb = await UserModel.findOne({chatId: chatId});
             let userBasket = userDb.basket.body
             let games = ''
-            userBasket.map(el => {
-                return games += el.title
-            })
-            bot.sendMessage(chatId, games)
+            bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
+                '\n' +
+                'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
+                '\n' +
+                'Менеджер — @gwstore_admin. \n' +
+                'Часы работы 10:00 — 22:00 по МСК ежедневно.')
             userDb.basket = {body: []};
             userDb.save();
-            return res.status(200).json({body: result});
+            return res.status(200).json({body: []});
         } catch (e) {
             console.log(e)
             return res.status(503).json({});
