@@ -111,10 +111,10 @@ app.post('/basket', async (req, res) => {
             await console.log(userDb.basket.body)
             userDb.basket = summa;
             await userDb.save();
-            return res.status(200).json({body: userDb.basket.body});
+            return res.status(200).json({body: true});
         } catch (e) {
             console.log(e)
-            return res.status(501).json({});
+            return res.status(501).json({body: false});
         }
     } else if (method === 'get') {
         try {
