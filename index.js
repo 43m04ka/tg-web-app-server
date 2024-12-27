@@ -107,6 +107,11 @@ app.post('/basket', async (req, res) => {
             const {mainData, user} = req.body;
             const chatId = user.id;
             const userDb = await UserModel.findOne({chatId: chatId});
+            userDb.basket.body.map(el => {
+                if(el.id === mainData.id && el.title === mainData.title) {
+                    return res.status(200).json({body: true});
+                }
+            })
             let summa = {body: [...[mainData], ...userDb.basket.body]};
             await console.log(userDb.basket.body)
             userDb.basket = summa;
