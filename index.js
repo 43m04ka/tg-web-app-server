@@ -33,10 +33,15 @@ bot.on('message', async (msg) => {
     const text = msg.text;
     if (text === 'bd') {
         const dataDb = await DataModel.findOne({id: 1})
-        dataDb.body = {body: [{id: 0, page: 'playstation', body: [[], []]}, {id: 1, page: 'xbox', body: [[], []]} , {id: 2, page: 'service', body: [[], []]}]};
+        dataDb.body = {
+            body: [{id: 0, page: 'playstation', body: [[], []]}, {
+                id: 1,
+                page: 'xbox',
+                body: [[], []]
+            }, {id: 2, page: 'service', body: [[], []]}]
+        };
         dataDb.save();
-    }
-    else if (text === '/start') {
+    } else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({chatId: chatId})
@@ -107,17 +112,21 @@ app.post('/basket', async (req, res) => {
             const {mainData, user} = req.body;
             const chatId = user.id;
             const userDb = await UserModel.findOne({chatId: chatId});
+            let isContinue = true;
             userDb.basket.body.map(el => {
-                console.log(el.id, mainData.id,el.title , mainData.title)
-                if(el.id === mainData.id && el.title === mainData.title) {
+                console.log(el.id, mainData.id, el.title, mainData.title)
+                if (el.id === mainData.id && el.title === mainData.title) {
+                    isContinue = false;
                     return res.status(200).json({body: true});
                 }
             })
-            let summa = {body: [...[mainData], ...userDb.basket.body]};
-            await console.log(userDb.basket.body)
-            userDb.basket = summa;
-            await userDb.save();
-            return res.status(200).json({body: true});
+            if (isContinue) {
+                let summa = {body: [...[mainData], ...userDb.basket.body]};
+                await console.log(userDb.basket.body)
+                userDb.basket = summa;
+                await userDb.save();
+                return res.status(200).json({body: true});
+            }
         } catch (e) {
             console.log(e)
             return res.status(501).json({body: false});
