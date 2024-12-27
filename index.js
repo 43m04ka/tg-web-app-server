@@ -108,6 +108,7 @@ app.post('/basket', async (req, res) => {
             const chatId = user.id;
             const userDb = await UserModel.findOne({chatId: chatId});
             userDb.basket.body.map(el => {
+                console.log(el.id, mainData.id,el.title , mainData.title)
                 if(el.id === mainData.id && el.title === mainData.title) {
                     return res.status(200).json({body: true});
                 }
