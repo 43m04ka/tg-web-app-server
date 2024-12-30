@@ -180,5 +180,10 @@ app.post('/basket', async (req, res) => {
     }
 })
 
+app.post('/database', async (req, res) => {
+    const method = req.body.method;
+    return res.status(200).json({body: req.body});
+})
+
 start()
 
