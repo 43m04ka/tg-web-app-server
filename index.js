@@ -3,8 +3,10 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
+const {mainData} = require("./models");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
+const MainDataModel = require('./models.js').mainData;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -181,8 +183,23 @@ app.post('/basket', async (req, res) => {
 })
 
 app.post('/database', async (req, res) => {
-    const method = req.body.method;
-    return res.status(200).json({body: req.body});
+    try {
+        const method = req.body.method;
+        const data = req.body.data;
+        data.map(async el => {
+            const cardDB = await MainDataModel.findOne({body:el});
+            cardDB.save()
+        })
+        let resArray = []
+        for (i = 0; i < data.length; i++) {
+            const cardDB = await MainDataModel.findOne({id:i});
+            resArray = [...resArray, ...[cardDB]]
+        }
+        return res.status(200).json({body: resArray});
+    } catch (e) {
+        console.log(e)
+        return res.status(550).json({});
+    }
 })
 
 start()
