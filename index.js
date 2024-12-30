@@ -187,8 +187,7 @@ app.post('/database', async (req, res) => {
         const method = req.body.method;
         const data = req.body.data;
         data.map(async el => {
-            const cardDB = await MainDataModel.findOne({el});
-            cardDB.save()
+            const cardDB = await MainDataModel.create({body:el});
         })
         let resArray = []
         for (i = 0; i < data.length; i++) {
