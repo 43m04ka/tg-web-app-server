@@ -192,7 +192,7 @@ app.post('/database', async (req, res) => {
                 const cardDB = await MainDataModel.create({body: el});
                 console.log(cardDB)
             })
-            return res.status(200).json({body: true, method: method});
+            return res.status(200).json({answer: true, method: method});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
