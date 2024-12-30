@@ -190,12 +190,9 @@ app.post('/database', async (req, res) => {
             const cardDB = await MainDataModel.create({body:el});
             console.log(cardDB)
         })
-        let resArray = []
-        for (i = 0; i < 1000; i++) {
-            let cardDB = await MainDataModel.findOne({id:i});
-            resArray = [...resArray, ...[cardDB]]
-        }
-        return res.status(200).json({body: resArray});
+
+        const cards = await MainDataModel.findAll();
+        return res.status(200).json({body: cards});
     } catch (e) {
         console.log(e)
         return res.status(550).json({});
