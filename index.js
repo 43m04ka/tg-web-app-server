@@ -192,7 +192,7 @@ app.post('/database', async (req, res) => {
         })
         let resArray = []
         for (i = 0; i < 1000; i++) {
-            const cardDB = await MainDataModel.findOne({id:i});
+            let cardDB = await MainDataModel.findOne({id:i});
             resArray = [...resArray, ...[cardDB]]
         }
         return res.status(200).json({body: resArray});
