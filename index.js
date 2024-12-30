@@ -191,7 +191,7 @@ app.post('/database', async (req, res) => {
             console.log(cardDB)
         })
         let resArray = []
-        for (i = 0; i < data.length; i++) {
+        for (i = 0; i < 1000; i++) {
             const cardDB = await MainDataModel.findOne({id:i});
             resArray = [...resArray, ...[cardDB]]
         }
