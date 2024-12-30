@@ -6,7 +6,7 @@ const sequelize = require('./db.js')
 const {mainData} = require("./models");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
-const MainDataModel = require('./models.js').mainData;
+const MainDataModel = require('./models.js').MainData;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -188,6 +188,7 @@ app.post('/database', async (req, res) => {
         const data = req.body.data;
         data.map(async el => {
             const cardDB = await MainDataModel.create({body:el});
+            console.log(cardDB)
         })
         let resArray = []
         for (i = 0; i < data.length; i++) {
