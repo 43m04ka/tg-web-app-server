@@ -185,22 +185,29 @@ app.post('/basket', async (req, res) => {
 app.post('/database', async (req, res) => {
 
     const method = req.body.method;
-    if (method === 'add') {
+    if(method=== 'add'){
+    try {
+        const data = req.body.data;
+        let newArray = []
+        await data.map(async el => {
+            const cardDB = await MainDataModel.create({body: el});
+            newArray = [...newArray, ...[cardDB]]
+        })
+        const cards = await MainDataModel.findAll();
+        const newData = [...cards, ...newArray]
+        return res.status(200).json({body: newData});
+    } catch (e) {
+        console.log(e)
+        return res.status(550).json({});
+    }}else if(method === 'get'){
         try {
             const data = req.body.data;
             await data.map(async el => {
                 const cardDB = await MainDataModel.create({body: el});
                 console.log(cardDB)
             })
-            return res.status(200).json({answer: true, method: method});
-        } catch (e) {
-            console.log(e)
-            return res.status(550).json({});
-        }
-    } else if (method === 'get') {
-        try {
             const cards = await MainDataModel.findAll();
-            return res.status(200).json({body: cards, method: method});
+            return res.status(200).json({body: true});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
