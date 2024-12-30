@@ -186,11 +186,10 @@ app.post('/database', async (req, res) => {
     try {
         const method = req.body.method;
         const data = req.body.data;
-        data.map(async el => {
+        await data.map(async el => {
             const cardDB = await MainDataModel.create({body:el});
             console.log(cardDB)
         })
-
         const cards = await MainDataModel.findAll();
         return res.status(200).json({body: cards});
     } catch (e) {
