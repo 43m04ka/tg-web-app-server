@@ -190,8 +190,16 @@ app.post('/database', async (req, res) => {
             const data = req.body.data;
             let newArray = []
             await data.map(async el => {
-                const cardDB = await MainDataModel.create({body: el});
-                newArray = [...newArray, ...[cardDB]]
+                const allCards = await MainDataModel.findAll();
+                await allCards.body.map(async elD =>{
+                    if(elD.title === el.title){
+                        console.log('есть')
+                    }else{
+                        const cardDB = await MainDataModel.create({body: el});
+                        console.log('добавлено')
+                        newArray = [...newArray, ...[cardDB]]
+                    }
+                })
             })
             const cards = await MainDataModel.findAll();
             const newData = [...cards, ...newArray]
