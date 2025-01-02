@@ -212,13 +212,8 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'get') {
         try {
-            const data = req.body.data;
-            await data.map(async el => {
-                const cardDB = await MainDataModel.create({body: el});
-                console.log(cardDB)
-            })
             const cards = await MainDataModel.findAll();
-            return res.status(200).json({body: true});
+            return res.status(200).json({body: cards});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
