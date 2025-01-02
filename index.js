@@ -191,8 +191,8 @@ app.post('/database', async (req, res) => {
             let newArray = []
             await data.map(async el => {
                 const allCards = await MainDataModel.findAll();
-                await allCards.body.map(async elD =>{
-                    if(elD.title === el.title){
+                await allCards.map(async elD =>{
+                    if(elD.body.title === el.title){
                         console.log('есть')
                     }else{
                         const cardDB = await MainDataModel.create({body: el});
