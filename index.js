@@ -69,6 +69,7 @@ bot.on('message', async (msg) => {
 
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
+    console.log(req)
     if (method === 'login') {
         try {
             const login = req.body.userData.login;
