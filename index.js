@@ -216,7 +216,7 @@ app.post('/database', async (req, res) => {
         try {
             const cards = await MainDataModel.findAll();
             const dataDb = await DataModel.findOne({id: 1})
-            console.log(dataDb.body.body)
+            console.log(dataDb.body.body[0].body)
             return res.status(200).json({cards: cards, structure: dataDb.body.body});
         } catch (e) {
             console.log(e)
