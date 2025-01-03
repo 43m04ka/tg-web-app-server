@@ -187,6 +187,7 @@ app.post('/database', async (req, res) => {
 
     const method = req.body.method;
     if (method === 'add') {
+        console.log('set')
         try {
             const data = req.body.data;
             let newArray = []
@@ -212,6 +213,7 @@ app.post('/database', async (req, res) => {
             return res.status(550).json({});
         }
     } else if (method === 'get') {
+        console.log('get')
         try {
             const cards = await MainDataModel.findAll();
             const dataDb = await DataModel.findOne({id: 1})
