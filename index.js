@@ -195,9 +195,13 @@ app.post('/database', async (req, res) => {
                 let flag = false;
                 allCards.map(async elD => {
                     if (elD.body.title === el.title) {
+                        const card = await MainDataModel.findOne({body:elD});
+                        card.body = el;
+                        card.save();
                         flag = true;
                     }
                 })
+
                 if (flag === false) {
                     const cardDB = await MainDataModel.create({body: el});
                     console.log('добавлено')
