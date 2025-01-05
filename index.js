@@ -175,7 +175,7 @@ app.post('/basket', async (req, res) => {
                 'Часы работы 10:00 — 22:00 по МСК ежедневно.')
             userDb.basket = {body: []};
             userDb.save();
-            return res.status(200).json({body: []});
+            return res.status(200).json({body: true});
         } catch (e) {
             console.log(e)
             return res.status(503).json({});
