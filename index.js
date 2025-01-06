@@ -225,10 +225,11 @@ app.post('/database', async (req, res) => {
         }
     }else if (method === 'del') {
         try {
-            const delEl = req.body.data;
-            console.log(delEl.id)
-            const dataDb = await MainDataModel.findByPk(delEl.id);
-            console.log(dataDb)
+            await MainDataModel.destroy({
+                where: {
+                    id: req.body.data.id
+                }
+            })
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
