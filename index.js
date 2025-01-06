@@ -43,6 +43,13 @@ bot.on('message', async (msg) => {
             }, {id: 2, page: 'service', body: [[], []]}]
         };
         dataDb.save();
+    } else if (text === 'fun') {
+        const dataDb = await MainDataModel.findAll;
+        dataDb.map(el=>{
+            const card = MainDataModel.findOne({body:el.body});
+            card.body.tabCategoryPath = [card.body.tabCategoryPath];
+            card.save();
+        })
     } else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
