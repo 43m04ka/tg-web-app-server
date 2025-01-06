@@ -48,7 +48,9 @@ bot.on('message', async (msg) => {
         dataDb.map(el=>{
             console.log(el.body)
             const card = MainDataModel.findOne({body:el.body});
-            card.body.tabCategoryPath = [card.body.tabCategoryPath];
+            let newBody = card.body
+            newBody.tabCategoryPath = [newBody.tabCategoryPath];
+            card.body = newBody;
             card.save();
         })
     } else if (text === '/start') {
