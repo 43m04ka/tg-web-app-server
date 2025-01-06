@@ -45,8 +45,8 @@ bot.on('message', async (msg) => {
         dataDb.save();
     } else if (text === 'fun') {
         const dataDb = await MainDataModel.findAll();
-        dataDb.map(el=>{
-            const card = MainDataModel.findOne({body:el.body});
+        dataDb.map(async el=>{
+            const card = await MainDataModel.findOne({body:el.body});
             console.log(card.body)
         })
     } else if (text === '/start') {
@@ -80,7 +80,7 @@ app.post('/admin', async (req, res) => {
         try {
             const login = req.body.userData.login;
             const password = req.body.userData.password;
-            if (login == 'root' && password == '0207') {
+            if (login === 'root' && password === '0207') {
                 return res.status(200).json({});
             } else {
                 return res.status(410).json({});
