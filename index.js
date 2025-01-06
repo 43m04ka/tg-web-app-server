@@ -48,8 +48,8 @@ bot.on('message', async (msg) => {
         dataDb.map(el=>{
             console.log(el.body)
             const card = MainDataModel.findOne({body:el.body});
-            let newBody = card.body
-            newBody.tabCategoryPath = [newBody.tabCategoryPath];
+            let newBody = el.body
+            newBody.tabCategoryPath = [el.body.tabCategoryPath];
             card.body = newBody;
             card.save();
         })
