@@ -47,7 +47,7 @@ bot.on('message', async (msg) => {
         const dataDb = await MainDataModel.findAll();
         dataDb.map(el=>{
             const card = MainDataModel.findOne({body:el.body});
-            console.log(card)
+            console.log(card.body)
         })
     } else if (text === '/start') {
         try {
