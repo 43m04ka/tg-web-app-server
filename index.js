@@ -46,12 +46,8 @@ bot.on('message', async (msg) => {
     } else if (text === 'fun') {
         const dataDb = await MainDataModel.findAll();
         dataDb.map(el=>{
-            console.log(el.body)
             const card = MainDataModel.findOne({body:el.body});
-            let newBody = el.body
-            newBody.tabCategoryPath = [el.body.tabCategoryPath];
-            card.body = newBody;
-            card.save();
+            console.log(card)
         })
     } else if (text === '/start') {
         try {
