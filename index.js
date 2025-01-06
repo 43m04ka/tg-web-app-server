@@ -227,7 +227,7 @@ app.post('/database', async (req, res) => {
         try {
             const delEl = req.body.data;
             console.log(delEl.id)
-            const dataDb = await MainDataModel.findOne({id: delEl.id})
+            const dataDb = await MainDataModel.findOne(delEl.id)
             console.log(dataDb)
             return res.status(200).json({});
         } catch (e) {
