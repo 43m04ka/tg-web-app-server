@@ -45,8 +45,8 @@ bot.on('message', async (msg) => {
         dataDb.save();
     } else if (text === 'fun') {
         const dataDb = await MainDataModel.findAll();
-        console.log(dataDb)
         dataDb.map(el=>{
+            console.log(el.body)
             const card = MainDataModel.findOne({body:el.body});
             card.body.tabCategoryPath = [card.body.tabCategoryPath];
             card.save();
