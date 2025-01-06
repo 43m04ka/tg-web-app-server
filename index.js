@@ -226,8 +226,8 @@ app.post('/database', async (req, res) => {
     }else if (method === 'del') {
         try {
             const delEl = req.body.data;
-            const dataDb = await DataModel.findOne({id: delEl.id})
-            console.log(delEl)
+            const dataDb = await MainDataModel.findOne({id: delEl.id})
+            console.log(dataDb)
             return res.status(200).json({cards: cards, structure: dataDb.body.body});
         } catch (e) {
             console.log(e)
