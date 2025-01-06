@@ -43,18 +43,7 @@ bot.on('message', async (msg) => {
             }, {id: 2, page: 'service', body: [[], []]}]
         };
         dataDb.save();
-    } else if (text === 'fun') {
-        const dataDb = await MainDataModel.findAll();
-        dataDb.map(async el=>{
-            const card = await MainDataModel.findOne({body:el.body});
-            console.log(card);
-            let newBody = card.body;
-            newBody.tabCategoryPath = [newBody.tabCategoryPath];
-            card.body = newBody;
-            console.log(card);
-            card.save();
-        })
-    } else if (text === '/start') {
+   }else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({chatId: chatId})
@@ -70,7 +59,7 @@ bot.on('message', async (msg) => {
         return bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
                 inline_keyboard: [
-                    [{text: 'Магазин', web_app: {url: webAppURL + '/home'}}]
+                    [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}]
                 ]
             }
         })
@@ -104,7 +93,7 @@ app.post('/admin', async (req, res) => {
         try {
             const login = req.body.userData.login;
             const password = req.body.userData.password;
-            if (login == 'root' && password == '0207') {
+            if (login === 'root' && password === '0207') {
                 const dataDb = await DataModel.findOne({id: 1});
                 dataDb.body = req.body.data;
                 dataDb.save();
@@ -212,7 +201,6 @@ app.post('/database', async (req, res) => {
                         flag = true;
                     }
                 })
-
                 if (flag === false) {
                     const cardDB = await MainDataModel.create({body: el});
                     console.log('добавлено')
