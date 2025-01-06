@@ -113,8 +113,10 @@ app.post('/basket', async (req, res) => {
     if (method === 'add') {
         try {
             const {mainData, user} = req.body;
+            console.log(user)
             const chatId = user.id;
             const userDb = await UserModel.findOne({chatId: chatId});
+            console.log(userDb)
             let isContinue = true;
             userDb.basket.body.map(el => {
                 console.log(el.id, mainData.id, el.title, mainData.title)
