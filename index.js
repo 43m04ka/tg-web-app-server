@@ -140,7 +140,7 @@ app.post('/basket', async (req, res) => {
     } else if (method === 'get') {
         try {
             const {user} = req.body;
-            const chatId = user.id;
+            const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
