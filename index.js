@@ -115,7 +115,7 @@ app.post('/basket', async (req, res) => {
     if (method === 'add') {
         try {
             const {mainData, user} = req.body;
-            const chatId = user.id;
+            const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             console.log(userDb)
             let isContinue = true;
@@ -151,8 +151,8 @@ app.post('/basket', async (req, res) => {
     } else if (method === 'del') {
         try {
             const {user, mainData} = req.body;
-            const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId: chatId});
+            const chatId = String(user.id);
+            const userDb = await UserModel.findOne({where: {chatId: chatId}});
             let userBasket = userDb.basket.body
             let deleteItem = [mainData];
             const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
@@ -166,8 +166,8 @@ app.post('/basket', async (req, res) => {
     } else if (method === 'buy') {
         try {
             const {user} = req.body;
-            const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId: chatId});
+            const chatId = String(user.id);
+            const userDb = await UserModel.findOne({where: {chatId: chatId}});
             let userBasket = userDb.basket.body
             let games = ''
             bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
