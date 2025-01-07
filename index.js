@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
 const {mainData} = require("./models");
+const {all} = require("express/lib/application");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const MainDataModel = require('./models.js').MainData;
@@ -110,6 +111,8 @@ app.post('/admin', async (req, res) => {
 
 app.post('/basket', async (req, res) => {
     const method = req.body.method;
+    const allUser = await UserModel.findAll();
+    console.log(allUser)
     if (method === 'add') {
         try {
             const {mainData, user} = req.body;
