@@ -47,7 +47,7 @@ bot.on('message', async (msg) => {
    }else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
-            const db = await UserModel.findOne({chatId: chatId})
+            const db = await UserModel.findOne({where:{chatId: String(chatId)}})
             console.log(db)
             console.log(chatId)
             db.basket = {body: []};
@@ -139,6 +139,8 @@ app.post('/basket', async (req, res) => {
         }
     } else if (method === 'get') {
         try {
+            const allUsers = await UserModel.findAll();
+            console.log(allUsers)
             const {user} = req.body;
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
