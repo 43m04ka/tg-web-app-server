@@ -111,14 +111,12 @@ app.post('/admin', async (req, res) => {
 
 app.post('/basket', async (req, res) => {
     const method = req.body.method;
-    const allUser = await UserModel.findAll();
-    console.log(allUser)
+    console.log(req)
     if (method === 'add') {
         try {
             const {mainData, user} = req.body;
-            console.log(user)
             const chatId = user.id;
-            const userDb = await UserModel.findOne({where: {chatId: String(chatId)}});
+            const userDb = await UserModel.findOne({where: {chatId: chatId}});
             console.log(userDb)
             let isContinue = true;
             userDb.basket.body.map(el => {
@@ -143,7 +141,7 @@ app.post('/basket', async (req, res) => {
         try {
             const {user} = req.body;
             const chatId = user.id;
-            const userDb = await UserModel.findOne({chatId: chatId});
+            const userDb = await UserModel.findOne({where: {chatId: chatId}});
             console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
         } catch (e) {
