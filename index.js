@@ -118,7 +118,7 @@ app.post('/basket', async (req, res) => {
             const {mainData, user} = req.body;
             console.log(user)
             const chatId = user.id;
-            const userDb = await UserModel.findOne({where: {chatId: chatId}});
+            const userDb = await UserModel.findOne({where: {chatId: String(chatId)}});
             console.log(userDb)
             let isContinue = true;
             userDb.basket.body.map(el => {
