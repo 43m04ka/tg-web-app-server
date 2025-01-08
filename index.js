@@ -163,7 +163,7 @@ app.post('/basket', async (req, res) => {
     } else if (method === 'buy') {
         try {
             const {user, accData, page} = req.body;
-            console.log(req.body+'------')
+            console.log(req.body + '------')
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             console.log(userDb)
@@ -180,38 +180,43 @@ app.post('/basket', async (req, res) => {
             resultMassage += accData + '\n\n'
             resultMassage += 'Корзина:' + '\n\n'
             let sumPrice = 0
+            let basketMsg = ''
 
             userBasket.map(pos => {
                 let positionString = ''
                 if (typeof pos.view === 'undefined') {
-                    positionString += pos.title+' '
+                    positionString += pos.title + ' '
                     if (typeof pos.platform !== 'undefined') {
                         positionString += pos.platform + ' '
                     }
-                    positionString += '- '+ String(pos.price)+'р'
+                    positionString += '- ' + String(pos.price) + 'р'
                     if (typeof pos.url !== 'undefined') {
-                        positionString += ' / '+pos.url
+                        positionString += ' / ' + pos.url
                     }
-                }else{
-                    positionString += pos.title+' '+ pos.view + ' - '+ String(pos.price)+'р'
+                } else {
+                    positionString += pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
                 }
                 positionString += '\n'
-                resultMassage+=positionString
+                basketMsg += positionString
                 sumPrice += pos.price
             })
-            resultMassage += '\n'+'Итого к оплате:' + String(sumPrice)+'р'+'\n'
+            resultMassage += basketMsg
+            resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
             resultMassage += 'Статус: Не оплачен'
 
-            bot.sendMessage(5106439090, resultMassage)
+            if (basketMsg !== '') {
+                console.log(basketMsg)
+                bot.sendMessage(5106439090, resultMassage)
 
-            bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
-                '\n' +
-                'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
-                '\n' +
-                'Менеджер — @gwstore_admin. \n' +
-                'Часы работы 10:00 — 22:00 по МСК ежедневно.')
-            userDb.basket = {body: []};
-            userDb.save();
+                bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
+                    '\n' +
+                    'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
+                    '\n' +
+                    'Менеджер — @gwstore_admin. \n' +
+                    'Часы работы 10:00 — 22:00 по МСК ежедневно.')
+                userDb.basket = {body: []};
+                userDb.save();
+            }
             return res.status(200).json({body: true});
         } catch (e) {
             console.log(e)
