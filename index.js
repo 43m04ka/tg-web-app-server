@@ -168,6 +168,7 @@ app.post('/basket', async (req, res) => {
     } else if (method === 'buy') {
         try {
             const {user, accData, page} = req.body;
+            console.log(req.body)
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             let userBasket = userDb.basket.body
@@ -202,7 +203,7 @@ app.post('/basket', async (req, res) => {
                 resultMassage+=positionString
                 sumPrice += pos.price
             })
-            resultMassage += '\n'+'Итого к оплате:' + String(sumPrice)+'р'+'/n'
+            resultMassage += '\n'+'Итого к оплате:' + String(sumPrice)+'р'+'\n'
             resultMassage += 'Статус: Не оплачен'
 
             bot.sendMessage(5106439090, resultMassage)
