@@ -117,7 +117,6 @@ app.post('/basket', async (req, res) => {
             const {mainData, user} = req.body;
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
-            console.log(userDb)
             let isContinue = true;
             userDb.basket.body.map(el => {
                 console.log(el.id, mainData.id, el.title, mainData.title)
@@ -127,9 +126,7 @@ app.post('/basket', async (req, res) => {
                 }
             })
             if (isContinue) {
-                let summa = {body: [...[mainData], ...userDb.basket.body]};
-                await console.log(userDb.basket.body)
-                userDb.basket = summa;
+                userDb.basket = {body: [...[mainData], ...userDb.basket.body]};
                 await userDb.save();
                 return res.status(200).json({body: true});
             }
@@ -139,8 +136,6 @@ app.post('/basket', async (req, res) => {
         }
     } else if (method === 'get') {
         try {
-            const allUsers = await UserModel.findAll();
-            console.log(allUsers)
             const {user} = req.body;
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
@@ -168,7 +163,7 @@ app.post('/basket', async (req, res) => {
     } else if (method === 'buy') {
         try {
             const {user, accData, page} = req.body;
-            console.log(req.body)
+            console.log(req.body+'------')
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             let userBasket = userDb.basket.body
