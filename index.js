@@ -166,6 +166,7 @@ app.post('/basket', async (req, res) => {
             console.log(req.body+'------')
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
+            console.log(userDb)
             let userBasket = userDb.basket.body
             let resultMassage = ''
             if (page === 0) {
