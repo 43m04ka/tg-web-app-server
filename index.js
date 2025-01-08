@@ -44,10 +44,10 @@ bot.on('message', async (msg) => {
             }, {id: 2, page: 'service', body: [[], []]}]
         };
         dataDb.save();
-   }else if (text === '/start') {
+    } else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
-            const db = await UserModel.findOne({where:{chatId: String(chatId)}})
+            const db = await UserModel.findOne({where: {chatId: String(chatId)}})
             console.log(db)
             console.log(chatId)
             db.basket = {body: []};
@@ -167,11 +167,46 @@ app.post('/basket', async (req, res) => {
         }
     } else if (method === 'buy') {
         try {
-            const {user} = req.body;
+            const {user, accData, page} = req.body;
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             let userBasket = userDb.basket.body
-            let games = ''
+            let resultMassage = ''
+            if (page === 0) {
+                resultMassage += 'Заказ Playstation\n\n'
+            } else if (page === 1) {
+                resultMassage += 'Заказ Xbox\n\n'
+            } else if (page === 2) {
+                resultMassage += 'Заказ Сервисы\n\n'
+            }
+            resultMassage += 'Контакт - @' + user.username + '\n\n'
+            resultMassage += accData + '\n\n'
+            resultMassage += 'Корзина:' + '\n\n'
+            let sumPrice = 0
+
+            userBasket.map(pos => {
+                let positionString = ''
+                if (typeof pos.view === 'undefined') {
+                    positionString += pos.title+' '
+                    if (typeof pos.platform !== 'undefined') {
+                        positionString += pos.platform + ' '
+                    }
+                    positionString += '- '+ String(pos.price)+'р'
+                    if (typeof pos.url !== 'undefined') {
+                        positionString += ' / '+pos.url
+                    }
+                }else{
+                    positionString += pos.title+' '+ pos.view + ' - '+ String(pos.price)+'р'
+                }
+                positionString += '\n'
+                resultMassage+=positionString
+                sumPrice += pos.price
+            })
+            resultMassage += '\n'+'Итого к оплате:' + String(sumPrice)+'р'+'/n'
+            resultMassage += 'Статус: Не оплачен'
+
+            bot.sendMessage(5106439090, resultMassage)
+
             bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
                 '\n' +
                 'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
@@ -200,7 +235,7 @@ app.post('/database', async (req, res) => {
                 let flag = false;
                 allCards.map(async elD => {
                     if (elD.body.title === el.title) {
-                        const card = await MainDataModel.findOne({body:elD});
+                        const card = await MainDataModel.findOne({body: elD});
                         card.body = el;
                         card.save();
                         flag = true;
@@ -228,7 +263,7 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
-    }else if (method === 'del') {
+    } else if (method === 'del') {
         try {
             await MainDataModel.destroy({
                 where: {
