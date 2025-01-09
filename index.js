@@ -239,7 +239,7 @@ app.post('/database', async (req, res) => {
                     if (elD.body.title === el.title) {
                         const card = await MainDataModel.findOne({body: elD});
                         card.body = el;
-                        card.save();
+                        await card.save();
                         flag = true;
                     }
                 })
@@ -266,23 +266,28 @@ app.post('/database', async (req, res) => {
             return res.status(550).json({});
         }
     } else if (method === 'del') {
-        try {
+        await req.body.data.map(async el => {
             await MainDataModel.destroy({
                 where: {
-                    id: req.body.data.id
+                    id: el.id
                 }
             })
+        })
+        try {
+
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
         }
-    }else if (method === 'upd') {
+    } else if (method === 'upd') {
         try {
-            const card = await MainDataModel.findByPk(req.body.data.id)
-            console.log(req.body.data, card)
-            card.body = req.body.data.body
-            card.save()
+            await req.body.data.map(async el => {
+                const card = await MainDataModel.findByPk(el.id)
+                console.log(el, card)
+                card.body = el.body
+                await card.save();
+            })
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
