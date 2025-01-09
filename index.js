@@ -277,6 +277,17 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
+    }else if (method === 'upd') {
+        try {
+            const card = await MainDataModel.findByPk(req.body.data.id)
+            console.log(req.body.data, card)
+            card.body = req.body.data.body
+            card.save()
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
     }
 })
 
