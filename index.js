@@ -252,7 +252,7 @@ app.post('/database', async (req, res) => {
                 })
             })
             console.log(allCategory)
-            CardModel.findAll({where:{category: "ps_plus"}, raw: true })
+            CardModel.findAll({where:{category: 'ps_plus'}, raw: true })
                 .then(users=>{
                     console.log(users);
                 }).catch(err=>console.log(err));
