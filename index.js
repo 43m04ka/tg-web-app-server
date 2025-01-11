@@ -252,8 +252,10 @@ app.post('/database', async (req, res) => {
                 })
             })
             console.log(allCategory)
-            let all = await CardModel.findAll({where: {category: 'ps_plus'}, raw: true})
-            console.log(all)
+            CardModel.findAll({where:{category: "ps_plus"}, raw: true })
+                .then(users=>{
+                    console.log(users);
+                }).catch(err=>console.log(err));
             return res.status(200).json({cards: [], structure: dataDb.body.body});
         } catch (e) {
             return res.status(550).json({});
