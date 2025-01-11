@@ -367,7 +367,7 @@ const reload = async ()=> {
     })
     allCategory.map(async card => {
         console.log(card)
-    }
+    })
     console.log('==============================================================')
 
     let count = 0
