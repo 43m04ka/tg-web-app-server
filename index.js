@@ -32,58 +32,25 @@ const start = async () => {
         CardData = cardDbAll
 
         let allCategory = []
-        StructureData.map(tab => {
-            tab.body[0].map(cat => {
-                allCategory = [...allCategory, cat]
-            })
-            tab.body[1].map(cat => {
-                allCategory = [...allCategory, cat]
-            })
-        })
-
-        let prevCards = []
         cardDbAll.map(card => {
+            let flag = false
+            let count = 0
+            let index = 0
             allCategory.map(cat => {
-                if(card.category === cat.path && cat.body.length < 20){
-                    cat.body = [...cat.body, card]
+                if (cat.path === card.category) {
+                    flag = true
+                    index = count
                 }
+                count += 1;
             })
-        })
-        allCategory.map(cat => {
-            prevCards = [...prevCards, ...cat.body]
-        })
-
-        CardPreviewData = prevCards
-
-        let allCategoryList = []
-        StructureData.map(tab => {
-            tab.body[0].map(cat => {
-                allCategoryList = [...allCategoryList, cat]
-            })
-            tab.body[1].map(cat => {
-                allCategoryList = [...allCategoryList, cat]
-            })
-        })
-
-        cardDbAll.map(card => {
-            allCategoryList.map(cat => {
-                cat.body = [...cat.body, card]
-            })
-        })
-
-        let count = 0
-        allCategoryList.map(cat =>{
-            let array = cat.body
-            let size = 20; //размер подмассива
-            let subarray = []; //массив в который будет выведен результат.
-            for (let i = 0; i <Math.ceil(array.length/size); i++){
-                subarray[i] = array.slice((i*size), (i*size) + size);
+            if (flag === false) {
+                allCategory = [...allCategory, {path: card.category, body: [card]}]
+            } else {
+                allCategory[index].body = [...allCategory[index].body, card]
             }
-            allCategoryList[count].body = subarray;
-            count++;
         })
-        allCategoryListData = allCategoryList
-        console.log(allCategoryListData);
+        console.log(allCategory)
+
         app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
         console.log(err);
