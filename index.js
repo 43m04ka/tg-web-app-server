@@ -255,7 +255,7 @@ app.post('/database', async (req, res) => {
             const allCards = await CardModel.findAll();
             allCards.map(card => {
                 allCategory.map(cat => {
-                    if(card.category === cat.path && cat.body.length < 11){
+                    if(card.category === cat.path && cat.body.length < 20){
                         cat.body = [...cat.body, card]
                     }
                 })
