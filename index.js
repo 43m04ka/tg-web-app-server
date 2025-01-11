@@ -287,6 +287,7 @@ app.post('/database', async (req, res) => {
     if (method === 'add') {
         try {
             const data = req.body.data;
+            console.log(data)
             data.map(async card => {
                 await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
             })
