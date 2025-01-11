@@ -21,10 +21,17 @@ let allCategoryListData = []
 
 const PORT = process.env.PORT || 8000;
 
-const start = async () => {
+const input = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+    } catch (e) {
+    }
+}
+input()
+
+const start = async () => {
+    try {
         const dataDb = await DataModel.findOne({id: 1})
         StructureData = dataDb.body.body
         console.log(StructureData)
@@ -44,7 +51,7 @@ const start = async () => {
                 count += 1;
             })
             let newCard = card.body
-            newCard.id = card.is
+            newCard.id = card.id
             if (flag === false) {
                 allCategory = [...allCategory, {path: card.category, body: [card.newCard]}]
             } else {
@@ -52,9 +59,30 @@ const start = async () => {
             }
         })
 
-        allCategory.map(el=>{
-            console.log(el)
+        let count = 0
+        allCategory.map(el => {
+            let array = el.body; //массив, можно использовать массив объектов
+            let size = 20; //размер подмассива
+            let subarray = []; //массив в который будет выведен результат.
+            for (let i = 0; i < Math.ceil(array.length / size); i++) {
+                subarray[i] = array.slice((i * size), (i * size) + size);
+            }
+            allCategory[count].body = subarray;
+            count += 1;
         })
+        allCategoryListData = allCategory
+
+        count = 0
+        allCategory.map(el => {
+            allCategory[count].body = allCategory[count].body[0];
+            count += 1;
+        })
+        let prevCards = []
+        allCategory.map(el => {
+            prevCards = [...el.body, ...allCategory];
+        })
+
+        CardPreviewData = prevCards
 
         await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
@@ -162,6 +190,7 @@ app.post('/basket', async (req, res) => {
             if (isContinue) {
                 userDb.basket = {body: [...[mainData], ...userDb.basket.body]};
                 await userDb.save();
+                start()
                 return res.status(200).json({body: true});
             }
         } catch (e) {
@@ -274,41 +303,8 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
-            const dataDb = await DataModel.findOne({id: 1})
-            const structure = dataDb.body
-            console.log(structure)
-            let allCategory = []
-            structure.body.map(tab => {
-                tab.body[0].map(cat => {
-                    allCategory = [...allCategory, cat]
-                })
-                tab.body[1].map(cat => {
-                    allCategory = [...allCategory, cat]
-                })
-            })
-            let prevCards = []
-            const allCards = await CardModel.findAll();
-            allCards.map(card => {
-                allCategory.map(cat => {
-                    if(card.category === cat.path && cat.body.length < 20){
-                        cat.body = [...cat.body, card]
-                    }
-                })
-            })
-            allCategory.map(cat => {
-                prevCards = [...prevCards, ...cat.body]
-            })
-            return res.status(200).json({cards: prevCards, structure: dataDb.body.body});
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
         } catch (e) {
-            return res.status(550).json({});
-        }
-    } else if (method === 'get') {
-        try {
-            const cards = await CardModel.findAll();
-            const dataDb = await DataModel.findOne({id: 1})
-            return res.status(200).json({cards: cards, structure: dataDb.body.body});
-        } catch (e) {
-            console.log(e)
             return res.status(550).json({});
         }
     } else if (method === 'del') {
