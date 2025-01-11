@@ -16,6 +16,7 @@ const CardData = sequelize.define('mainData', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     name: {type: DataTypes.STRING, defaultValue: ''},
     category: {type: DataTypes.STRING, defaultValue: ''},
+    hashtag: {type: DataTypes.STRING, defaultValue: ''},
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 

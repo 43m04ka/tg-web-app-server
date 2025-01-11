@@ -16,6 +16,8 @@ const bot = new TelegramBot(token, {polling: true});
 const app = express();
 let StructureData = {}
 let CardData = []
+let CardPreviewData = []
+let allCategoryListData = []
 
 const PORT = process.env.PORT || 8000;
 
@@ -28,6 +30,58 @@ const start = async () => {
         console.log(StructureData)
         const cardDbAll = await CardModel.findAll();
         CardData = cardDbAll
+
+        let allCategory = []
+        StructureData.map(tab => {
+            tab.body[0].map(cat => {
+                allCategory = [...allCategory, cat]
+            })
+            tab.body[1].map(cat => {
+                allCategory = [...allCategory, cat]
+            })
+        })
+
+        let prevCards = []
+        cardDbAll.map(card => {
+            allCategory.map(cat => {
+                if(card.category === cat.path && cat.body.length < 20){
+                    cat.body = [...cat.body, card]
+                }
+            })
+        })
+        allCategory.map(cat => {
+            prevCards = [...prevCards, ...cat.body]
+        })
+
+        CardPreviewData = prevCards
+
+        let allCategoryList = []
+        StructureData.map(tab => {
+            tab.body[0].map(cat => {
+                allCategoryList = [...allCategoryList, cat]
+            })
+            tab.body[1].map(cat => {
+                allCategoryList = [...allCategoryList, cat]
+            })
+        })
+
+        cardDbAll.map(card => {
+            allCategoryList.map(cat => {
+                cat.body = [...cat.body, card]
+            })
+        })
+        let count = 0
+        allCategoryList.map(cat =>{
+            let array = cat.body
+            let size = 20; //размер подмассива
+            let subarray = []; //массив в который будет выведен результат.
+            for (let i = 0; i <Math.ceil(array.length/size); i++){
+                subarray[i] = array.slice((i*size), (i*size) + size);
+            }
+            allCategoryList[count].body = subarray;
+            count++;
+        })
+        allCategoryListData = allCategoryList
         app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
         console.log(err);
