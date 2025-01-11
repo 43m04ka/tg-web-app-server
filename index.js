@@ -14,6 +14,8 @@ const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
 
 const bot = new TelegramBot(token, {polling: true});
 const app = express();
+let StructureData = {}
+let CardData = []
 
 const PORT = process.env.PORT || 8000;
 
@@ -21,6 +23,11 @@ const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+        const dataDb = await DataModel.findOne({id: 1})
+        StructureData = dataDb.body.body
+        console.log(StructureData)
+        const cardDbAll = await CardModel.findAll();
+        CardData = cardDbAll
         app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
         console.log(err);
