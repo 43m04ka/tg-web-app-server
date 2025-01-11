@@ -231,40 +231,36 @@ app.post('/database', async (req, res) => {
     if (method === 'add') {
         try {
             const data = req.body.data;
-            data.map(async card =>{
-                await CardModel.create({body: card, category:card.tabCategoryPath, name:card.title});
+            data.map(async card => {
+                await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
             })
-            return res.status(200).json({answer:true});
+            return res.status(200).json({answer: true});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
         }
     } else if (method === 'getPreview') {
-        const dataDb = await DataModel.findOne({id: 1})
-        const structure = dataDb.body
-        console.log(structure)
-        let allCategory = []
-        structure.body.map(tab => {
-            tab.body[0].map(cat =>{
-                allCategory = [...allCategory, cat]
-            })
-            tab.body[1].map(cat =>{
-                allCategory = [...allCategory, cat]
-            })
-        })
-        console.log(allCategory)
-
         try {
-            CardModel.findAll({where:{category: "ps_plus"}, raw: true })
-                .then(users=>{
-                    console.log(users);
-                }).catch();
             const dataDb = await DataModel.findOne({id: 1})
+            const structure = dataDb.body
+            console.log(structure)
+            let allCategory = []
+            structure.body.map(tab => {
+                tab.body[0].map(cat => {
+                    allCategory = [...allCategory, cat]
+                })
+                tab.body[1].map(cat => {
+                    allCategory = [...allCategory, cat]
+                })
+            })
+            console.log(allCategory)
+            let all = await CardModel.findAll({where: {category: "ps_plus"}, raw: true})
+            console.log(all)
             return res.status(200).json({cards: [], structure: dataDb.body.body});
         } catch (e) {
             return res.status(550).json({});
         }
-    }else if (method === 'get') {
+    } else if (method === 'get') {
         try {
             const cards = await CardModel.findAll();
             const dataDb = await DataModel.findOne({id: 1})
