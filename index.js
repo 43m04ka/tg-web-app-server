@@ -313,6 +313,10 @@ app.post('/database', async (req, res) => {
                     allCategory[index].body = [...allCategory[index].body, newCard]
                 }
             })
+            allCategory.map(async card => {
+                console.log(card)
+            })
+            console.log('==============================================================')
 
             let count = 0
             allCategory.map(el=>{
@@ -327,6 +331,11 @@ app.post('/database', async (req, res) => {
             })
             allCategoryListData = allCategory
 
+            allCategory.map(async card => {
+                console.log(card)
+            })
+            console.log('==============================================================')
+
             count = 0
             allCategory.map(el=>{
                 allCategory[count].body = allCategory[count].body[0];
@@ -336,6 +345,11 @@ app.post('/database', async (req, res) => {
             allCategory.map(el=>{
                 prevCards = [...el.body, ...allCategory];
             })
+
+            prevCards.map(async card => {
+                console.log(card)
+            })
+            console.log('==============================================================')
 
             CardPreviewData = prevCards
             return res.status(200).json({answer: true});
