@@ -70,6 +70,7 @@ const start = async () => {
                 cat.body = [...cat.body, card]
             })
         })
+
         let count = 0
         allCategoryList.map(cat =>{
             let array = cat.body
@@ -82,6 +83,7 @@ const start = async () => {
             count++;
         })
         allCategoryListData = allCategoryList
+        console.log(allCategoryListData);
         app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
         console.log(err);
