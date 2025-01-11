@@ -32,6 +32,7 @@ const start = async () => {
         CardData = cardDbAll
 
         let allCategory = []
+        console.log(cardDbAll)
         cardDbAll.map(async card => {
             await console.log(card)
             let flag = false
