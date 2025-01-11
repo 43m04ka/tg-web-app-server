@@ -243,8 +243,8 @@ app.post('/database', async (req, res) => {
         const dataDb = await DataModel.findOne({id: 1})
         const structure = dataDb.body
         console.log(structure)
-        allCategory = []
-        structure.map(tab => {
+        let allCategory = []
+        structure.body.map(tab => {
             tab.body[0].map(cat =>{
                 allCategory = [...allCategory, cat]
             })
