@@ -43,10 +43,12 @@ const start = async () => {
                 }
                 count += 1;
             })
+            let newCard = card.body
+            newCard.id = card.is
             if (flag === false) {
-                allCategory = [...allCategory, {path: card.category, body: [card]}]
+                allCategory = [...allCategory, {path: card.category, body: [card.newCard]}]
             } else {
-                allCategory[index].body = [...allCategory[index].body, card]
+                allCategory[index].body = [...allCategory[index].body, newCard]
             }
         })
 
