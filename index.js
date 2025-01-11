@@ -33,6 +33,7 @@ const start = async () => {
 
         let allCategory = []
         cardDbAll.map(card => {
+            console.log(card)
             let flag = false
             let count = 0
             let index = 0
@@ -49,6 +50,7 @@ const start = async () => {
                 allCategory[index].body = [...allCategory[index].body, card]
             }
         })
+
         console.log(allCategory)
 
         app.listen(PORT, () => console.log('server started on PORT ' + PORT))
