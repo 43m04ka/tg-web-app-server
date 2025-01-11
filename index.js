@@ -346,6 +346,7 @@ const reload = async ()=> {
     console.log(cardDbAll)
 
     let allCategory = []
+    let newListAllCategory = []
     cardDbAll.map(async card => {
         let flag = false
         let count = 0
@@ -360,14 +361,15 @@ const reload = async ()=> {
         let newCard = card.body
         newCard.id = card.id
         if (flag === false) {
-            allCategory = [...allCategory, {path: card.category, body: [card.newCard]}]
+            newListAllCategory = [...newListAllCategory, {path: card.category, body: [newCard]}]
         } else {
-            allCategory[index].body = [...allCategory[index].body, newCard]
+            newListAllCategory[index].body = [...newListAllCategory[index].body, newCard]
         }
     })
-    allCategory.map(async card => {
+    newListAllCategory.map(async card => {
         console.log(card)
     })
+    allCategory = newListAllCategory
     console.log('==============================================================')
 
     let count = 0
