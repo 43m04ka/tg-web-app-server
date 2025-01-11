@@ -21,18 +21,12 @@ let allCategoryListData = []
 
 const PORT = process.env.PORT || 8000;
 
-const input = async () => {
-    try {
-        await sequelize.authenticate()
-        await sequelize.sync()
-        await start()
-    } catch (e) {
-    }
-}
-input()
+
 
 const start = async () => {
     try {
+        await sequelize.authenticate()
+        await sequelize.sync()
         const dataDb = await DataModel.findOne({id: 1})
         StructureData = dataDb.body.body
         console.log(StructureData)
@@ -61,12 +55,12 @@ const start = async () => {
         })
 
         let count = 0
-        allCategory.map(el => {
+        allCategory.map(el=>{
             let array = el.body; //массив, можно использовать массив объектов
             let size = 20; //размер подмассива
             let subarray = []; //массив в который будет выведен результат.
-            for (let i = 0; i < Math.ceil(array.length / size); i++) {
-                subarray[i] = array.slice((i * size), (i * size) + size);
+            for (let i = 0; i <Math.ceil(array.length/size); i++){
+                subarray[i] = array.slice((i*size), (i*size) + size);
             }
             allCategory[count].body = subarray;
             count += 1;
@@ -74,12 +68,12 @@ const start = async () => {
         allCategoryListData = allCategory
 
         count = 0
-        allCategory.map(el => {
+        allCategory.map(el=>{
             allCategory[count].body = allCategory[count].body[0];
             count += 1;
         })
         let prevCards = []
-        allCategory.map(el => {
+        allCategory.map(el=>{
             prevCards = [...el.body, ...allCategory];
         })
 
@@ -191,7 +185,6 @@ app.post('/basket', async (req, res) => {
             if (isContinue) {
                 userDb.basket = {body: [...[mainData], ...userDb.basket.body]};
                 await userDb.save();
-                start()
                 return res.status(200).json({body: true});
             }
         } catch (e) {
@@ -297,6 +290,57 @@ app.post('/database', async (req, res) => {
             data.map(async card => {
                 await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
             })
+            const dataDb = await DataModel.findOne({id: 1})
+            StructureData = dataDb.body.body
+            console.log(StructureData)
+            const cardDbAll = await CardModel.findAll();
+            CardData = cardDbAll
+
+            let allCategory = []
+            cardDbAll.map(async card => {
+                let flag = false
+                let count = 0
+                let index = 0
+                allCategory.map(async cat => {
+                    if (cat.path === card.category) {
+                        flag = true
+                        index = count
+                    }
+                    count += 1;
+                })
+                let newCard = card.body
+                newCard.id = card.id
+                if (flag === false) {
+                    allCategory = [...allCategory, {path: card.category, body: [card.newCard]}]
+                } else {
+                    allCategory[index].body = [...allCategory[index].body, newCard]
+                }
+            })
+
+            let count = 0
+            allCategory.map(el=>{
+                let array = el.body; //массив, можно использовать массив объектов
+                let size = 20; //размер подмассива
+                let subarray = []; //массив в который будет выведен результат.
+                for (let i = 0; i <Math.ceil(array.length/size); i++){
+                    subarray[i] = array.slice((i*size), (i*size) + size);
+                }
+                allCategory[count].body = subarray;
+                count += 1;
+            })
+            allCategoryListData = allCategory
+
+            count = 0
+            allCategory.map(el=>{
+                allCategory[count].body = allCategory[count].body[0];
+                count += 1;
+            })
+            let prevCards = []
+            allCategory.map(el=>{
+                prevCards = [...el.body, ...allCategory];
+            })
+
+            CardPreviewData = prevCards
             return res.status(200).json({answer: true});
         } catch (e) {
             console.log(e)
@@ -339,4 +383,5 @@ app.post('/database', async (req, res) => {
     }
 })
 
+start()
 
