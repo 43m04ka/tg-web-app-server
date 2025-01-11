@@ -25,6 +25,7 @@ const input = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
+        await start()
     } catch (e) {
     }
 }
@@ -338,5 +339,4 @@ app.post('/database', async (req, res) => {
     }
 })
 
-start()
 
