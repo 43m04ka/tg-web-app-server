@@ -32,9 +32,8 @@ const start = async () => {
         CardData = cardDbAll
 
         let allCategory = []
-        console.log(cardDbAll)
         cardDbAll.map(async card => {
-            await console.log(card)
+            await console.log(card.category)
             let flag = false
             let count = 0
             let index = 0
@@ -52,7 +51,7 @@ const start = async () => {
             }
         })
 
-        await console.log(allCategory)
+        await console.log(allCategory+'----')
 
         await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
