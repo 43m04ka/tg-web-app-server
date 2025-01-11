@@ -251,12 +251,19 @@ app.post('/database', async (req, res) => {
                     allCategory = [...allCategory, cat]
                 })
             })
-            console.log(allCategory)
-            CardModel.findAll({where:{category: 'ps_plus'}, raw: true })
-                .then(users=>{
-                    console.log(users);
-                }).catch(err=>console.log(err));
-            return res.status(200).json({cards: [], structure: dataDb.body.body});
+            let prevCards = []
+            const allCards = await CardModel.findAll();
+            allCards.map(card => {
+                allCategory.map(cat => {
+                    if(card.category === cat.path && cat.body.length < 11){
+                        cat.body = [...cat.body, card]
+                    }
+                })
+            })
+            allCategory.map(cat => {
+                prevCards = [...prevCards, ...cat.body]
+            })
+            return res.status(200).json({cards: prevCards, structure: dataDb.body.body});
         } catch (e) {
             return res.status(550).json({});
         }
