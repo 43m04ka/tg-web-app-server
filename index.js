@@ -37,7 +37,6 @@ const start = async () => {
             let count = 0
             let index = 0
             allCategory.map(async cat => {
-                await console.log(card.category, cat.path)
                 if (cat.path === card.category) {
                     flag = true
                     index = count
@@ -51,7 +50,9 @@ const start = async () => {
             }
         })
 
-        await console.log(allCategory+'----')
+        allCategory.map(el=>{
+            console.log(el)
+        })
 
         await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
