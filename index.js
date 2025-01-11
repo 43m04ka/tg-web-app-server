@@ -292,6 +292,7 @@ app.post('/database', async (req, res) => {
             })
             const cardDbAll = await CardModel.findAll();
             CardData = cardDbAll
+            console.log(cardDbAll)
 
             let allCategory = []
             cardDbAll.map(async card => {
