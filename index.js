@@ -33,11 +33,11 @@ const start = async () => {
 
         let allCategory = []
         cardDbAll.map(async card => {
-            await console.log(card.category)
             let flag = false
             let count = 0
             let index = 0
             allCategory.map(async cat => {
+                await console.log(card.category, cat.path)
                 if (cat.path === card.category) {
                     flag = true
                     index = count
