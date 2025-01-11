@@ -288,7 +288,7 @@ app.post('/database', async (req, res) => {
         try {
             const data = req.body.data;
             console.log(data)
-            data.map(async card => {
+            await data.map(async card => {
                 await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
             })
             const dataDb = await DataModel.findOne({id: 1})
