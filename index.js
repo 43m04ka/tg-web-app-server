@@ -388,14 +388,14 @@ const reload = async ()=> {
     })
     console.log('==============================================================')
 
-    count = 0
+    let count1 = 0
     allCategory.map(el=>{
-        allCategory[count].body = allCategory[count].body[0];
-        count += 1;
+        allCategory[count1].body = allCategory[count1].body[0];
+        count1 += 1;
     })
     let prevCards = []
     allCategory.map(el=>{
-        prevCards = [...el.body, ...allCategory];
+        prevCards = [...el.body, ...prevCards];
     })
 
     prevCards.map(async card => {
