@@ -14,8 +14,8 @@ const Data = sequelize.define('data', {
 
 const CardData = sequelize.define('mainData', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
-    name: {type: DataTypes.JSON, defaultValue: ''},
-    category: {type: DataTypes.JSON, defaultValue: ''},
+    name: {type: DataTypes.STRING, defaultValue: ''},
+    category: {type: DataTypes.STRING, defaultValue: ''},
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
