@@ -111,7 +111,6 @@ app.post('/admin', async (req, res) => {
 
 app.post('/basket', async (req, res) => {
     const method = req.body.method;
-    console.log(req)
     if (method === 'add') {
         try {
             const {mainData, user} = req.body;
@@ -139,7 +138,6 @@ app.post('/basket', async (req, res) => {
             const {user} = req.body;
             const chatId = String(user.id);
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
-            console.log(userDb.basket);
             return res.status(200).json(userDb.basket);
         } catch (e) {
             console.log(e)
@@ -254,7 +252,7 @@ app.post('/database', async (req, res) => {
                 })
             })
             console.log(allCategory)
-            let all = await CardModel.findAll()
+            let all = await CardModel.findAll({where: {category: 'ps_plus'}, raw: true})
             console.log(all)
             return res.status(200).json({cards: [], structure: dataDb.body.body});
         } catch (e) {
