@@ -7,7 +7,7 @@ const {mainData} = require("./models");
 const {all} = require("express/lib/application");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
-const MainDataModel = require('./models.js').MainData;
+const CardModel = require('./models.js').CardData;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -231,34 +231,43 @@ app.post('/database', async (req, res) => {
     if (method === 'add') {
         try {
             const data = req.body.data;
-            let newArray = []
-            const allCards = await MainDataModel.findAll();
-            await data.map(async el => {
-                let flag = false;
-                allCards.map(async elD => {
-                    if (elD.body.title === el.title) {
-                        const card = await MainDataModel.findOne({body: elD});
-                        card.body = el;
-                        await card.save();
-                        flag = true;
-                    }
-                })
-                if (flag === false) {
-                    const cardDB = await MainDataModel.create({body: el});
-                    console.log('добавлено')
-                    newArray = [...newArray, ...[cardDB]]
-                }
+            data.map(async card =>{
+                await CardModel.create({body: card, category:card.tabCategoryPath, name:card.title});
             })
-            const cards = await MainDataModel.findAll();
-            const newData = [...cards, ...newArray]
-            return res.status(200).json({body: newData});
+            return res.status(200).json({answer:true});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
         }
-    } else if (method === 'get') {
+    } else if (method === 'getPreview') {
+        const dataDb = await DataModel.findOne({id: 1})
+        const structure = dataDb.body
+        console.log(structure)
+        allCategory = []
+        structure.map(tab => {
+            tab.body[0].map(cat =>{
+                allCategory = [...allCategory, cat]
+            })
+            tab.body[1].map(cat =>{
+                allCategory = [...allCategory, cat]
+            })
+        })
+        console.log(allCategory)
+
         try {
-            const cards = await MainDataModel.findAll();
+            CardModel.findAll({where:{category: "Tom"}, raw: true })
+                .then(users=>{
+                    console.log(users);
+                }).catch(err=>console.log(err));
+            const dataDb = await DataModel.findOne({id: 1})
+            return res.status(200).json({cards: cards, structure: dataDb.body.body});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    }else if (method === 'get') {
+        try {
+            const cards = await CardModel.findAll();
             const dataDb = await DataModel.findOne({id: 1})
             return res.status(200).json({cards: cards, structure: dataDb.body.body});
         } catch (e) {
@@ -267,7 +276,7 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'del') {
         await req.body.data.map(async el => {
-            await MainDataModel.destroy({
+            await CardModel.destroy({
                 where: {
                     id: el.id
                 }
@@ -283,7 +292,7 @@ app.post('/database', async (req, res) => {
     } else if (method === 'upd') {
         try {
             await req.body.data.map(async el => {
-                const card = await MainDataModel.findByPk(el.id)
+                const card = await CardModel.findByPk(el.id)
                 console.log(el, card)
                 card.body = el.body
                 await card.save();

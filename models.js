@@ -12,9 +12,11 @@ const Data = sequelize.define('data', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-const MainData = sequelize.define('mainData', {
+const CardData = sequelize.define('mainData', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    name: {type: DataTypes.JSON, defaultValue: ''},
+    category: {type: DataTypes.JSON, defaultValue: ''},
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-module.exports = {Users, Data, MainData};
+module.exports = {Users, Data, CardData};
