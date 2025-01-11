@@ -290,69 +290,6 @@ app.post('/database', async (req, res) => {
             data.map(async card => {
                 await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
             })
-            const cardDbAll = await CardModel.findAll();
-            CardData = cardDbAll
-            console.log(cardDbAll)
-
-            let allCategory = []
-            cardDbAll.map(async card => {
-                let flag = false
-                let count = 0
-                let index = 0
-                allCategory.map(async cat => {
-                    if (cat.path === card.category) {
-                        flag = true
-                        index = count
-                    }
-                    count += 1;
-                })
-                let newCard = card.body
-                newCard.id = card.id
-                if (flag === false) {
-                    allCategory = [...allCategory, {path: card.category, body: [card.newCard]}]
-                } else {
-                    allCategory[index].body = [...allCategory[index].body, newCard]
-                }
-            })
-            allCategory.map(async card => {
-                console.log(card)
-            })
-            console.log('==============================================================')
-
-            let count = 0
-            allCategory.map(el=>{
-                let array = el.body; //массив, можно использовать массив объектов
-                let size = 20; //размер подмассива
-                let subarray = []; //массив в который будет выведен результат.
-                for (let i = 0; i <Math.ceil(array.length/size); i++){
-                    subarray[i] = array.slice((i*size), (i*size) + size);
-                }
-                allCategory[count].body = subarray;
-                count += 1;
-            })
-            allCategoryListData = allCategory
-
-            allCategory.map(async card => {
-                console.log(card)
-            })
-            console.log('==============================================================')
-
-            count = 0
-            allCategory.map(el=>{
-                allCategory[count].body = allCategory[count].body[0];
-                count += 1;
-            })
-            let prevCards = []
-            allCategory.map(el=>{
-                prevCards = [...el.body, ...allCategory];
-            })
-
-            prevCards.map(async card => {
-                console.log(card)
-            })
-            console.log('==============================================================')
-
-            CardPreviewData = prevCards
             return res.status(200).json({answer: true});
         } catch (e) {
             console.log(e)
@@ -360,6 +297,13 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+        } catch (e) {
+            return res.status(550).json({});
+        }
+    } else if (method === 'reload') {
+        try {
+            await reload()
             return res.status(200).json({cards: CardPreviewData, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
@@ -394,6 +338,72 @@ app.post('/database', async (req, res) => {
         }
     }
 })
+
+
+const reload = async ()=> {
+    const cardDbAll = await CardModel.findAll();
+    CardData = cardDbAll
+    console.log(cardDbAll)
+
+    let allCategory = []
+    cardDbAll.map(async card => {
+        let flag = false
+        let count = 0
+        let index = 0
+        allCategory.map(async cat => {
+            if (cat.path === card.category) {
+                flag = true
+                index = count
+            }
+            count += 1;
+        })
+        let newCard = card.body
+        newCard.id = card.id
+        if (flag === false) {
+            allCategory = [...allCategory, {path: card.category, body: [card.newCard]}]
+        } else {
+            allCategory[index].body = [...allCategory[index].body, newCard]
+        }
+    })
+    allCategory.map(async card => {
+        console.log(card)
+    })
+    console.log('==============================================================')
+
+    let count = 0
+    allCategory.map(el=>{
+        let array = el.body; //массив, можно использовать массив объектов
+        let size = 20; //размер подмассива
+        let subarray = []; //массив в который будет выведен результат.
+        for (let i = 0; i <Math.ceil(array.length/size); i++){
+            subarray[i] = array.slice((i*size), (i*size) + size);
+        }
+        allCategory[count].body = subarray;
+        count += 1;
+    })
+    allCategoryListData = allCategory
+
+    allCategory.map(async card => {
+        console.log(card)
+    })
+    console.log('==============================================================')
+
+    count = 0
+    allCategory.map(el=>{
+        allCategory[count].body = allCategory[count].body[0];
+        count += 1;
+    })
+    let prevCards = []
+    allCategory.map(el=>{
+        prevCards = [...el.body, ...allCategory];
+    })
+
+    prevCards.map(async card => {
+        console.log(card)
+    })
+    console.log('==============================================================')
+
+    CardPreviewData = prevCards}
 
 start()
 
