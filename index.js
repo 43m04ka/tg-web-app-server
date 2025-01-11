@@ -255,14 +255,13 @@ app.post('/database', async (req, res) => {
         console.log(allCategory)
 
         try {
-            CardModel.findAll({where:{category: "Tom"}, raw: true })
+            CardModel.findAll({where:{category: "ps_plus"}, raw: true })
                 .then(users=>{
                     console.log(users);
-                }).catch(err=>console.log(err));
+                }).catch();
             const dataDb = await DataModel.findOne({id: 1})
-            return res.status(200).json({cards: cards, structure: dataDb.body.body});
+            return res.status(200).json({cards: [], structure: dataDb.body.body});
         } catch (e) {
-            console.log(e)
             return res.status(550).json({});
         }
     }else if (method === 'get') {
