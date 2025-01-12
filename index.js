@@ -369,7 +369,23 @@ const reload = async ()=> {
         console.log(card)
     })
     console.log('==============================================================')
+    let allCategory1 = allCategory
+    let count1 = 0
+    allCategory1.map(el=>{
+        allCategory1[count1].body = allCategory1[count1].body[0];
+        count1 += 1;
+    })
+    let prevCards = []
+    allCategory1.map(el=>{
+        prevCards = [...el.body, ...prevCards];
+    })
 
+    prevCards.map(async card => {
+        console.log(card)
+    })
+
+    CardPreviewData = prevCards
+    console.log('==============================================================')
     let count = 0
     allCategory.map(el=>{
         let array = el.body; //массив, можно использовать массив объектов
@@ -386,24 +402,8 @@ const reload = async ()=> {
     allCategory.map(async card => {
         console.log(card)
     })
-    console.log('==============================================================')
 
-    let count1 = 0
-    allCategory.map(el=>{
-        allCategory[count1].body = allCategory[count1].body[0];
-        count1 += 1;
-    })
-    let prevCards = []
-    allCategory.map(el=>{
-        prevCards = [...el.body, ...prevCards];
-    })
-
-    prevCards.map(async card => {
-        console.log(card)
-    })
-    console.log('==============================================================')
-
-    CardPreviewData = prevCards}
+    }
 
 start()
 
