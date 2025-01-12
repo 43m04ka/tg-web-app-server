@@ -306,7 +306,6 @@ app.post('/database', async (req, res) => {
                 const json = req.body.data.json;
                 console.log(json)
                 let request = []
-                let len = 0
                 allCategoryListData.map(cat =>{
                     if(cat.path === path){
                         request = cat.body
@@ -314,6 +313,7 @@ app.post('/database', async (req, res) => {
                 })
 
                 let newProducts = []
+                console.log(request[0])
                 if (typeof request[0].body.platform !== 'undefined') {
                     request.map(el => {
                         let flag = true
