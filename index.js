@@ -346,9 +346,17 @@ const reload = async ()=> {
     const cardDbAll = await CardModel.findAll();
     CardData = cardDbAll
 
+    let cartSortCategory = []
     cardDbAll.map(el=>{
-        console.log(el.category)
+        flag = true
+        cartSortCategory.map(cat=>{
+            if(cat.path === el.category){flag = false}
+        })
+        if(flag) {
+            cartSortCategory = [...cartSortCategory, {path: el.category, body: []}]
+        }
     })
+    console.log(cartSortCategory)
     }
 
 start()
