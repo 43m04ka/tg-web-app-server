@@ -314,7 +314,7 @@ app.post('/database', async (req, res) => {
 
                 let newProducts = []
                 console.log(request[0])
-                if (typeof request[0].body.platform !== 'undefined') {
+                if (json.platform.length>0) {
                     request.map(el => {
                         let flag = true
                         json.platform.map((platform) => {
