@@ -22,7 +22,6 @@ let allCategoryListData = []
 const PORT = process.env.PORT || 8000;
 
 
-
 const start = async () => {
     try {
         await sequelize.authenticate()
@@ -33,32 +32,36 @@ const start = async () => {
         CardData = cardDbAll
 
         let cartSortCategory = []
-        cardDbAll.map(el=>{
+        cardDbAll.map(el => {
             flag = true
-            cartSortCategory.map(cat=>{
-                if(cat.path === el.category){flag = false}
+            cartSortCategory.map(cat => {
+                if (cat.path === el.category) {
+                    flag = false
+                }
             })
-            if(flag) {
+            if (flag) {
                 cartSortCategory = [...cartSortCategory, {path: el.category, body: []}]
             }
         })
 
         let count = 0
-        cartSortCategory.map(cat=>{
-            cardDbAll.map(el=>{
-                if(cat.path === el.category){cartSortCategory[count].body = [...cartSortCategory[count].body, el]}
+        cartSortCategory.map(cat => {
+            cardDbAll.map(el => {
+                if (cat.path === el.category) {
+                    cartSortCategory[count].body = [...cartSortCategory[count].body, el]
+                }
             })
             count++
         })
 
 
         count = 0
-        cartSortCategory.map(el=>{
+        cartSortCategory.map(el => {
             let array = el.body; //массив, можно использовать массив объектов
             let size = 20; //размер подмассива
             let subarray = []; //массив в который будет выведен результат.
-            for (let i = 0; i <Math.ceil(array.length/size); i++){
-                subarray[i] = array.slice((i*size), (i*size) + size);
+            for (let i = 0; i < Math.ceil(array.length / size); i++) {
+                subarray[i] = array.slice((i * size), (i * size) + size);
             }
             cartSortCategory[count].body = subarray;
             cartSortCategory[count].len = subarray.length;
@@ -67,16 +70,16 @@ const start = async () => {
 
         console.log(cartSortCategory)
         allCategoryListData = cartSortCategory
-        let  cartSortCategoryPrev = []
+        let cartSortCategoryPrev = []
         count = 0
-        cartSortCategory.map(cat=>{
+        cartSortCategory.map(cat => {
             cartSortCategoryPrev = [...cartSortCategoryPrev, ...cartSortCategory[count].body[0]]
             count++
         })
 
         CardPreviewData = cartSortCategoryPrev
 
-    await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
+        await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
         console.log(err);
     }
@@ -298,17 +301,17 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
-    }else if (method === 'getList') {
+    } else if (method === 'getList') {
         try {
             const path = req.body.data.path;
             const number = req.body.data.number;
-            if(typeof req.body.data.json !== 'undefined'){
+            if (typeof req.body.data.json !== 'undefined') {
                 const json = req.body.data.json;
                 console.log(json)
                 let request = []
-                
-                allCategoryListData.map(cat =>{
-                    if(cat.path === path){
+
+                allCategoryListData.map(cat => {
+                    if (cat.path === path) {
                         request = cat.body
                     }
                 })
@@ -316,8 +319,9 @@ app.post('/database', async (req, res) => {
                 let newProducts = []
 
                 let k = 0
+                request = request[0]
+
                 request.map(el => {
-                    console.log(request[k])
                     if (typeof request[k].body.platform !== 'undefined') {
                         let flag = true
                         json.platform.map((platform) => {
@@ -330,11 +334,12 @@ app.post('/database', async (req, res) => {
                         })
                     }
                     k += 1
-
                 })
                 console.log(newProducts.length)
-                if (typeof request[k].body.category !== 'undefined') {
-                    request.map(el => {
+
+                k = 0
+                request.map(el => {
+                    if (typeof request[k].body.category !== 'undefined') {
                         let flag = true
                         json.category.map((platform) => {
                             console.log(flag)
@@ -344,30 +349,29 @@ app.post('/database', async (req, res) => {
                                 flag = false
                             }
                         })
-                    })
-                    console.log(newProducts.length)
-
-                }
-
+                    }
+                    k += 1
+                })
+                console.log(newProducts.length)
                 let size = 20; //размер подмассива
                 let subarray = []; //массив в который будет выведен результат.
-                for (let i = 0; i <Math.ceil(newProducts.length/size); i++){
-                    subarray[i] = newProducts.slice((i*size), (i*size) + size);
+                for (let i = 0; i < Math.ceil(newProducts.length / size); i++) {
+                    subarray[i] = newProducts.slice((i * size), (i * size) + size);
                 }
 
                 console.log(subarray[number])
-                return res.status(200).json({cards: subarray[number], len:newProducts.length});
-            }else{
+                return res.status(200).json({cards: subarray[number], len: newProducts.length});
+            } else {
                 let request = []
                 let len = 0
                 console.log(allCategoryListData)
-                allCategoryListData.map(cat =>{
-                    if(cat.path === path){
-                        request = cat.body[number-1]
+                allCategoryListData.map(cat => {
+                    if (cat.path === path) {
+                        request = cat.body[number - 1]
                         len = cat.len
                     }
                 })
-                return res.status(200).json({cards: request, len:len});
+                return res.status(200).json({cards: request, len: len});
             }
         } catch (e) {
             console.log(e)
@@ -412,38 +416,42 @@ app.post('/database', async (req, res) => {
 })
 
 
-const reload = async ()=> {
+const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
     const cardDbAll = await CardModel.findAll();
     CardData = cardDbAll
 
     let cartSortCategory = []
-    cardDbAll.map(el=>{
+    cardDbAll.map(el => {
         flag = true
-        cartSortCategory.map(cat=>{
-            if(cat.path === el.category){flag = false}
+        cartSortCategory.map(cat => {
+            if (cat.path === el.category) {
+                flag = false
+            }
         })
-        if(flag) {
+        if (flag) {
             cartSortCategory = [...cartSortCategory, {path: el.category, body: []}]
         }
     })
 
     let count = 0
-    cartSortCategory.map(cat=>{
-        cardDbAll.map(el=>{
-            if(cat.path === el.category){cartSortCategory[count].body = [...cartSortCategory[count].body, el]}
+    cartSortCategory.map(cat => {
+        cardDbAll.map(el => {
+            if (cat.path === el.category) {
+                cartSortCategory[count].body = [...cartSortCategory[count].body, el]
+            }
         })
         count++
     })
 
     count = 0
-    cartSortCategory.map(el=>{
+    cartSortCategory.map(el => {
         let array = el.body; //массив, можно использовать массив объектов
         let size = 20; //размер подмассива
         let subarray = []; //массив в который будет выведен результат.
-        for (let i = 0; i <Math.ceil(array.length/size); i++){
-            subarray[i] = array.slice((i*size), (i*size) + size);
+        for (let i = 0; i < Math.ceil(array.length / size); i++) {
+            subarray[i] = array.slice((i * size), (i * size) + size);
         }
         cartSortCategory[count].body = subarray;
         cartSortCategory[count].len = subarray.length;
@@ -452,15 +460,15 @@ const reload = async ()=> {
 
     console.log(cartSortCategory)
     allCategoryListData = cartSortCategory
-    let  cartSortCategoryPrev = []
+    let cartSortCategoryPrev = []
     count = 0
-    cartSortCategory.map(cat=>{
+    cartSortCategory.map(cat => {
         cartSortCategoryPrev = [...cartSortCategoryPrev, ...cartSortCategory[count].body[0]]
         count++
     })
 
     CardPreviewData = cartSortCategoryPrev
-    }
+}
 
 start()
 
