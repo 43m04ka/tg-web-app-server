@@ -379,6 +379,15 @@ const reload = async ()=> {
     })
 
     console.log(cartSortCategory)
+    allCategoryListData = cartSortCategory
+    let  cartSortCategoryPrev = cartSortCategory
+    count = 0
+    cartSortCategoryPrev.map(cat=>{
+        cartSortCategoryPrev[count].body = cartSortCategoryPrev[count].body[0]
+        count++
+    })
+
+    CardPreviewData = cartSortCategoryPrev
     }
 
 start()
