@@ -319,15 +319,17 @@ app.post('/database', async (req, res) => {
                 let newProducts = []
 
                 let k = 0
-                request = request[0]
+                let newRequest = []
+                request.map(el=>{
+                    newRequest = [...newRequest, ...el]
+                })
+                request = newRequest
 
                 request.map(el => {
                     if (typeof request[k].body.platform !== 'undefined') {
                         let flag = true
                         json.platform.map((platform) => {
-                            console.log(flag)
                             if (el.body.platform.includes(platform) && flag) {
-                                console.log(platform)
                                 newProducts = [...newProducts, el]
                                 flag = false
                             }
@@ -342,9 +344,7 @@ app.post('/database', async (req, res) => {
                     if (typeof request[k].body.category !== 'undefined') {
                         let flag = true
                         json.category.map((platform) => {
-                            console.log(flag)
                             if (el.body.category.includes(platform) && flag) {
-                                console.log(platform)
                                 newProducts = [...newProducts, el]
                                 flag = false
                             }
@@ -352,7 +352,7 @@ app.post('/database', async (req, res) => {
                     }
                     k += 1
                 })
-                console.log(newProducts.length)
+                console.log(newProducts)
                 let size = 20; //размер подмассива
                 let subarray = []; //массив в который будет выведен результат.
                 for (let i = 0; i < Math.ceil(newProducts.length / size); i++) {
