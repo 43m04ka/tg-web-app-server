@@ -307,13 +307,15 @@ app.post('/database', async (req, res) => {
             const number = req.body.data.number;
             console.log(path, number)
             let request = []
+            let len = 0
             console.log(allCategoryListData)
             allCategoryListData.map(cat =>{
                 if(cat.path === path){
                     request = cat.body[number-1]
+                    len = cat.len
                 }
             })
-            return res.status(200).json({cards: request});
+            return res.status(200).json({cards: request, len:len});
         } catch (e) {
             return res.status(550).json({});
         }
