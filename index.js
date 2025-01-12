@@ -307,8 +307,8 @@ app.post('/database', async (req, res) => {
             const number = req.body.data.number;
             console.log(path, number)
             let request = []
+            console.log(allCategoryListData)
             allCategoryListData.map(cat =>{
-                console.log(cat.path,path)
                 if(cat.path === path){
                     request = cat.body[number]
                 }
