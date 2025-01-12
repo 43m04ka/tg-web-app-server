@@ -351,7 +351,7 @@ app.post('/database', async (req, res) => {
                     subarray[i] = newProducts.slice((i*size), (i*size) + size);
                 }
 
-
+                console.log(subarray[number])
                 return res.status(200).json({cards: subarray[number], len:newProducts.length});
             }else{
                 let request = []
