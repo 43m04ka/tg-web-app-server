@@ -301,6 +301,20 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
+    }else if (method === 'getList') {
+        try {
+            const path = req.body.data.path;
+            const number = req.body.data.number;
+            let request = []
+            allCategoryListData.map(cat =>{
+                if(cat.path === path){
+                    request = cat[number]
+                }
+            })
+            return res.status(200).json({cards: request});
+        } catch (e) {
+            return res.status(550).json({});
+        }
     } else if (method === 'reload') {
         try {
             await reload()
