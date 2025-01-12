@@ -337,7 +337,6 @@ app.post('/database', async (req, res) => {
                     }
                     k += 1
                 })
-                console.log(newProducts.length)
 
                 k = 0
                 request.map(el => {
@@ -345,6 +344,20 @@ app.post('/database', async (req, res) => {
                         let flag = true
                         json.category.map((platform) => {
                             if (el.body.category.includes(platform) && flag) {
+                                newProducts = [...newProducts, el]
+                                flag = false
+                            }
+                        })
+                    }
+                    k += 1
+                })
+
+                k = 0
+                request.map(el => {
+                    if (typeof request[k].body.languageSelector !== 'undefined') {
+                        let flag = true
+                        json.languageSelector.map((platform) => {
+                            if (el.body.languageSelector.includes(platform) && flag) {
                                 newProducts = [...newProducts, el]
                                 flag = false
                             }
