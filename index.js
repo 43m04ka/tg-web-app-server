@@ -306,6 +306,7 @@ app.post('/database', async (req, res) => {
                 const json = req.body.data.json;
                 console.log(json)
                 let request = []
+                
                 allCategoryListData.map(cat =>{
                     if(cat.path === path){
                         request = cat.body
@@ -313,9 +314,10 @@ app.post('/database', async (req, res) => {
                 })
 
                 let newProducts = []
-                console.log(request[0])
-                if (json.platform.length>0) {
-                    request.map(el => {
+
+                let k = 0
+                request.map(el => {
+                    if (typeof request[k].body.platform !== 'undefined') {
                         let flag = true
                         json.platform.map((platform) => {
                             console.log(flag)
@@ -325,11 +327,12 @@ app.post('/database', async (req, res) => {
                                 flag = false
                             }
                         })
-                    })
-                    console.log(newProducts.length)
+                    }
+                    k += 1
 
-                }
-                if (typeof request[0].body.category !== 'undefined') {
+                })
+                console.log(newProducts.length)
+                if (typeof request[k].body.category !== 'undefined') {
                     request.map(el => {
                         let flag = true
                         json.category.map((platform) => {
