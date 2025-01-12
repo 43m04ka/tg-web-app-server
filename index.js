@@ -304,6 +304,7 @@ app.post('/database', async (req, res) => {
             const number = req.body.data.number;
             if(typeof req.body.data.json !== 'undefined'){
                 const json = req.body.data.json;
+                console.log(json)
                 let request = []
                 let len = 0
                 allCategoryListData.map(cat =>{
