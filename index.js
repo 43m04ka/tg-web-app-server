@@ -356,6 +356,14 @@ const reload = async ()=> {
             cartSortCategory = [...cartSortCategory, {path: el.category, body: []}]
         }
     })
+
+    let count = 0
+    cartSortCategory.map(cat=>{
+        cardDbAll.map(el=>{
+            if(cat.path === el.category){cartSortCategory[count].body = [...cartSortCategory[count].body, el]}
+        })
+        count++
+    })
     console.log(cartSortCategory)
     }
 
