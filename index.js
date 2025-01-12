@@ -375,6 +375,7 @@ const reload = async ()=> {
             subarray[i] = array.slice((i*size), (i*size) + size);
         }
         cartSortCategory[count].body = subarray;
+        cartSortCategory[count].len = subarray.length;
         count += 1;
     })
 
