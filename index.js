@@ -317,8 +317,8 @@ app.post('/database', async (req, res) => {
 
                 let k = 0
                 request.map(el => {
+                    console.log(request[k].body)
                     if (typeof request[k].body.platform !== 'undefined') {
-                        console.log(request[k].body)
                         let flag = true
                         json.platform.map((platform) => {
                             console.log(flag)
