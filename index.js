@@ -365,6 +365,20 @@ const reload = async ()=> {
         count++
     })
     console.log(cartSortCategory)
+
+    count = 0
+    cartSortCategory.map(el=>{
+        let array = el.body; //массив, можно использовать массив объектов
+        let size = 20; //размер подмассива
+        let subarray = []; //массив в который будет выведен результат.
+        for (let i = 0; i <Math.ceil(array.length/size); i++){
+            subarray[i] = array.slice((i*size), (i*size) + size);
+        }
+        cartSortCategory[count].body = subarray;
+        count += 1;
+    })
+
+    console.log(cartSortCategory)
     }
 
 start()
