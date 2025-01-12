@@ -380,10 +380,10 @@ const reload = async ()=> {
 
     console.log(cartSortCategory)
     allCategoryListData = cartSortCategory
-    let  cartSortCategoryPrev = cartSortCategory
+    let  cartSortCategoryPrev = []
     count = 0
-    cartSortCategoryPrev.map(cat=>{
-        cartSortCategoryPrev[count].body = cartSortCategoryPrev[count].body[0]
+    cartSortCategory.map(cat=>{
+        cartSortCategoryPrev = [...cartSortCategoryPrev, ...cartSortCategory[count].body[0]]
         count++
     })
 
