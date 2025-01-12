@@ -366,6 +366,7 @@ app.post('/database', async (req, res) => {
                 return res.status(200).json({cards: request, len:len});
             }
         } catch (e) {
+            console.log(e)
             return res.status(550).json({});
         }
     } else if (method === 'reload') {
