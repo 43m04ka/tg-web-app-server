@@ -352,19 +352,16 @@ app.post('/database', async (req, res) => {
                     }
                     k += 1
                 })
-                console.log(newProducts)
                 let size = 20; //размер подмассива
                 let subarray = []; //массив в который будет выведен результат.
                 for (let i = 0; i < Math.ceil(newProducts.length / size); i++) {
                     subarray[i] = newProducts.slice((i * size), (i * size) + size);
                 }
 
-                console.log(subarray[number])
                 return res.status(200).json({cards: subarray[number], len: newProducts.length});
             } else {
                 let request = []
                 let len = 0
-                console.log(allCategoryListData)
                 allCategoryListData.map(cat => {
                     if (cat.path === path) {
                         request = cat.body[number - 1]
