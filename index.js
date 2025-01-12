@@ -310,7 +310,7 @@ app.post('/database', async (req, res) => {
             console.log(allCategoryListData)
             allCategoryListData.map(cat =>{
                 if(cat.path === path){
-                    request = cat.body[number]
+                    request = cat.body[number-1]
                 }
             })
             return res.status(200).json({cards: request});
