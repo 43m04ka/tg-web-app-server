@@ -305,6 +305,7 @@ app.post('/database', async (req, res) => {
         try {
             const path = req.body.data.path;
             const number = req.body.data.number;
+            console.log(path, number)
             let request = []
             allCategoryListData.map(cat =>{
                 if(cat.path === path){
