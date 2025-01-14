@@ -342,7 +342,7 @@ app.post('/database', async (req, res) => {
                     if (typeof jsonFilter.platform !== 'undefined') {
                         let plBol = true
                         jsonFilter.platform.map(platform =>{
-                            if(platform === card.body.platform) {
+                            if(card.body.platform.includes(platform)) {
                                 plBol = false
                             }
                         })
