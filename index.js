@@ -264,7 +264,22 @@ app.post('/basket', async (req, res) => {
                 console.log(basketMsg)
                 bot.sendMessage(5106439090, resultMassage)
 
+                userBasket.map(pos => {
+                    let positionString = ''
+                    if (typeof pos.view === 'undefined') {
+                        positionString += pos.title + ' '
+                        if (typeof pos.platform !== 'undefined') {
+                            positionString += pos.platform + ' '
+                        }
+                        positionString += '- ' + String(pos.price) + 'р'
+                        if (typeof pos.url !== 'undefined') {
+                            positionString += ' / ' + pos.url
+                        }
+                    }
+                })
+
                 bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
+
                     '\n' +
                     'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
                     '\n' +
@@ -306,72 +321,44 @@ app.post('/database', async (req, res) => {
             const path = req.body.data.path;
             const number = req.body.data.number;
             if (typeof req.body.data.json !== 'undefined') {
-                const json = req.body.data.json;
-                console.log(json)
+                const jsonFilter = req.body.data.json;
                 let request = []
-
+                let len = 0
                 allCategoryListData.map(cat => {
                     if (cat.path === path) {
                         request = cat.body
+                        len = cat.len
                     }
                 })
 
-                let newProducts = []
-
-                let k = 0
-                let newRequest = []
+                let allArray = []
                 request.map(el=>{
-                    newRequest = [...newRequest, ...el]
-                })
-                request = newRequest
-
-                request.map(el => {
-                    if (typeof request[k].body.platform !== 'undefined') {
-                        let flag = true
-                        json.platform.map((platform) => {
-                            if (el.body.platform.includes(platform) && flag) {
-                                newProducts = [...newProducts, el]
-                                flag = false
-                            }
-                        })
-                    }
-                    k += 1
+                    allArray = [...allArray, ...el]
                 })
 
-                k = 0
-                request.map(el => {
-                    if (typeof request[k].body.category !== 'undefined') {
-                        let flag = true
-                        json.category.map((platform) => {
-                            if (el.body.category.includes(platform) && flag) {
-                                newProducts = [...newProducts, el]
-                                flag = false
+                request = []
+                allArray.map(card=>{
+                    let add = true
+                    if (typeof jsonFilter.platform !== 'undefined') {
+                        let plBol = true
+                        jsonFilter.platform.map(platform =>{
+                            if(platform === card.body.platform) {
+                                plBol = false
                             }
                         })
+                        if(plBol){add = false}
                     }
-                    k += 1
+                    if(add){request = [...request, card]}
                 })
 
-                k = 0
-                request.map(el => {
-                    if (typeof request[k].body.languageSelector !== 'undefined') {
-                        let flag = true
-                        json.languageSelector.map((platform) => {
-                            if (el.body.languageSelector.includes(platform) && flag) {
-                                newProducts = [...newProducts, el]
-                                flag = false
-                            }
-                        })
-                    }
-                    k += 1
-                })
+                let array = request; //массив, можно использовать массив объектов
                 let size = 20; //размер подмассива
                 let subarray = []; //массив в который будет выведен результат.
-                for (let i = 0; i < Math.ceil(newProducts.length / size); i++) {
-                    subarray[i] = newProducts.slice((i * size), (i * size) + size);
+                for (let i = 0; i < Math.ceil(array.length / size); i++) {
+                    subarray[i] = array.slice((i * size), (i * size) + size);
                 }
 
-                return res.status(200).json({cards: subarray[number], len: newProducts.length});
+                return res.status(200).json({cards: subarray[number], len: subarray.length});
             } else {
                 let request = []
                 let len = 0
