@@ -352,7 +352,7 @@ app.post('/database', async (req, res) => {
                     if (typeof jsonFilter.category !== 'undefined') {
                         let ctBol = true
                         jsonFilter.category.map(cat =>{
-                            console.log(card.body.category)
+                            console.log(card.body.category, cat)
                             if(card.body.category.includes(cat) || card.body.category === cat) {
                                 ctBol = false
                             }
