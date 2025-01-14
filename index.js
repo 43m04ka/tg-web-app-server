@@ -374,9 +374,9 @@ app.post('/database', async (req, res) => {
                 })
 
                 if (jsonFilter.price.sort) {
-                    request.sort((a, b) => (+(a.price - b.price)))
+                    request.sort((a, b) => (+(a.body.price - b.body.price)))
                 } else if (!jsonFilter.price.sort) {
-                    request.sort((a, b) => (+(b.price - a.price)));
+                    request.sort((a, b) => (+(b.body.price - a.body.price)));
                 }
 
                 let array = request; //массив, можно использовать массив объектов
