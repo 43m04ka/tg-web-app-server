@@ -427,7 +427,7 @@ app.post('/database', async (req, res) => {
             allCategoryListData.map(cat1 => {
                 CardData.map(cat => {
                     if (cat.path === cat1) {
-                        allCardBlock = [...allCardBlock, ...cat1.body];
+                        allCardBlock = [...allCardBlock, ...cat.body];
                     }
                 })
             })
