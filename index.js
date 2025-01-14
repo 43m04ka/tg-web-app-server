@@ -373,6 +373,12 @@ app.post('/database', async (req, res) => {
                     }
                 })
 
+                if (jsonFilter.price.sort) {
+                    request.sort((a, b) => (+(a.price - b.price)))
+                } else if (!jsonFilter.price.sort) {
+                    request.sort((a, b) => (+(b.price - a.price)));
+                }
+
                 let array = request; //массив, можно использовать массив объектов
                 let size = 20; //размер подмассива
                 let subarray = []; //массив в который будет выведен результат.
