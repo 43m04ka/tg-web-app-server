@@ -353,7 +353,7 @@ app.post('/database', async (req, res) => {
                         let ctBol = true
                         jsonFilter.category.map(cat =>{
                             console.log(card.body.category)
-                            if(card.body.category.includes(cat)) {
+                            if(card.body.category.includes(cat) || card.body.category === cat) {
                                 ctBol = false
                             }
                         })
