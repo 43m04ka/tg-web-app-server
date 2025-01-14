@@ -416,16 +416,16 @@ app.post('/database', async (req, res) => {
             const page = req.body.data.page;
 
             let tab = StructureData[page]
-            let allCategoryListData = [];
+            let allCategoryList = [];
             tab.body.map(view => {
                 view.map(cat => {
-                    allCategoryListData = [...allCategoryListData, cat.path]
+                    allCategoryList = [...allCategoryList, cat.path]
                 })
             })
             let allCardBlock = []
-            console.log(allCategoryListData)
-            allCategoryListData.map(cat1 => {
-                CardData.map(cat => {
+            console.log(allCategoryList)
+            allCategoryList.map(cat1 => {
+                allCategoryListData.map(cat => {
                     console.log(cat.path, cat1)
                     if (cat.path === cat1) {
                         allCardBlock = [...allCardBlock, ...cat.body];
