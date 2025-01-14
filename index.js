@@ -436,6 +436,7 @@ app.post('/database', async (req, res) => {
             allCardBlock.map(block=>{
                 allCard= [...allCard, ...block]
             })
+            console.log(allCard)
 
             let result = []
             allCard.map(card => {
