@@ -416,17 +416,22 @@ app.post('/database', async (req, res) => {
 
             let tab = StructureData[page]
             let allCategoryListData = [];
-            console.log(tab)
             tab.body.map(view=>{
-                console.log(view)
                 view.map(cat=>{
-                    console.log(cat)
-                    allCategoryListData= [...allCategoryListData, cat.path]
+                    let add = true
+                    allCategoryListData.map(cat1 => {
+                        if(cat1===cat.replace('/', '')){
+                            add= false
+                        }
+                    })
+                    if(add) {
+                        allCategoryListData = [...allCategoryListData, cat.path]
+                    }
                 })
             })
             console.log(allCategoryListData)
 
-            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+            return res.status(200).json({cards: CardPreviewData});
         } catch (e) {
             return res.status(550).json({});
         }
