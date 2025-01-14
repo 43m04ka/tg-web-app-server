@@ -350,6 +350,7 @@ app.post('/database', async (req, res) => {
                         if(plBol){add = false}
                     }
                     if(add){request = [...request, card]}
+
                 })
 
                 let array = request; //массив, можно использовать массив объектов
