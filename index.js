@@ -5,6 +5,7 @@ const cors = require('cors');
 const sequelize = require('./db.js')
 const {mainData} = require("./models");
 const {all} = require("express/lib/application");
+const path = require("node:path");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
@@ -409,23 +410,41 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
-    }else if (method === 'getSearch') {
+    } else if (method === 'getSearch') {
         try {
             const str = req.body.data.str;
             const page = req.body.data.page;
 
             let tab = StructureData[page]
             let allCategoryListData = [];
-            tab.body.map(view=>{
-                view.map(cat=>{
-                    if(cat !== '' && !cat.includes('/')) {
-                        allCategoryListData = [...allCategoryListData, cat.path]
+            tab.body.map(view => {
+                view.map(cat => {
+                    allCategoryListData = [...allCategoryListData, cat.path]
+                })
+            })
+            let allCardBlock = []
+            console.log(allCategoryListData)
+            allCategoryListData.map(cat1 => {
+                CardData.map(cat => {
+                    if (cat.path === cat1) {
+                        allCardBlock = [...allCardBlock, ...cat1.body];
                     }
                 })
             })
-            console.log(allCategoryListData)
 
-            return res.status(200).json({cards: allCategoryListData});
+            let allCard = []
+            allCardBlock.map(block=>{
+                allCard= [...allCard, ...block]
+            })
+
+            let result = []
+            allCard.map(card => {
+                if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
+                    result = [...result, card]
+                }
+            })
+
+            return res.status(200).json({cards: result.slice(0, 25)});
         } catch (e) {
             return res.status(550).json({});
         }
