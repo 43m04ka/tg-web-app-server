@@ -332,35 +332,45 @@ app.post('/database', async (req, res) => {
                 })
 
                 let allArray = []
-                request.map(el=>{
+                request.map(el => {
                     allArray = [...allArray, ...el]
                 })
 
                 request = []
-                allArray.map(card=>{
+                allArray.map(card => {
                     let add = true
                     if (typeof jsonFilter.platform !== 'undefined') {
-                        let plBol = true
-                        jsonFilter.platform.map(platform =>{
-                            console.log(card.body.platform)
-                            if(card.body.platform.includes(platform)) {
-                                plBol = false
+                        if (jsonFilter.platform.length !== 0) {
+                            let plBol = true
+                            jsonFilter.platform.map(platform => {
+                                console.log(card.body.platform)
+                                if (card.body.platform.includes(platform)) {
+                                    plBol = false
+                                }
+                            })
+                            if (plBol) {
+                                add = false
                             }
-                        })
-                        if(plBol){add = false}
+                        }
                     }
                     if (typeof jsonFilter.category !== 'undefined') {
-                        let ctBol = true
-                        jsonFilter.category.map(cat =>{
-                            console.log(card.body.category, cat)
-                            if(card.body.category.includes(cat) || card.body.category === cat) {
-                                console.log(true)
-                                ctBol = false
+                        if (jsonFilter.category.length !== 0) {
+                            let ctBol = true
+                            jsonFilter.category.map(cat => {
+                                console.log(card.body.category, cat)
+                                if (card.body.category.includes(cat) || card.body.category === cat) {
+                                    console.log(true)
+                                    ctBol = false
+                                }
+                            })
+                            if (ctBol) {
+                                add = false
                             }
-                        })
-                        if(ctBol){add = false}
+                        }
+                        if (add) {
+                            request = [...request, card]
+                        }
                     }
-                    if(add){request = [...request, card]}
                 })
 
                 let array = request; //массив, можно использовать массив объектов
@@ -370,7 +380,7 @@ app.post('/database', async (req, res) => {
                     subarray[i] = array.slice((i * size), (i * size) + size);
                 }
 
-                return res.status(200).json({cards: subarray[number-1], len: subarray.length});
+                return res.status(200).json({cards: subarray[number - 1], len: subarray.length});
             } else {
                 let request = []
                 let len = 0
