@@ -330,6 +330,7 @@ app.post('/database', async (req, res) => {
                         len = cat.len
                     }
                 })
+                console.log(request)
 
                 let allArray = []
                 request.map(el=>{
