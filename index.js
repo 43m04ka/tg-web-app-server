@@ -359,7 +359,7 @@ app.post('/database', async (req, res) => {
                     subarray[i] = array.slice((i * size), (i * size) + size);
                 }
 
-                return res.status(200).json({cards: subarray[number-1], len: subarray.length-1});
+                return res.status(200).json({cards: subarray[number-1], len: subarray.length});
             } else {
                 let request = []
                 let len = 0
