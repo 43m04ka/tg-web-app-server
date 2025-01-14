@@ -349,6 +349,16 @@ app.post('/database', async (req, res) => {
                         })
                         if(plBol){add = false}
                     }
+                    if (typeof jsonFilter.category !== 'undefined') {
+                        let ctBol = true
+                        jsonFilter.category.map(cat =>{
+                            console.log(card.body.category)
+                            if(card.body.category.includes(cat)) {
+                                ctBol = false
+                            }
+                        })
+                        if(ctBol){add = false}
+                    }
                     if(add){request = [...request, card]}
                 })
 
