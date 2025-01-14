@@ -418,13 +418,7 @@ app.post('/database', async (req, res) => {
             let allCategoryListData = [];
             tab.body.map(view=>{
                 view.map(cat=>{
-                    let add = true
-                    allCategoryListData.map(cat1 => {
-                        if(cat1===cat.replace('/', '')){
-                            add= false
-                        }
-                    })
-                    if(add) {
+                    if(cat !== '' && !cat.includes('/')) {
                         allCategoryListData = [...allCategoryListData, cat.path]
                     }
                 })
