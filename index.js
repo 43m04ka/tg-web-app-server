@@ -426,18 +426,19 @@ app.post('/database', async (req, res) => {
             console.log(allCategoryListData)
             allCategoryListData.map(cat1 => {
                 CardData.map(cat => {
-                    console.log(cat)
+                    console.log(cat.path, cat1)
                     if (cat.path === cat1) {
                         allCardBlock = [...allCardBlock, ...cat.body];
                     }
                 })
             })
+            console.log(allCardBlock)
 
             let allCard = []
             allCardBlock.map(block=>{
                 allCard= [...allCard, ...block]
             })
-            console.log(allCard)
+
 
             let result = []
             allCard.map(card => {
