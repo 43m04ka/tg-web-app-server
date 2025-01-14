@@ -425,7 +425,7 @@ app.post('/database', async (req, res) => {
             })
             console.log(allCategoryListData)
 
-            return res.status(200).json({cards: CardPreviewData});
+            return res.status(200).json({cards: allCategoryListData});
         } catch (e) {
             return res.status(550).json({});
         }
