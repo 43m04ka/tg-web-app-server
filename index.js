@@ -330,7 +330,6 @@ app.post('/database', async (req, res) => {
                         len = cat.len
                     }
                 })
-                console.log(request)
 
                 let allArray = []
                 request.map(el=>{
@@ -343,6 +342,7 @@ app.post('/database', async (req, res) => {
                     if (typeof jsonFilter.platform !== 'undefined') {
                         let plBol = true
                         jsonFilter.platform.map(platform =>{
+                            console.log(card.body.platform)
                             if(card.body.platform.includes(platform)) {
                                 plBol = false
                             }
@@ -350,7 +350,6 @@ app.post('/database', async (req, res) => {
                         if(plBol){add = false}
                     }
                     if(add){request = [...request, card]}
-
                 })
 
                 let array = request; //массив, можно использовать массив объектов
