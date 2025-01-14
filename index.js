@@ -320,8 +320,8 @@ app.post('/database', async (req, res) => {
         try {
             const path = req.body.data.path;
             const number = req.body.data.number;
-            if (typeof req.body.data.json !== 'undefined') {
-                const jsonFilter = req.body.data.json;
+            if (typeof req.body.data.filter !== 'undefined') {
+                const jsonFilter = req.body.data.filter;
                 let request = []
                 let len = 0
                 allCategoryListData.map(cat => {
