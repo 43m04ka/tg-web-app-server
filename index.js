@@ -409,6 +409,27 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
+    }else if (method === 'getSearch') {
+        try {
+            const str = req.body.data.str;
+            const page = req.body.data.page;
+
+            let tab = StructureData[page]
+            let allCategoryListData = [];
+            console.log(tab)
+            tab.body.map(view=>{
+                console.log(view)
+                view.map(cat=>{
+                    console.log(cat)
+                    allCategoryListData= [...allCategoryListData, cat.path]
+                })
+            })
+            console.log(allCategoryListData)
+
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+        } catch (e) {
+            return res.status(550).json({});
+        }
     } else if (method === 'del') {
         await req.body.data.map(async el => {
             await CardModel.destroy({
