@@ -314,9 +314,10 @@ app.post('/database', async (req, res) => {
     } else if (method === 'getPreview') {
         try {
             let r1 = Math.floor(Math.random() * CardData.length)
-            let randomData = CardData[r1]
+            let randomData = CardData[r1].body
             let r2 = Math.floor(Math.random() * CardData[r1].body.length)
             randomData =  randomData[r2]
+            console.log(randomData);
             return res.status(200).json({cards: CardPreviewData, structure: StructureData, random:randomData});
         } catch (e) {
             return res.status(550).json({});
