@@ -314,11 +314,7 @@ app.post('/database', async (req, res) => {
     } else if (method === 'getPreview') {
         try {
             console.log(CardData)
-            let r1 = Math.floor(Math.random() * allCategoryListData.length)
-            let randomData = allCategoryListData[r1].body
-            let r2 = Math.floor(Math.random() * allCategoryListData[r1].body.length)
-            randomData =  randomData[r2]
-            console.log(randomData);
+
             return res.status(200).json({cards: CardPreviewData, structure: StructureData, random:randomData});
         } catch (e) {
             return res.status(550).json({});
@@ -352,6 +348,20 @@ app.post('/database', async (req, res) => {
                             jsonFilter.platform.map(platform => {
                                 console.log(card.body.platform)
                                 if (card.body.platform.includes(platform)) {
+                                    plBol = false
+                                }
+                            })
+                            if (plBol) {
+                                add = false
+                            }
+                        }
+                    }
+                    if (typeof jsonFilter.languageSelector !== 'undefined') {
+                        if (jsonFilter.languageSelector.length !== 0) {
+                            let plBol = true
+                            jsonFilter.languageSelector.map(languageSelector => {
+                                console.log(card.body.languageSelector)
+                                if (card.body.languageSelector.includes(languageSelector)) {
                                     plBol = false
                                 }
                             })
@@ -544,4 +554,7 @@ const reload = async () => {
 }
 
 start()
+
+
+
 
