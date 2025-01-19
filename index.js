@@ -330,8 +330,7 @@ app.post('/database', async (req, res) => {
             //         count++
             //     }
             // }
-
-            console.log(randomArray);
+            //console.log(randomArray);
             return res.status(200).json({cards: CardPreviewData, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
