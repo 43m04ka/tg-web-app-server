@@ -313,9 +313,26 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
-            console.log(CardData)
+            // let array = Car;
+            // let randomArray = []
+            //
+            // let count = 0
+            // while(count<10) {
+            //     let randomItem = array[Math.floor(Math.random() * array.length)];
+            //     let add = true
+            //     randomArray.map(el=>{
+            //         if(el === randomItem){
+            //             add = false
+            //         }
+            //     })
+            //     if(add){
+            //         randomArray= [...randomArray, randomItem]
+            //         count++
+            //     }
+            // }
 
-            return res.status(200).json({cards: CardPreviewData, structure: StructureData, random:randomData});
+            console.log(randomArray);
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
         }
