@@ -385,6 +385,7 @@ app.post('/database', async (req, res) => {
                     cardDb.save()
                 })
             })
+            reload()
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
