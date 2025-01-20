@@ -382,7 +382,7 @@ app.post('/database', async (req, res) => {
                 el.map(async card => {
                     const cardDb = await CardModel.findByPk(card.id);
                     console.log(cardDb)
-                    let newCard = cardDb.body;
+                    let newCard = cardDb;
                      newCard.isSale = bool;
                      cardDb.body = newCard;
                      await cardDb.save();
