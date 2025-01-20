@@ -378,8 +378,8 @@ app.post('/database', async (req, res) => {
 
             request.map(async el => {
                 el.map(async card => {
-                    console.log(card.body.id)
-                    const cardDb = await CardModel.findByPk(card.body.id)
+                    console.log(card.id)
+                    const cardDb = await CardModel.findByPk(card.id)
                     let newCard = cardDb.body
                     newCard.isSale = bool
                     cardDb.body = newCard
