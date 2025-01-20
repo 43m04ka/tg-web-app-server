@@ -383,7 +383,7 @@ app.post('/database', async (req, res) => {
                     const cardDb = await CardModel.findByPk(card.id)
                     let newCard = cardDb.body
                     newCard.isSale = !bool
-                    console.log(card.id, newCard.isSale)
+                    console.log(card.id, newCard.isSale, bool)
                     cardDb.body = newCard
                     cardDb.save()
                 })
