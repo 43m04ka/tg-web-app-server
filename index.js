@@ -335,6 +335,31 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
+    } else if (method === 'delCategory') {
+        const path = req.body.path;
+        try {
+            let request = []
+            let len = 0
+            allCategoryListData.map(cat => {
+                if (cat.path === path) {
+                    request = cat.body
+                    len = cat.len
+                }
+            })
+            request.map(async el => {
+                await el.map(async el => {
+                    await CardModel.destroy({
+                        where: {
+                            id: el.id
+                        }
+                    })
+                })
+            })
+
+            return res.status(200).json({});
+        } catch (e) {
+            return res.status(550).json({});
+        }
     } else if (method === 'getList') {
         try {
             const path = req.body.data.path;
@@ -467,8 +492,8 @@ app.post('/database', async (req, res) => {
             console.log(allCardBlock)
 
             let allCard = []
-            allCardBlock.map(block=>{
-                allCard= [...allCard, ...block]
+            allCardBlock.map(block => {
+                allCard = [...allCard, ...block]
             })
 
 
@@ -484,15 +509,14 @@ app.post('/database', async (req, res) => {
             return res.status(550).json({});
         }
     } else if (method === 'del') {
-        await req.body.data.map(async el => {
-            await CardModel.destroy({
-                where: {
-                    id: el.id
-                }
-            })
-        })
         try {
-
+            await req.body.data.map(async el => {
+                await CardModel.destroy({
+                    where: {
+                        id: el.id
+                    }
+                })
+            })
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
