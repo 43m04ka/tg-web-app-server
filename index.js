@@ -380,15 +380,15 @@ app.post('/database', async (req, res) => {
 
             request.map(async el => {
                 el.map(async card => {
-                    const cardDb = await CardModel.findByPk(card.id)
-                    let newCard = cardDb.body
-                     newCard.isSale = bool
-                     console.log(card.id, newCard.isSale, cardDb.body.isSale)
-                     cardDb.body = newCard
-                    await cardDb.save()
+                    const cardDb = await CardModel.findByPk(card.id);
+                    let newCard = cardDb.body;
+                     newCard.isSale = bool;
+                     console.log(card.id, newCard.isSale, cardDb.body.isSale, bool);
+                     cardDb.body = newCard;
+                     await cardDb.save();
                 })
             })
-            reload()
+            await reload()
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
