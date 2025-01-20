@@ -385,7 +385,7 @@ app.post('/database', async (req, res) => {
                     newCard.isSale = !bool
                     console.log(card.id, newCard.isSale, bool)
                     cardDb.body = newCard
-                    cardDb.save()
+                    await cardDb.save()
                 })
             })
             reload()
