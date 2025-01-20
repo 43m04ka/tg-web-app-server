@@ -337,7 +337,7 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'delCategory') {
         const path = req.body.path;
-        console.log(path)
+        console.log(req.body)
         try {
             let request = []
             let len = 0
