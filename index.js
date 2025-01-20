@@ -389,7 +389,6 @@ app.post('/database', async (req, res) => {
                             id: card.id
                         }
                     })
-                    console.log(cardDb1.body)
                 })
             })
             await reload()
