@@ -384,8 +384,11 @@ app.post('/database', async (req, res) => {
                     let newCard = cardDb.body;
                     newCard.isSale = bool;
                     cardDb.body = newCard;
-                    await cardDb.save();
-                    const cardDb1 = await CardModel.findByPk(card.id);
+                    await CardModel.update({ body: newCard }, {
+                        where: {
+                            id: card.id
+                        }
+                    })
                     console.log(cardDb1.body)
                 })
             })
