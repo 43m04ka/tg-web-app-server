@@ -361,7 +361,7 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
-    }else if (method === 'updCategory') {
+    } else if (method === 'updCategory') {
         const path = req.body.data;
         try {
             let request = []
@@ -374,17 +374,19 @@ app.post('/database', async (req, res) => {
             })
 
             let bool = false
-            if (typeof request[0][0].isSale !== 'undefined') {
-                bool = !request[0][0].isSale;
-            }
+            try {
+                const cardDb = await CardModel.findByPk(request[0][0].id);
+                bool = !cardDb.body.isSale
+            } catch (e) {
 
+            }
             request.map(async el => {
                 el.map(async card => {
                     const cardDb = await CardModel.findByPk(card.id);
                     let newCard = cardDb.body;
                     newCard.isSale = bool;
                     cardDb.body = newCard;
-                    await CardModel.update({ body: newCard }, {
+                    await CardModel.update({body: newCard}, {
                         where: {
                             id: card.id
                         }
