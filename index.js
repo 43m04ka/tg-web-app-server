@@ -373,7 +373,7 @@ app.post('/database', async (req, res) => {
                 }
             })
 
-            let bool = request[0][0].body?.isSale || false
+            let bool = !request[0][0].body?.isSale || false
             console.log(bool)
 
             request.map(async el => {
