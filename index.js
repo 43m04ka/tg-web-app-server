@@ -337,6 +337,7 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'delCategory') {
         const path = req.body.path;
+        console.log(path)
         try {
             let request = []
             let len = 0
@@ -346,6 +347,7 @@ app.post('/database', async (req, res) => {
                     len = cat.len
                 }
             })
+            console.log(request)
             request.map(async el => {
                 await el.map(async el => {
                     await CardModel.destroy({
@@ -355,9 +357,9 @@ app.post('/database', async (req, res) => {
                     })
                 })
             })
-
             return res.status(200).json({});
         } catch (e) {
+            console.log(e)
             return res.status(550).json({});
         }
     } else if (method === 'getList') {
