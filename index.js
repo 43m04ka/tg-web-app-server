@@ -377,10 +377,10 @@ app.post('/database', async (req, res) => {
 
             request.map(async el => {
                 el.map(async card => {
-                    console.log(card.id)
                     const cardDb = await CardModel.findByPk(card.id)
                     let newCard = cardDb.body
                     newCard.isSale = !bool
+                    console.log(card.id, newCard.isSale)
                     cardDb.body = newCard
                     cardDb.save()
                 })
