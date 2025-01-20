@@ -375,15 +375,14 @@ app.post('/database', async (req, res) => {
 
             let bool = false
             if (typeof request[0][0].isSale !== 'undefined') {
-                bool = !request[0][0].isSale
+                bool = !request[0][0].isSale;
             }
 
             request.map(async el => {
                 el.map(async card => {
                     const cardDb = await CardModel.findByPk(card.id)
                     let newCard = cardDb.body
-                    newCard.isSale = !bool
-                    console.log(card.id, newCard.isSale, bool)
+                    newCard.isSale = bool
                     cardDb.body = newCard
                     await cardDb.save()
                 })
