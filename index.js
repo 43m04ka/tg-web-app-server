@@ -374,10 +374,12 @@ app.post('/database', async (req, res) => {
             })
 
             let bool = request[0][0].body?.isSale || false
+            console.log(bool)
 
             request.map(async el => {
                 el.map(async card => {
-                    const cardDb = await CardModel.findByPk(card.id)
+                    console.log(card.body.id)
+                    const cardDb = await CardModel.findByPk(card.body.id)
                     let newCard = cardDb.body
                     newCard.isSale = bool
                     cardDb.body = newCard
@@ -509,7 +511,6 @@ app.post('/database', async (req, res) => {
                 })
             })
             let allCardBlock = []
-            console.log(allCategoryList)
             allCategoryList.map(cat1 => {
                 allCategoryListData.map(cat => {
                     console.log(cat.path, cat1)
@@ -518,7 +519,6 @@ app.post('/database', async (req, res) => {
                     }
                 })
             })
-            console.log(allCardBlock)
 
             let allCard = []
             allCardBlock.map(block => {
@@ -610,7 +610,6 @@ const reload = async () => {
         count += 1;
     })
 
-    console.log(cartSortCategory)
     allCategoryListData = cartSortCategory
     let cartSortCategoryPrev = []
     count = 0
