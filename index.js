@@ -373,7 +373,10 @@ app.post('/database', async (req, res) => {
                 }
             })
 
-            let bool = request[0][0].body?.isSale || true
+            let bool = false
+            if (typeof request[0][0].isSale !== 'undefined') {
+                bool = !request[0][0].isSale
+            }
 
             request.map(async el => {
                 el.map(async card => {
