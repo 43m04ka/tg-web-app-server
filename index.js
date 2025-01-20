@@ -361,6 +361,34 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
+    }else if (method === 'updCategory') {
+        const path = req.body.data;
+        try {
+            let request = []
+            let len = 0
+            allCategoryListData.map(cat => {
+                if (cat.path === path) {
+                    request = cat.body
+                    len = cat.len
+                }
+            })
+
+            let bool = request[0][0].body?.isSale || false
+
+            request.map(async el => {
+                el.map(async card => {
+                    const cardDb = await CardModel.findByPk(card.id)
+                    let newCard = cardDb.body
+                    newCard.isSale = bool
+                    cardDb.body = newCard
+                    cardDb.save()
+                })
+            })
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
     } else if (method === 'getList') {
         try {
             const path = req.body.data.path;
