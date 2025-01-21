@@ -515,11 +515,14 @@ app.post('/database', async (req, res) => {
 
             let result = []
             CardData.map(card => {
-                console.log(card.body.title)
-                if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                    if(card.body.tab===page) {
-                        result = [...result, card]
+                try {
+                    if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
+                        if (card.body.tab === page) {
+                            result = [...result, card]
+                        }
                     }
+                }catch (e) {
+                    
                 }
             })
 
