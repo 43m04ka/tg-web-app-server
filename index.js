@@ -511,33 +511,13 @@ app.post('/database', async (req, res) => {
             const str = req.body.data.str;
             const page = req.body.data.page;
 
-            let tab = StructureData[page]
-            let allCategoryList = [];
-            tab.body.map(view => {
-                view.map(cat => {
-                    allCategoryList = [...allCategoryList, cat.path]
-                })
-            })
-            let allCardBlock = []
-            allCategoryList.map(cat1 => {
-                allCategoryListData.map(cat => {
-                    console.log(cat.path, cat1)
-                    if (cat.path === cat1) {
-                        allCardBlock = [...allCardBlock, ...cat.body];
-                    }
-                })
-            })
-
-            let allCard = []
-            allCardBlock.map(block => {
-                allCard = [...allCard, ...block]
-            })
-
 
             let result = []
-            allCard.map(card => {
+            CardData.map(card => {
                 if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                    result = [...result, card]
+                    if(card.body.tab===page) {
+                        result = [...result, card]
+                    }
                 }
             })
 
