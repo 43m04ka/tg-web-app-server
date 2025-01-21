@@ -523,6 +523,7 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({cards: result.slice(0, 25)});
         } catch (e) {
+            console.log(e)
             return res.status(550).json({});
         }
     } else if (method === 'del') {
