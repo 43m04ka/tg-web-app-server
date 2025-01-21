@@ -509,11 +509,13 @@ app.post('/database', async (req, res) => {
     } else if (method === 'getSearch') {
         try {
             const str = req.body.data.str;
+            console.log(str)
             const page = req.body.data.page;
 
 
             let result = []
             CardData.map(card => {
+                console.log(card)
                 if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
                     if(card.body.tab===page) {
                         result = [...result, card]
