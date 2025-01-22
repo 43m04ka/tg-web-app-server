@@ -265,23 +265,25 @@ app.post('/basket', async (req, res) => {
                 console.log(basketMsg)
                 bot.sendMessage(5106439090, resultMassage)
 
+                let bsMsg = ''
+
                 userBasket.map(pos => {
-                    let positionString = ''
+                    let bsMsg = ''
                     if (typeof pos.view === 'undefined') {
-                        positionString += pos.title + ' '
-                        if (typeof pos.platform !== 'undefined') {
-                            positionString += pos.platform + ' '
-                        }
-                        positionString += '- ' + String(pos.price) + 'р'
-                        if (typeof pos.url !== 'undefined') {
-                            positionString += ' / ' + pos.url
-                        }
+                        bsMsg += pos.title + ' '
+                        bsMsg += '- ' + String(pos.price) + 'р'
                     }
+                    else {
+                        bsMsg += pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
+                    }
+
                 })
 
                 bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
-
                     '\n' +
+                        bsMsg+
+                    '\n \n'+
+                    'На сумму - '+String(sumPrice) + 'р' + '\n'+
                     'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
                     '\n' +
                     'Менеджер — @gwstore_admin. \n' +
