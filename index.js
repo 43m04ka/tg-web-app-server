@@ -238,11 +238,11 @@ app.post('/basket', async (req, res) => {
             resultMassage += 'Корзина:' + '\n\n'
             let sumPrice = 0
             let basketMsg = ''
-
+            let c = 0
             userBasket.map(pos => {
                 let positionString = ''
                 if (typeof pos.view === 'undefined') {
-                    positionString += pos.title + ' '
+                    positionString += String(c)+'. '+pos.title + ' '
                     if (typeof pos.platform !== 'undefined') {
                         positionString += pos.platform + ' '
                     }
@@ -251,11 +251,12 @@ app.post('/basket', async (req, res) => {
                         positionString += ' / ' + pos.url
                     }
                 } else {
-                    positionString += pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
+                    positionString += String(c)+'. '+pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
                 }
                 positionString += '\n'
                 basketMsg += positionString
                 sumPrice += pos.price
+                c++
             })
             resultMassage += basketMsg
             resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
@@ -265,14 +266,14 @@ app.post('/basket', async (req, res) => {
                 bot.sendMessage(5106439090, resultMassage)
 
                 let bsMsg = ''
-
+                let r = 0
                 userBasket.map(pos => {
                     if (typeof pos.view === 'undefined') {
-                        bsMsg += pos.title + ' '
+                        bsMsg += String(r)+'. '+pos.title + ' '
                         bsMsg += '- ' + String(pos.price) + 'р' + '\n'
                     }
                     else {
-                        bsMsg += pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
+                        bsMsg += String(r)+'. '+pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
                     }
 
                 })
