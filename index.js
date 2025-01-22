@@ -323,8 +323,10 @@ app.post('/database', async (req, res) => {
             let randomArray = []
 
             let count = 0
+            let attempt = 0
             while(count<10) {
                 let randomItem = CardData[Math.floor(Math.random() * CardData.length)];
+                attempt+=1
                 let add = true
                 randomArray.map(el=>{
                     if(el.body.title === randomItem.body.title || el.body.tab !== page){
@@ -334,6 +336,9 @@ app.post('/database', async (req, res) => {
                 if(add){
                     randomArray= [...randomArray, randomItem]
                     count++
+                }
+                if(attempt > 2500){
+                    count = 10
                 }
             }
             console.log(randomArray);
