@@ -468,12 +468,12 @@ app.post('/database', async (req, res) => {
                             }
                         }
                     }
-                    if (typeof jsonFilter.players !== 'undefined') {
-                        if (jsonFilter.players.length !== 0) {
+                    if (typeof jsonFilter.numPlayers !== 'undefined') {
+                        if (jsonFilter.numPlayers.length !== 0) {
                             let plBol = true
-                            jsonFilter.players.map(players => {
+                            jsonFilter.numPlayers.map(numPlayers => {
                                 console.log(card.body.numPlayers)
-                                if (card.body.numPlayers.includes(players)) {
+                                if (card.body.numPlayers.includes(numPlayers)) {
                                     plBol = false
                                 }
                             })
