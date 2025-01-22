@@ -313,25 +313,31 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
-            // let array = Car;
-            // let randomArray = []
-            //
-            // let count = 0
-            // while(count<10) {
-            //     let randomItem = array[Math.floor(Math.random() * array.length)];
-            //     let add = true
-            //     randomArray.map(el=>{
-            //         if(el === randomItem){
-            //             add = false
-            //         }
-            //     })
-            //     if(add){
-            //         randomArray= [...randomArray, randomItem]
-            //         count++
-            //     }
-            // }
-            //console.log(randomArray);
             return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+        } catch (e) {
+            return res.status(550).json({});
+        }
+    }else if (method === 'getRandom') {
+        try {
+            const page = req.body.data;
+            let randomArray = []
+
+            let count = 0
+            while(count<10) {
+                let randomItem = CardData[Math.floor(Math.random() * CardData.length)];
+                let add = true
+                randomArray.map(el=>{
+                    if(el.body.title === randomItem.body.title || el.body.tab !== page){
+                        add = false
+                    }
+                })
+                if(add){
+                    randomArray= [...randomArray, randomItem]
+                    count++
+                }
+            }
+            console.log(randomArray);
+            return res.status(200).json({cards: randomArray});
         } catch (e) {
             return res.status(550).json({});
         }
