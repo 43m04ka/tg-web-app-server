@@ -473,7 +473,7 @@ app.post('/database', async (req, res) => {
                             let plBol = true
                             jsonFilter.numPlayers.map(numPlayers => {
                                 console.log(card.body.numPlayers)
-                                if (card.body.numPlayers.includes(numPlayers)) {
+                                if (String(card.body.numPlayers).includes(numPlayers)) {
                                     plBol = false
                                 }
                             })
