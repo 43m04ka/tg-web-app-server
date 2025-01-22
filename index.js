@@ -262,7 +262,8 @@ app.post('/basket', async (req, res) => {
             resultMassage += 'Статус: Не оплачен'
 
             if (basketMsg !== '') {
-                console.log(basketMsg)
+                bot.sendMessage(5106439090, resultMassage)
+
                 let bsMsg = ''
 
                 userBasket.map(pos => {
