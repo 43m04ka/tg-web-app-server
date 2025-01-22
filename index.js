@@ -468,6 +468,20 @@ app.post('/database', async (req, res) => {
                             }
                         }
                     }
+                    if (typeof jsonFilter.players !== 'undefined') {
+                        if (jsonFilter.players.length !== 0) {
+                            let plBol = true
+                            jsonFilter.players.map(players => {
+                                console.log(card.body.numPlayers)
+                                if (card.body.numPlayers.includes(players)) {
+                                    plBol = false
+                                }
+                            })
+                            if (plBol) {
+                                add = false
+                            }
+                        }
+                    }
                     if (typeof jsonFilter.category !== 'undefined') {
                         if (jsonFilter.category.length !== 0) {
                             let ctBol = true
