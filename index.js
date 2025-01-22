@@ -268,10 +268,10 @@ app.post('/basket', async (req, res) => {
                 userBasket.map(pos => {
                     if (typeof pos.view === 'undefined') {
                         bsMsg += pos.title + ' '
-                        bsMsg += '- ' + String(pos.price) + 'р'
+                        bsMsg += '- ' + String(pos.price) + 'р' + '\n'
                     }
                     else {
-                        bsMsg += pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
+                        bsMsg += pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
                     }
 
                 })
