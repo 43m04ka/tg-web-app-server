@@ -238,7 +238,7 @@ app.post('/basket', async (req, res) => {
             resultMassage += 'Корзина:' + '\n\n'
             let sumPrice = 0
             let basketMsg = ''
-            let c = 0
+            let c = 1
             userBasket.map(pos => {
                 let positionString = ''
                 if (typeof pos.view === 'undefined') {
@@ -266,7 +266,7 @@ app.post('/basket', async (req, res) => {
                 bot.sendMessage(5106439090, resultMassage)
 
                 let bsMsg = ''
-                let r = 0
+                let r = 1
                 userBasket.map(pos => {
                     if (typeof pos.view === 'undefined') {
                         bsMsg += String(r)+'. '+pos.title + ' '
