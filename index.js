@@ -263,12 +263,9 @@ app.post('/basket', async (req, res) => {
 
             if (basketMsg !== '') {
                 console.log(basketMsg)
-                bot.sendMessage(5106439090, resultMassage)
-
                 let bsMsg = ''
 
                 userBasket.map(pos => {
-                    let bsMsg = ''
                     if (typeof pos.view === 'undefined') {
                         bsMsg += pos.title + ' '
                         bsMsg += '- ' + String(pos.price) + 'р'
@@ -283,7 +280,7 @@ app.post('/basket', async (req, res) => {
                     '\n' +
                         bsMsg+
                     '\n \n'+
-                    'На сумму - '+String(sumPrice) + 'р' + '\n'+
+                    'На сумму - '+String(sumPrice) + 'р' + '\n \n'+
                     'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
                     '\n' +
                     'Менеджер — @gwstore_admin. \n' +
