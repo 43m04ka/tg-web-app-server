@@ -275,7 +275,7 @@ app.post('/basket', async (req, res) => {
                     else {
                         bsMsg += String(r)+'. '+pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
                     }
-
+                    r++
                 })
 
                 bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
