@@ -317,29 +317,36 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
-    }else if (method === 'getRandom') {
+    } else if (method === 'getRandom') {
         try {
             const page = req.body.data;
             let randomArray = []
+            let tabArray = []
+
+            CardData.map(el => {
+                if (el.body.tab === page) {
+                    tabArray = [...tabArray, el]
+                }
+            })
 
             let count = 0
             let attempt = 0
-            while(count<10) {
-                let randomItem = CardData[Math.floor(Math.random() * CardData.length)];
-                attempt+=1
-                let add = true
-                randomArray.map(el=>{
-                    if(el.body.title === randomItem.body.title || el.body.tab !== page){
-                        add = false
+            if (tabArray.length > 10) {
+                while (count < 10) {
+                    let randomItem = tabArray[Math.floor(Math.random() * tabArray.length)];
+                    let add = true
+                    randomArray.map(el => {
+                        if (el.body.title === randomItem.body.title) {
+                            add = false
+                        }
+                    })
+                    if (add) {
+                        randomArray = [...randomArray, randomItem]
+                        count++
                     }
-                })
-                if(add){
-                    randomArray= [...randomArray, randomItem]
-                    count++
                 }
-                if(attempt > 2500){
-                    count = 10
-                }
+            } else {
+                randomArray = tabArray
             }
             console.log(randomArray);
             return res.status(200).json({cards: randomArray});
@@ -532,8 +539,8 @@ app.post('/database', async (req, res) => {
                             result = [...result, card]
                         }
                     }
-                }catch (e) {
-                    
+                } catch (e) {
+
                 }
             })
 
