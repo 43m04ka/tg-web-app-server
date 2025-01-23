@@ -298,7 +298,7 @@ app.post('/basket', async (req, res) => {
             })
             resultMassage += basketMsg
 
-            if(typeof req.body.promo !== 'undefined') {
+            if(req.body.promo !== '') {
                 const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
                 resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
                 resultMassage += 'Промокод: '+promoDb.body+'\n'
