@@ -326,7 +326,9 @@ app.post('/basket', async (req, res) => {
 
                 try {
                     const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                    bsMsg += '\n' + 'На сумму: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
+                    bsMsg += '\n' + 'Цена без учёта скидки: ' + String(sumPrice) + 'р' + '\n'
+                    bsMsg += '\n' + 'Скидка: ' + String(sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
+                    bsMsg += '\n' + 'Итого: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
                 }catch (e){
                     bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                 }
