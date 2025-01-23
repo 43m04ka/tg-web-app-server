@@ -300,7 +300,7 @@ app.post('/basket', async (req, res) => {
 
             if(typeof req.body.promo !== 'undefined') {
                 const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
+                resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
                 resultMassage += 'Промокод: '+promoDb.body+'\n'
                 resultMassage += 'Статус: Не оплачен'
             }else{
@@ -326,16 +326,15 @@ app.post('/basket', async (req, res) => {
 
                 if(typeof req.body.promo !== 'undefined') {
                     const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                    bsMsg += '\n' + 'На сумму:' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
+                    bsMsg += '\n' + 'На сумму: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
                 }else{
-                    bsMsg += '\n' + 'На сумму:' + String(sumPrice) + 'р' + '\n'
+                    bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                 }
 
                 bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
                     '\n' +
                         bsMsg+
                     '\n'+
-                    'На сумму - '+String(sumPrice) + 'р' + '\n \n'+
                     'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
                     '\n' +
                     'Менеджер — @gwstore_admin. \n' +
