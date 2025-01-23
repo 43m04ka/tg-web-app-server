@@ -20,4 +20,12 @@ const CardData = sequelize.define('mainData', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-module.exports = {Users, Data, CardData};
+const Promo = sequelize.define('promo', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    body: {type: DataTypes.STRING, defaultValue: ''},
+    parcent: {type: DataTypes.INTEGER, defaultValue: 0},
+    number: {type: DataTypes.INTEGER, defaultValue: 0},
+    numberLocal: {type: DataTypes.INTEGER, defaultValue: 0},
+})
+
+module.exports = {Users, Data, CardData, Promo};

@@ -9,6 +9,7 @@ const path = require("node:path");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
+const PromoModel = require('./models.js').Promo;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -164,6 +165,42 @@ app.post('/admin', async (req, res) => {
             }
         } catch (err) {
             return res.status(512).json({});
+        }
+    }
+});
+
+app.post('/promo', async (req, res) => {
+    const method = req.body.method;
+    if (method === 'use') {
+        try {
+            const promo = req.body.str;
+            const promoDb = await PromoModel.findOne({where: {body: promo}})
+            let count = promoDb.number
+            if(count !== 0) {
+                promoDb.number = count - 1
+                return res.status(200).json({body: promoDb.parcent});
+            }else{
+                return res.status(200).json({body: false});
+            }
+        } catch (err) {
+            return res.status(510).json({});
+        }
+    }if (method === 'add') {
+        try {
+            const str = req.body.str;
+            const count = req.body.count;
+            const par = req.body.parcent;
+            await PromoModel.create({body: str, number: count, numberLocal: count, parcent:par});
+            return res.status(200).json({answer: true});
+        } catch (err) {
+            return res.status(510).json({});
+        }
+    }if (method === 'get') {
+        try {
+            let all = await PromoModel.findAll();
+            return res.status(200).json({promo: all});
+        } catch (err) {
+            return res.status(510).json({});
         }
     }
 });
