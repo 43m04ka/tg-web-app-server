@@ -173,7 +173,7 @@ app.post('/promo', async (req, res) => {
     const method = req.body.method;
     if (method === 'use') {
         try {
-            const promo = req.body.str;
+            const promo = req.body.data.str;
             const promoDb = await PromoModel.findOne({where: {body: promo}})
             let count = promoDb.number
             if(count !== 0) {
@@ -187,9 +187,9 @@ app.post('/promo', async (req, res) => {
         }
     }if (method === 'add') {
         try {
-            const str = req.body.str;
-            const count = req.body.count;
-            const par = req.body.parcent;
+            const str = req.body.data.str;
+            const count = req.body.data.count;
+            const par = req.body.data.parcent;
             await PromoModel.create({body: str, number: count, numberLocal: count, parcent:par});
             return res.status(200).json({answer: true});
         } catch (err) {
