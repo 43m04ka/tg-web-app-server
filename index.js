@@ -298,12 +298,12 @@ app.post('/basket', async (req, res) => {
             })
             resultMassage += basketMsg
 
-            if(req.body.promo !== '') {
+            try {
                 const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
                 resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
                 resultMassage += 'Промокод: '+promoDb.body+'\n'
                 resultMassage += 'Статус: Не оплачен'
-            }else{
+            }catch (e){
                 resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
                 resultMassage += 'Статус: Не оплачен'
             }
