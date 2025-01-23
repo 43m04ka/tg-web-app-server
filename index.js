@@ -324,10 +324,10 @@ app.post('/basket', async (req, res) => {
                     r++
                 })
 
-                if(typeof req.body.promo !== 'undefined') {
+                try {
                     const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
                     bsMsg += '\n' + 'На сумму: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
-                }else{
+                }catch (e){
                     bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                 }
 
