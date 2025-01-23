@@ -178,12 +178,12 @@ app.post('/promo', async (req, res) => {
             let count = promoDb.number
             if(count !== 0) {
                 promoDb.number = count - 1
-                return res.status(200).json({body: promoDb.parcent});
+                return res.status(200).json({answer : true, parcent : promoDb.parcent});
             }else{
-                return res.status(200).json({body: false});
+                return res.status(200).json({answer: true, parcent : 0});
             }
         } catch (err) {
-            return res.status(510).json({});
+            return res.status(510).json({answer: false});
         }
     }if (method === 'add') {
         try {
