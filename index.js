@@ -176,30 +176,45 @@ app.post('/promo', async (req, res) => {
             const promo = req.body.data.str;
             const promoDb = await PromoModel.findOne({where: {body: promo}})
             let count = promoDb.number
-            if(count !== 0) {
+            if (count !== 0) {
                 promoDb.number = count - 1
                 promoDb.save()
-                return res.status(200).json({answer : true, parcent : promoDb.parcent});
-            }else{
-                return res.status(200).json({answer: true, parcent : 0});
+                return res.status(200).json({answer: true, parcent: promoDb.parcent});
+            } else {
+                return res.status(200).json({answer: true, parcent: 0});
             }
         } catch (err) {
             return res.status(510).json({answer: false});
         }
-    }if (method === 'add') {
+    }
+    if (method === 'add') {
         try {
             const str = req.body.data.str;
             const count = req.body.data.count;
             const par = req.body.data.parcent;
-            await PromoModel.create({body: str, number: count, numberLocal: count, parcent:par});
+            await PromoModel.create({body: str, number: count, numberLocal: count, parcent: par});
             return res.status(200).json({answer: true});
         } catch (err) {
             return res.status(510).json({});
         }
-    }if (method === 'get') {
+    }
+    if (method === 'get') {
         try {
             let all = await PromoModel.findAll();
             return res.status(200).json({promo: all});
+        } catch (err) {
+            return res.status(510).json({});
+        }
+    }
+    if (method === 'del') {
+        const id = req.body.data.id;
+        try {
+            await PromoModel.destroy({
+                where: {
+                    id: id
+                }
+            })
+            return res.status(200).json({});
         } catch (err) {
             return res.status(510).json({});
         }
@@ -280,7 +295,7 @@ app.post('/basket', async (req, res) => {
             userBasket.map(pos => {
                 let positionString = ''
                 if (typeof pos.view === 'undefined') {
-                    positionString += String(c)+'. '+pos.title + ' '
+                    positionString += String(c) + '. ' + pos.title + ' '
                     if (typeof pos.platform !== 'undefined') {
                         positionString += pos.platform + ' '
                     }
@@ -289,7 +304,7 @@ app.post('/basket', async (req, res) => {
                         positionString += ' / ' + pos.url
                     }
                 } else {
-                    positionString += String(c)+'. '+pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
+                    positionString += String(c) + '. ' + pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
                 }
                 positionString += '\n'
                 basketMsg += positionString
@@ -300,10 +315,10 @@ app.post('/basket', async (req, res) => {
 
             try {
                 const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent/100)) + 'р' + '\n'
-                resultMassage += 'Промокод: '+promoDb.body+'\n'
+                resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent / 100)) + 'р' + '\n'
+                resultMassage += 'Промокод: ' + promoDb.body + '\n'
                 resultMassage += 'Статус: Не оплачен'
-            }catch (e){
+            } catch (e) {
                 resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
                 resultMassage += 'Статус: Не оплачен'
             }
@@ -315,11 +330,10 @@ app.post('/basket', async (req, res) => {
                 let r = 1
                 userBasket.map(pos => {
                     if (typeof pos.view === 'undefined') {
-                        bsMsg += String(r)+'. '+pos.title + ' '
+                        bsMsg += String(r) + '. ' + pos.title + ' '
                         bsMsg += '- ' + String(pos.price) + 'р' + '\n'
-                    }
-                    else {
-                        bsMsg += String(r)+'. '+pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
+                    } else {
+                        bsMsg += String(r) + '. ' + pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
                     }
                     r++
                 })
@@ -328,16 +342,16 @@ app.post('/basket', async (req, res) => {
                     const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
                     let parcent = promoDb.parcent
                     bsMsg += '\n' + 'Цена без учёта скидки: ' + String(sumPrice) + 'р' + '\n'
-                    bsMsg += 'Скидка: ' + String(sumPrice * (parcent/100)) + 'р' + '\n'
-                    bsMsg += 'Итого: ' + String(sumPrice - sumPrice * (parcent/100)) + 'р' + '\n'
-                }catch (e){
+                    bsMsg += 'Скидка: ' + String(sumPrice * (parcent / 100)) + 'р' + '\n'
+                    bsMsg += 'Итого: ' + String(sumPrice - sumPrice * (parcent / 100)) + 'р' + '\n'
+                } catch (e) {
                     bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                 }
 
                 bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
                     '\n' +
-                        bsMsg+
-                    '\n'+
+                    bsMsg +
+                    '\n' +
                     'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
                     '\n' +
                     'Менеджер — @gwstore_admin. \n' +
