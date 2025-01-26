@@ -294,21 +294,21 @@ app.post('/basket', async (req, res) => {
             let c = 1
             userBasket.map(pos => {
                 let positionString = ''
-                if (typeof pos.view === 'undefined') {
-                    positionString += String(c) + '. ' + pos.title + ' '
-                    if (typeof pos.platform !== 'undefined') {
-                        positionString += pos.platform + ' '
+                if (typeof pos.body.view === 'undefined') {
+                    positionString += String(c) + '. ' + pos.body.title + ' '
+                    if (typeof pos.body.platform !== 'undefined') {
+                        positionString += pos.body.platform + ' '
                     }
-                    positionString += '- ' + String(pos.price) + 'р'
-                    if (typeof pos.url !== 'undefined') {
-                        positionString += ' / ' + pos.url
+                    positionString += '- ' + String(pos.body.price) + 'р'
+                    if (typeof pos.body.url !== 'undefined') {
+                        positionString += ' / ' + pos.body.url
                     }
                 } else {
-                    positionString += String(c) + '. ' + pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р'
+                    positionString += String(c) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р'
                 }
                 positionString += '\n'
                 basketMsg += positionString
-                sumPrice += pos.price
+                sumPrice += pos.body.price
                 c++
             })
             resultMassage += basketMsg
@@ -329,11 +329,11 @@ app.post('/basket', async (req, res) => {
                 let bsMsg = ''
                 let r = 1
                 userBasket.map(pos => {
-                    if (typeof pos.view === 'undefined') {
-                        bsMsg += String(r) + '. ' + pos.title + ' '
-                        bsMsg += '- ' + String(pos.price) + 'р' + '\n'
+                    if (typeof pos.body.view === 'undefined') {
+                        bsMsg += String(r) + '. ' + pos.body.title + ' '
+                        bsMsg += '- ' + String(pos.body.price) + 'р' + '\n'
                     } else {
-                        bsMsg += String(r) + '. ' + pos.title + ' ' + pos.view + ' - ' + String(pos.price) + 'р' + '\n'
+                        bsMsg += String(r) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р' + '\n'
                     }
                     r++
                 })
