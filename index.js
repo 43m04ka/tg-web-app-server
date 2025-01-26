@@ -230,8 +230,8 @@ app.post('/basket', async (req, res) => {
             const userDb = await UserModel.findOne({where: {chatId: chatId}});
             let isContinue = true;
             userDb.basket.body.map(el => {
-                console.log(el.id, mainData.id, el.title, mainData.title)
-                if (el.id === mainData.id && el.title === mainData.title) {
+                console.log(el.id, mainData.id, el.body.title, mainData.body.title)
+                if (el.id === mainData.id && el.body.title === mainData.body.title) {
                     isContinue = false;
                     return res.status(200).json({body: true});
                 }
