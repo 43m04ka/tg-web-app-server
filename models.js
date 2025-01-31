@@ -28,4 +28,22 @@ const Promo = sequelize.define('promo', {
     numberLocal: {type: DataTypes.INTEGER, defaultValue: 0},
 })
 
-module.exports = {Users, Data, CardData, Promo};
+const Order = sequelize.define('order', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    summa: {type: DataTypes.INTEGER, defaultValue: 0},
+    date: {type: DataTypes.STRING, defaultValue: ''},
+    preview: {type: DataTypes.STRING, defaultValue: ''},
+    status: {type: DataTypes.INTEGER, defaultValue: 0},
+})
+
+const OrderPosition = sequelize.define('orderPosition', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    price: {type: DataTypes.INTEGER, defaultValue: 0},
+    name: {type: DataTypes.STRING, defaultValue: ''},
+    idPos: {type: DataTypes.INTEGER, defaultValue: 0},
+})
+
+Users.hasMany(Order,  { onDelete: "cascade"})
+Order.hasMany(OrderPosition)
+
+module.exports = {Users, Data, CardData, Promo, Order, OrderPosition};

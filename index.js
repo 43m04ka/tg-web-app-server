@@ -10,6 +10,8 @@ const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
 const PromoModel = require('./models.js').Promo;
+const OrderModel = require('./models.js').Order;
+const OrderModelPosition = require('./models.js').OrderPosition;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
@@ -222,150 +224,186 @@ app.post('/promo', async (req, res) => {
 });
 
 app.post('/basket', async (req, res) => {
-    const method = req.body.method;
-    if (method === 'add') {
-        try {
-            const {mainData, user} = req.body;
-            const chatId = String(user.id);
-            const userDb = await UserModel.findOne({where: {chatId: chatId}});
-            let isContinue = true;
-            userDb.basket.body.map(el => {
-                console.log(el.id, mainData.id, el.body.title, mainData.body.title)
-                if (el.id === mainData.id && el.body.title === mainData.body.title) {
-                    isContinue = false;
+        const method = req.body.method;
+        if (method === 'add') {
+            try {
+                const {mainData, user} = req.body;
+                const chatId = String(user.id);
+                const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                let isContinue = true;
+                userDb.basket.body.map(el => {
+                    console.log(el.id, mainData.id, el.body.title, mainData.body.title)
+                    if (el.id === mainData.id && el.body.title === mainData.body.title) {
+                        isContinue = false;
+                        return res.status(200).json({body: true});
+                    }
+                })
+                if (isContinue) {
+                    userDb.basket = {body: [...[mainData], ...userDb.basket.body]};
+                    await userDb.save();
                     return res.status(200).json({body: true});
                 }
-            })
-            if (isContinue) {
-                userDb.basket = {body: [...[mainData], ...userDb.basket.body]};
-                await userDb.save();
-                return res.status(200).json({body: true});
-            }
-        } catch (e) {
-            console.log(e)
-            return res.status(501).json({body: false});
-        }
-    } else if (method === 'get') {
-        try {
-            const {user} = req.body;
-            const chatId = String(user.id);
-            const userDb = await UserModel.findOne({where: {chatId: chatId}});
-            return res.status(200).json(userDb.basket);
-        } catch (e) {
-            console.log(e)
-            return res.status(502).json({});
-        }
-    } else if (method === 'del') {
-        try {
-            const {user, mainData} = req.body;
-            const chatId = String(user.id);
-            const userDb = await UserModel.findOne({where: {chatId: chatId}});
-            let userBasket = userDb.basket.body
-            let deleteItem = [mainData];
-            const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
-            userDb.basket = {body: result || []};
-            userDb.save();
-            return res.status(200).json({body: result});
-        } catch (e) {
-            console.log(e)
-            return res.status(503).json({});
-        }
-    } else if (method === 'buy') {
-        try {
-            const {user, accData, page} = req.body;
-            console.log(req.body + '------')
-            const chatId = String(user.id);
-            const userDb = await UserModel.findOne({where: {chatId: chatId}});
-            console.log(userDb)
-            let userBasket = userDb.basket.body
-            let resultMassage = ''
-            if (page === 0) {
-                resultMassage += 'Заказ Playstation\n\n'
-            } else if (page === 1) {
-                resultMassage += 'Заказ Xbox\n\n'
-            } else if (page === 2) {
-                resultMassage += 'Заказ Сервисы\n\n'
-            }
-            resultMassage += 'Контакт - @' + user.username + '\n\n'
-            resultMassage += accData + '\n\n'
-            resultMassage += 'Корзина:' + '\n\n'
-            let sumPrice = 0
-            let basketMsg = ''
-            let c = 1
-            userBasket.map(pos => {
-                let positionString = ''
-                if (typeof pos.body.view === 'undefined') {
-                    positionString += String(c) + '. ' + pos.body.title + ' '
-                    if (typeof pos.body.platform !== 'undefined') {
-                        positionString += pos.body.platform + ' '
-                    }
-                    positionString += '- ' + String(pos.body.price) + 'р'
-                    if (typeof pos.body.url !== 'undefined') {
-                        positionString += ' / ' + pos.body.url
-                    }
-                } else {
-                    positionString += String(c) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р'
-                }
-                positionString += '\n'
-                basketMsg += positionString
-                sumPrice += pos.body.price
-                c++
-            })
-            resultMassage += basketMsg
-
-            try {
-                const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent / 100)) + 'р' + '\n'
-                resultMassage += 'Промокод: ' + promoDb.body + '\n'
-                resultMassage += 'Статус: Не оплачен'
             } catch (e) {
-                resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
-                resultMassage += 'Статус: Не оплачен'
+                console.log(e)
+                return res.status(501).json({body: false});
             }
-
-            if (basketMsg !== '') {
-                bot.sendMessage(5106439090, resultMassage)
-
-                let bsMsg = ''
-                let r = 1
+        } else if (method === 'get') {
+            try {
+                const {user} = req.body;
+                const chatId = String(user.id);
+                const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                return res.status(200).json(userDb.basket);
+            } catch (e) {
+                console.log(e)
+                return res.status(502).json({});
+            }
+        } else if (method === 'del') {
+            try {
+                const {user, mainData} = req.body;
+                const chatId = String(user.id);
+                const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                let userBasket = userDb.basket.body
+                let deleteItem = [mainData];
+                const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
+                userDb.basket = {body: result || []};
+                userDb.save();
+                return res.status(200).json({body: result});
+            } catch (e) {
+                console.log(e)
+                return res.status(503).json({});
+            }
+        } else if (method === 'buy') {
+            try {
+                const {user, accData, page} = req.body;
+                console.log(req.body + '------')
+                const chatId = String(user.id);
+                const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                console.log(userDb)
+                let userBasket = userDb.basket.body
+                let resultMassage = ''
+                if (page === 0) {
+                    resultMassage += 'Заказ Playstation\n\n'
+                } else if (page === 1) {
+                    resultMassage += 'Заказ Xbox\n\n'
+                } else if (page === 2) {
+                    resultMassage += 'Заказ Сервисы\n\n'
+                }
+                resultMassage += 'Контакт - @' + user.username + '\n\n'
+                resultMassage += accData + '\n\n'
+                resultMassage += 'Корзина:' + '\n\n'
+                let sumPrice = 0
+                let basketMsg = ''
+                let c = 1
                 userBasket.map(pos => {
+                    let positionString = ''
                     if (typeof pos.body.view === 'undefined') {
-                        bsMsg += String(r) + '. ' + pos.body.title + ' '
-                        bsMsg += '- ' + String(pos.body.price) + 'р' + '\n'
+                        positionString += String(c) + '. ' + pos.body.title + ' '
+                        if (typeof pos.body.platform !== 'undefined') {
+                            positionString += pos.body.platform + ' '
+                        }
+                        positionString += '- ' + String(pos.body.price) + 'р'
+                        if (typeof pos.body.url !== 'undefined') {
+                            positionString += ' / ' + pos.body.url
+                        }
                     } else {
-                        bsMsg += String(r) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р' + '\n'
+                        positionString += String(c) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р'
                     }
-                    r++
+                    positionString += '\n'
+                    basketMsg += positionString
+                    sumPrice += pos.body.price
+                    c++
                 })
+                resultMassage += basketMsg
 
                 try {
                     const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                    let parcent = promoDb.parcent
-                    bsMsg += '\n' + 'Цена без учёта скидки: ' + String(sumPrice) + 'р' + '\n'
-                    bsMsg += 'Скидка: ' + String(sumPrice * (parcent / 100)) + 'р' + '\n'
-                    bsMsg += 'Итого: ' + String(sumPrice - sumPrice * (parcent / 100)) + 'р' + '\n'
+                    resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent / 100)) + 'р' + '\n'
+                    resultMassage += 'Промокод: ' + promoDb.body + '\n'
+                    resultMassage += 'Статус: Не оплачен'
+                    sumPrice = sumPrice - sumPrice * (promoDb.parcent / 100)
                 } catch (e) {
-                    bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
+                    resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
+                    resultMassage += 'Статус: Не оплачен'
                 }
 
-                bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
-                    '\n' +
-                    bsMsg +
-                    '\n' +
-                    'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
-                    '\n' +
-                    'Менеджер — @gwstore_admin. \n' +
-                    'Часы работы 10:00 — 22:00 по МСК ежедневно.')
-                userDb.basket = {body: []};
-                userDb.save();
+                await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
+                    await user.createOrder({
+                        summa: sumPrice,
+                        date: '01.01.01',
+                        preview: userBasket[0].body.title,
+                        status: 1
+                    }).then( async res => {
+                        const orderId = res.id;
+                        userBasket.map(async el => {
+                            await OrderModelPosition.create({
+                                name: el.body.title,
+                                price: el.body.price,
+                                idPos: el.id,
+                                orderId: orderId
+                            }).catch(err => console.log(err));
+                        })
+                    }).catch(err => console.log(err));
+                })
+
+                await UserModel.findOne({where: {chatId: chatId}}).then(user=>{
+                    if(!user) return console.log("User not found");
+                    user.getOrders().then(orders=>{
+                            for(order of orders)
+                                order.getOrderPositions().then(orderPoss=>{
+                                    for(orderPos of orderPoss)
+                                        console.log(user.id, " - ", order.id, " - ", orderPos.idPos);
+                                })
+                                    .catch(err=>console.log(err));
+                        })
+                        .catch(err=>console.log(err));
+                }).catch(err=>console.log(err));
+
+                if (basketMsg !== '') {
+                    bot.sendMessage(5106439090, resultMassage)
+
+                    let bsMsg = ''
+                    let r = 1
+
+                    userBasket.map(pos => {
+                        if (typeof pos.body.view === 'undefined') {
+                            bsMsg += String(r) + '. ' + pos.body.title + ' '
+                            bsMsg += '- ' + String(pos.body.price) + 'р' + '\n'
+                        } else {
+                            bsMsg += String(r) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р' + '\n'
+                        }
+                        r++
+                    })
+
+                    try {
+                        const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
+                        let parcent = promoDb.parcent
+                        bsMsg += '\n' + 'Цена без учёта скидки: ' + String(sumPrice) + 'р' + '\n'
+                        bsMsg += 'Скидка: ' + String(sumPrice * (parcent / 100)) + 'р' + '\n'
+                        bsMsg += 'Итого: ' + String(sumPrice - sumPrice * (parcent / 100)) + 'р' + '\n'
+                    } catch (e) {
+                        bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
+                    }
+
+                    bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
+                        '\n' +
+                        bsMsg +
+                        '\n' +
+                        'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
+                        '\n' +
+                        'Менеджер — @gwstore_admin. \n' +
+                        'Часы работы 10:00 — 22:00 по МСК ежедневно.')
+                    userDb.basket = {body: []};
+                    userDb.save();
+                }
+                return res.status(200).json({body: true});
+            } catch
+                (e) {
+                console.log(e)
+                return res.status(503).json({});
             }
-            return res.status(200).json({body: true});
-        } catch (e) {
-            console.log(e)
-            return res.status(503).json({});
         }
     }
-})
+)
 
 app.post('/database', async (req, res) => {
 
