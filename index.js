@@ -336,9 +336,7 @@ app.post('/basket', async (req, res) => {
                         const orderId = res.id;
                         userBasket.map(async el => {
                             await OrderModelPosition.create({
-                                name: el.body.title,
-                                price: el.body.price,
-                                idPos: el.id,
+                                body: el,
                                 orderId: orderId
                             }).catch(err => console.log(err));
                         })
@@ -352,7 +350,7 @@ app.post('/basket', async (req, res) => {
                                 let sumOrder = order.summa;
                                 order.getOrderPositions().then(orderPoss => {
                                     for (orderPos of orderPoss)
-                                        console.log(user.id, " - ", sumOrder, " - ", orderPos.name);
+                                        console.log(user.id, " - ", sumOrder, " - ", orderPos.body.name);
                                 })
                                     .catch(err => console.log(err));
                             }

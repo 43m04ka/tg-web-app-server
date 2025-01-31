@@ -38,9 +38,7 @@ const Order = sequelize.define('order', {
 
 const OrderPosition = sequelize.define('orderPosition', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
-    price: {type: DataTypes.INTEGER, defaultValue: 0},
-    name: {type: DataTypes.STRING, defaultValue: ''},
-    idPos: {type: DataTypes.INTEGER, defaultValue: 0},
+    body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
 Users.hasMany(Order,  { onDelete: "cascade"})
