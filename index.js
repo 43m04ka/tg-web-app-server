@@ -352,7 +352,7 @@ app.post('/basket', async (req, res) => {
                                 let sumOrder = order.summa;
                                 order.getOrderPositions().then(orderPoss => {
                                     for (orderPos of orderPoss)
-                                        console.log(user.id, " - ", sumOrder.summa, " - ", orderPos.name);
+                                        console.log(user.id, " - ", sumOrder, " - ", orderPos.name);
                                 })
                                     .catch(err => console.log(err));
                             }
