@@ -348,12 +348,14 @@ app.post('/basket', async (req, res) => {
                 await UserModel.findOne({where: {chatId: chatId}}).then(user=>{
                     if(!user) return console.log("User not found");
                     user.getOrders().then(orders=>{
-                            for(order of orders)
-                                order.getOrderPositions().then(orderPoss=>{
-                                    for(orderPos of orderPoss)
-                                        console.log(user.id, " - ", order.summa, " - ", orderPos.name);
+                            for(order of orders) {
+                                let sumOrder = order.summa;
+                                order.getOrderPositions().then(orderPoss => {
+                                    for (orderPos of orderPoss)
+                                        console.log(user.id, " - ", sumOrder.summa, " - ", orderPos.name);
                                 })
-                                    .catch(err=>console.log(err));
+                                    .catch(err => console.log(err));
+                            }
                         })
                         .catch(err=>console.log(err));
                 }).catch(err=>console.log(err));
