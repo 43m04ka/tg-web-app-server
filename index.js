@@ -351,7 +351,7 @@ app.post('/basket', async (req, res) => {
                             for(order of orders)
                                 order.getOrderPositions().then(orderPoss=>{
                                     for(orderPos of orderPoss)
-                                        console.log(user.id, " - ", order.id, " - ", orderPos.idPos);
+                                        console.log(user.id, " - ", order.summa, " - ", orderPos.name);
                                 })
                                     .catch(err=>console.log(err));
                         })
