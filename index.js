@@ -276,23 +276,48 @@ app.post('/basket', async (req, res) => {
         } else if (method === 'buy') {
             try {
                 const {user, accData, page} = req.body;
-                console.log(req.body + '------')
                 const chatId = String(user.id);
+
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
-                console.log(userDb)
+
                 let userBasket = userDb.basket.body
+                let sumPrice = 0
+
+                userBasket.map(pos=>{
+                    sumPrice += pos.body.price
+                })
+
+                let orderId = 'error';
+
+                await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
+                    await user.createOrder({
+                        summa: sumPrice,
+                        date: new Date().toLocaleDateString(),
+                        preview: userBasket[0].body.title,
+                        status: 1
+                    }).then( async res => {
+                        orderId = res.id;
+                        userBasket.map(async el => {
+                            await OrderModelPosition.create({
+                                body: el,
+                                orderId: orderId
+                            }).catch(err => console.log(err));
+                        })
+                    }).catch(err => console.log(err));
+                })
+
+
                 let resultMassage = ''
                 if (page === 0) {
-                    resultMassage += 'Заказ Playstation\n\n'
+                    resultMassage += 'Заказ Playstation №'+orderId+'\n\n'
                 } else if (page === 1) {
-                    resultMassage += 'Заказ Xbox\n\n'
+                    resultMassage += 'Заказ Xbox №'+orderId+'\n\n'
                 } else if (page === 2) {
-                    resultMassage += 'Заказ Сервисы\n\n'
+                    resultMassage += 'Заказ Сервисы №'+orderId+'\n\n'
                 }
                 resultMassage += 'Контакт - @' + user.username + '\n\n'
                 resultMassage += accData + '\n\n'
                 resultMassage += 'Корзина:' + '\n\n'
-                let sumPrice = 0
                 let basketMsg = ''
                 let c = 1
                 userBasket.map(pos => {
@@ -311,7 +336,6 @@ app.post('/basket', async (req, res) => {
                     }
                     positionString += '\n'
                     basketMsg += positionString
-                    sumPrice += pos.body.price
                     c++
                 })
                 resultMassage += basketMsg
@@ -326,23 +350,6 @@ app.post('/basket', async (req, res) => {
                     resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
                     resultMassage += 'Статус: Не оплачен'
                 }
-
-                await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
-                    await user.createOrder({
-                        summa: sumPrice,
-                        date: '01.01.01',
-                        preview: userBasket[0].body.title,
-                        status: 1
-                    }).then( async res => {
-                        const orderId = res.id;
-                        userBasket.map(async el => {
-                            await OrderModelPosition.create({
-                                body: el,
-                                orderId: orderId
-                            }).catch(err => console.log(err));
-                        })
-                    }).catch(err => console.log(err));
-                })
 
                 if (basketMsg !== '') {
                     bot.sendMessage(5106439090, resultMassage)
@@ -370,7 +377,7 @@ app.post('/basket', async (req, res) => {
                         bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                     }
 
-                    bot.sendMessage(chatId, 'Спасибо за Ваш заказ!\n' +
+                    bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №'+orderId+'!\n' +
                         '\n' +
                         bsMsg +
                         '\n' +
