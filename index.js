@@ -343,21 +343,6 @@ app.post('/basket', async (req, res) => {
                     }).catch(err => console.log(err));
                 })
 
-                await UserModel.findOne({where: {chatId: chatId}}).then(user=>{
-                    if(!user) return console.log("User not found");
-                    user.getOrders().then(orders=>{
-                            for(order of orders) {
-                                let sumOrder = order.summa;
-                                order.getOrderPositions().then(orderPoss => {
-                                    for (orderPos of orderPoss)
-                                        console.log(user.id, " - ", sumOrder, " - ", orderPos.body.name);
-                                })
-                                    .catch(err => console.log(err));
-                            }
-                        })
-                        .catch(err=>console.log(err));
-                }).catch(err=>console.log(err));
-
                 if (basketMsg !== '') {
                     bot.sendMessage(5106439090, resultMassage)
 
@@ -404,6 +389,36 @@ app.post('/basket', async (req, res) => {
         }
     }
 )
+
+app.post('/history', async (req, res) => {
+    const method = req.body.method;
+    if (method === 'get') {
+        try {
+            const {user} = req.body;
+            const chatId = String(user.id);
+
+            await UserModel.findOne({where: {chatId: chatId}}).then(user=>{
+                if(!user) return console.log("User not found");
+                user.getOrders().then(orders=>{
+                    for(order of orders) {
+                        let sumOrder = order.summa;
+                        order.getOrderPositions().then(orderPoss => {
+                            for (orderPos of orderPoss)
+                                console.log(orderPos);
+                        })
+                            .catch(err => console.log(err));
+                    }
+                })
+                    .catch(err=>console.log(err));
+            }).catch(err=>console.log(err));
+
+            return res.status(200).json({answer: true});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    }
+});
 
 app.post('/database', async (req, res) => {
 
