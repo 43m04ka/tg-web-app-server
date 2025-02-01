@@ -6,6 +6,7 @@ const sequelize = require('./db.js')
 const {mainData} = require("./models");
 const {all} = require("express/lib/application");
 const path = require("node:path");
+const {raw} = require("express");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
@@ -399,14 +400,14 @@ app.post('/history', async (req, res) => {
             const chatId = String(user.id);
             let historyData = []
 
-            await UserModel.findOne({where: {chatId: chatId}}).then(user=>{
+            await UserModel.findOne({where: {chatId: chatId}}).then(async user=>{
                 if(!user) return console.log("User not found");
-                user.getOrders().then(orders=>{
+                await user.getOrders().then( async orders=>{
                     for(order of orders) {
                         let orderData = {id:order.id, summa:order.summa, date:order.date, body:[]}
-                        order.getOrderPositions().then(orderPoss => {
+                        await order.getOrderPositions().then(async orderPoss => {
                             for (orderPos of orderPoss) {
-                                console.log(orderPos.body.title)
+                                console.log(orderPos.body.body.title)
                                 orderData.body = [...orderData.body, orderPos.body]
                             }
                         })
