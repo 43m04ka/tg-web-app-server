@@ -411,6 +411,7 @@ app.post('/history', async (req, res) => {
                         })
                             .catch(err => console.log(err));
                         historyData = [...historyData, orderData]
+                        console.log(orderData)
                     }
                 })
                     .catch(err=>console.log(err));
