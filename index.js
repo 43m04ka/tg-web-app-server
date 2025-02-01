@@ -427,9 +427,14 @@ app.post('/history', async (req, res) => {
                     .catch(err=>console.log(err));
             }).catch(err=>console.log(err));
 
-            console.log(historyData)
+            let arr = historyData
+            let newArr = [], index;
+            for (let i = arr.length; i > 0; i--) {
+                index = arr.length - i;
+                newArr[i] = arr[index];
+            }
 
-            return res.status(200).json({body: historyData.slice(0, 15)});
+            return res.status(200).json({body: newArr.slice(0, 15)});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
