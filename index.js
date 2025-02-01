@@ -394,6 +394,7 @@ app.post('/history', async (req, res) => {
     const method = req.body.method;
     if (method === 'get') {
         try {
+            console.log(123)
             const {user} = req.body;
             const chatId = String(user.id);
 
@@ -403,8 +404,9 @@ app.post('/history', async (req, res) => {
                     for(order of orders) {
                         let sumOrder = order.summa;
                         order.getOrderPositions().then(orderPoss => {
-                            for (orderPos of orderPoss)
+                            for (orderPos of orderPoss) {
                                 console.log(orderPos);
+                            }
                         })
                             .catch(err => console.log(err));
                     }
