@@ -397,24 +397,26 @@ app.post('/history', async (req, res) => {
             console.log(123)
             const {user} = req.body;
             const chatId = String(user.id);
+            let historyData = []
 
             await UserModel.findOne({where: {chatId: chatId}}).then(user=>{
                 if(!user) return console.log("User not found");
                 user.getOrders().then(orders=>{
                     for(order of orders) {
-                        let sumOrder = order.summa;
+                        let orderData = {id:order.id, summa:order.summa, data:order.data, body:[]}
                         order.getOrderPositions().then(orderPoss => {
                             for (orderPos of orderPoss) {
-                                console.log(orderPos);
+                                orderData.body = [...orderData.body, orderPos.body]
                             }
                         })
                             .catch(err => console.log(err));
+                        historyData = [...historyData, orderData]
                     }
                 })
                     .catch(err=>console.log(err));
             }).catch(err=>console.log(err));
 
-            return res.status(200).json({answer: true});
+            return res.status(200).json({body: historyData});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
