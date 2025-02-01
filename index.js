@@ -403,9 +403,10 @@ app.post('/history', async (req, res) => {
                 if(!user) return console.log("User not found");
                 user.getOrders().then(orders=>{
                     for(order of orders) {
-                        let orderData = {id:order.id, summa:order.summa, data:order.data, body:[]}
+                        let orderData = {id:order.id, summa:order.summa, date:order.date, body:[]}
                         order.getOrderPositions().then(orderPoss => {
                             for (orderPos of orderPoss) {
+                                console.log(orderPos.body)
                                 orderData.body = [...orderData.body, orderPos.body]
                             }
                         })
