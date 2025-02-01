@@ -406,17 +406,20 @@ app.post('/history', async (req, res) => {
                         let orderData = {id:order.id, summa:order.summa, date:order.date, body:[]}
                         order.getOrderPositions().then(orderPoss => {
                             for (orderPos of orderPoss) {
-                                console.log(orderPos.body)
+                                console.log(orderPos.body.title)
                                 orderData.body = [...orderData.body, orderPos.body]
                             }
                         })
                             .catch(err => console.log(err));
                         historyData = [...historyData, orderData]
+                        console.log(historyData)
                         console.log(orderData)
                     }
                 })
                     .catch(err=>console.log(err));
             }).catch(err=>console.log(err));
+
+            console.log(historyData)
 
             return res.status(200).json({body: historyData});
         } catch (e) {
