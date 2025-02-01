@@ -388,7 +388,7 @@ app.post('/basket', async (req, res) => {
                     userDb.basket = {body: []};
                     userDb.save();
                 }
-                return res.status(200).json({body: true});
+                return res.status(200).json({body: true, number:orderId});
             } catch
                 (e) {
                 console.log(e)
