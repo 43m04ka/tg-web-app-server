@@ -434,7 +434,7 @@ app.post('/history', async (req, res) => {
                 newArr[i] = arr[index];
             }
 
-            return res.status(200).json({body: newArr.slice(0, 15)});
+            return res.status(200).json({body: newArr.slice(1, 15)});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
