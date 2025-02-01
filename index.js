@@ -429,7 +429,7 @@ app.post('/history', async (req, res) => {
 
             console.log(historyData)
 
-            return res.status(200).json({body: historyData});
+            return res.status(200).json({body: historyData.slice(0, 15)});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
