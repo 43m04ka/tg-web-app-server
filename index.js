@@ -98,6 +98,8 @@ bot.on('message', async (msg) => {
     console.log(msg);
     const text = msg.text;
     if (text === 'bd') {
+        await DataModel.create()
+
         const dataDb = await DataModel.findOne({id: 1})
         dataDb.body = {
             body: [{id: 0, page: 'playstation', body: [[], []]}, {
@@ -127,6 +129,26 @@ bot.on('message', async (msg) => {
                 ]
             }
         })
+    }else if(text === '/request'){
+        let dataRequestDatabase = {
+            userName: 'Admin-bot',
+            password: '49ODAvir',
+
+        }
+
+        const sendRequestDatabase = useCallback(() => {
+            fetch('https://alfa.rbsuat.com/payment/rest/register.do', {
+                method: 'POST',
+                body: JSON.stringify(dataRequestDatabase)
+            }).then(r => {
+                let Promise = r.json()
+                Promise.then(prom => {
+                    console.log(prom)
+                })
+            })
+        }, [dataRequestDatabase])
+
+        sendRequestDatabase()
     }
 });
 
