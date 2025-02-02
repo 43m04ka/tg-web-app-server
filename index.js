@@ -98,17 +98,25 @@ bot.on('message', async (msg) => {
     console.log(msg);
     const text = msg.text;
     if (text === 'bd') {
-        await DataModel.create()
-
-        const dataDb = await DataModel.findOne({id: 1})
-        dataDb.body = {
-            body: [{id: 0, page: 'playstation', body: [[], []]}, {
-                id: 1,
-                page: 'xbox',
-                body: [[], []]
-            }, {id: 2, page: 'service', body: [[], []]}]
-        };
-        dataDb.save();
+        try {
+            const dataDb = await DataModel.findOne()
+            dataDb.body = {
+                body: [{id: 0, page: 'playstation', body: [[], []]}, {
+                    id: 1,
+                    page: 'xbox',
+                    body: [[], []]
+                }, {id: 2, page: 'service', body: [[], []]}]
+            };
+            dataDb.save();
+        }catch (e) {
+            await DataModel.create({body:{
+                body: [{id: 0, page: 'playstation', body: [[], []]}, {
+                    id: 1,
+                    page: 'xbox',
+                    body: [[], []]
+                }, {id: 2, page: 'service', body: [[], []]}]
+            }})
+        }
     } else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId});
