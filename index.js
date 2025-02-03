@@ -316,7 +316,7 @@ app.post('/basket', async (req, res) => {
                 let sumPrice = 0
 
                 userBasket.map(pos=>{
-                    sumPrice += pos.body.price
+                    sumPrice += parseFloat(pos.body.price)
                 })
 
                 let orderId = 'error';
@@ -384,8 +384,8 @@ app.post('/basket', async (req, res) => {
                 }
 
                 if (basketMsg !== '') {
-                    botAdmin.sendMessage(5242902575, resultMassage)
-                    bot.sendMessage(5106439090, resultMassage)
+                    await botAdmin.sendMessage(5242902575, resultMassage)
+                    await bot.sendMessage(5106439090, resultMassage)
 
                     let bsMsg = ''
                     let r = 1
@@ -410,7 +410,7 @@ app.post('/basket', async (req, res) => {
                         bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                     }
 
-                    bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №'+orderId+'!\n' +
+                    await bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №'+orderId+'!\n' +
                         '\n' +
                         bsMsg +
                         '\n' +
