@@ -15,9 +15,11 @@ const OrderModel = require('./models.js').Order;
 const OrderModelPosition = require('./models.js').OrderPosition;
 
 const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
+const tokenAdmin = '7914083585:AAGfnycmC6mgq_YLZX1nEtykj8VzSp1ctC4';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
 
 const bot = new TelegramBot(token, {polling: true});
+const botAdmin = new TelegramBot(tokenAdmin, {polling: true});
 const app = express();
 let StructureData = {}
 let CardData = []
@@ -382,6 +384,7 @@ app.post('/basket', async (req, res) => {
                 }
 
                 if (basketMsg !== '') {
+                    botAdmin.sendMessage(5242902575, resultMassage)
                     bot.sendMessage(5106439090, resultMassage)
 
                     let bsMsg = ''
