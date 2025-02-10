@@ -133,7 +133,7 @@ bot.on('message', async (msg) => {
             const db = await UserModel.findOne({where: {chatId: String(chatId)}})
             console.log(db)
             console.log(chatId)
-            db.basket = {body: []};
+            db.basket = [];
             db.save();
         } catch (err) {
             const db = await UserModel.findOne({chatId: chatId})
