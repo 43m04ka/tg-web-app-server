@@ -139,10 +139,17 @@ bot.on('message', async (msg) => {
                 ]
             }
         })
-        return bot.sendVideo(chatId, './preview.mov', {
-            caption: '<b>⭐️ Видео</b>',
-            parse_mode: 'HTML'
-        });
+            await bot.sendMediaGroup(video.chat.id, [
+
+                {
+
+                    type: 'video',
+                    media: './preview.mov',
+                    caption: `Название файла:`
+
+                }
+
+            ]);
     }else if(text === '/request'){
         let dataRequestDatabase = {
             userName: 'Admin-bot',
