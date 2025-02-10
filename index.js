@@ -147,7 +147,7 @@ bot.on('message', async (msg) => {
                 ]
             }
         })
-        await bot.sendMediaGroup(video.chat.id, [
+        await bot.sendMediaGroup(chatId, [
 
             {
 
