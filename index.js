@@ -153,7 +153,18 @@ bot.on('message', async (msg) => {
 
                 type: 'video',
                 media: 'BAACAgIAAxkBAAJrzWep2ne-f6_hNX8hDLRThdymgTySAAJJYAAClBxRSWOgPyykPcJCNgQ',
-                caption: 'Описание'
+                caption: `<b>Бот Геймворд — это замена PS Store и Xbox Store в России </b> .\n` +
+                    '\n' +
+                    'Тысячи позиции в одном приложении. Игры и подписки для PlayStation и XBOX, пополнение Steam, подписки Spotify, Netflix и многое другое. Все цены в рублях. Безопасная оплата картой и чек.\n' +
+                    '\n' +
+                    '<b>Канал в Telegram для  PlayStation — <a href=\'https://t.me/gameworld_ps\'>ссылка</a>\n' +
+                    'Канал в Telegram для Xbox — <a href=\'https://t.me/gameworld_xbox\'>ссылка</a>\n' +
+                    'Наш сайт —  <a href=\'https://gwstore.su\'>геймворд.рф</a>\n' +
+                    '\n' +
+                    'Нажмите кнопку «Магазин», чтобы открыть каталог и оформить заказ.</b>',
+                disable_web_page_preview: true,
+                parse_mode: "HTML"
+
             }
 
         ]);
