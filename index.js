@@ -303,12 +303,13 @@ app.post('/basket', async (req, res) => {
                 try {
                     await UserModel.create({chatId: chatId});
                     const userDb = await UserModel.findOne({where: {chatId: String(chatId)}})
-                    userDb.save();
+                    await userDb.save();
+                    console.log('123')
                     return res.status(200).json({body:[]});
                 } catch (err) {
                     const userDb = await UserModel.findOne({chatId: chatId})
                     let newArray = []
-                    await userDb.basket.map(async el=>{
+                    userDb.basket.map(async el=>{
                         const card = await CardModel.findByPk(el)
                         newArray = [...newArray, card]
                     })
