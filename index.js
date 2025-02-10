@@ -310,7 +310,7 @@ app.post('/basket', async (req, res) => {
                     let newArray = []
                     await userDb.basket.map(async el=>{
                         const card = await CardModel.findByPk(el)
-                        newArray = [...newArray, CardModel.findByPk(el)]
+                        newArray = [...newArray, card]
                     })
                     await console.log(newArray);
                     return res.status(200).json({body:newArray});
