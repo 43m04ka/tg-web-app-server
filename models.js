@@ -4,7 +4,7 @@ const {DataTypes} = require('sequelize');
 const Users = sequelize.define('users', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     chatId: {type: DataTypes.STRING, unique: true},
-    basket: {type: DataTypes.JSON, defaultValue: {}},
+    basket: {type: DataTypes.ARRAY, defaultValue: []},
 })
 
 const Data = sequelize.define('data', {
@@ -41,7 +41,7 @@ const OrderPosition = sequelize.define('orderPosition', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-Users.hasMany(Order,  { onDelete: "cascade"})
+Users.hasMany(Order)
 Order.hasMany(OrderPosition)
 
 module.exports = {Users, Data, CardData, Promo, Order, OrderPosition};

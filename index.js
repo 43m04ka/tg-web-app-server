@@ -287,14 +287,13 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
                 let isContinue = true;
                 userDb.basket.body.map(el => {
-                    console.log(el.id, mainData.id, el.body.title, mainData.body.title)
-                    if (el.id === mainData.id && el.body.title === mainData.body.title) {
+                    if (el === mainData) {
                         isContinue = false;
                         return res.status(200).json({body: true});
                     }
                 })
                 if (isContinue) {
-                    userDb.basket = {body: [...[mainData], ...userDb.basket.body]};
+                    userDb.basket = [...[mainData], ...userDb.basket.body];
                     await userDb.save();
                     return res.status(200).json({body: true});
                 }
@@ -307,7 +306,12 @@ app.post('/basket', async (req, res) => {
                 const {user} = req.body;
                 const chatId = String(user.id);
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
-                return res.status(200).json(userDb.basket);
+                let newArray = []
+                userDb.basket.map(async el=>{
+                    let card = await CardModel.findByPk(el)
+                    newArray = [...newArray, card]
+                })
+                return res.status(200).json({body:newArray});
             } catch (e) {
                 console.log(e)
                 return res.status(502).json({});
@@ -319,10 +323,16 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
                 let userBasket = userDb.basket.body
                 let deleteItem = [mainData];
-                const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A.id === person_B.id));
-                userDb.basket = {body: result || []};
+                const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A === person_B));
+                userDb.basket = result || [];
                 userDb.save();
-                return res.status(200).json({body: result});
+
+                let newArray = []
+                userDb.basket.map(async el=>{
+                    let card = await CardModel.findByPk(el)
+                    newArray = [...newArray, card]
+                })
+                return res.status(200).json({body: newArray});
             } catch (e) {
                 console.log(e)
                 return res.status(503).json({});
