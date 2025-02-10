@@ -306,7 +306,7 @@ app.post('/basket', async (req, res) => {
                 const {user} = req.body;
                 const chatId = String(user.id);
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
-                console.log(userDb.basket+ '================================================================')
+                console.log(userDb.basket)
                 let newArray = []
                 userDb.basket.map(async el=>{
                     let card = await CardModel.findByPk(el)
