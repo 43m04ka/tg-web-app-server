@@ -353,8 +353,16 @@ app.post('/basket', async (req, res) => {
 
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
 
-                let userBasket = userDb.basket.body
-                let sumPrice = 0
+                let userBasket = []
+                CardData.map(card=>{
+                    userDb.basket.map(el=>{
+                        if(card.id===el && card.body.tab===page){
+                            userBasket = [...userBasket, card]
+                        }
+                    })
+                })
+
+                let sumPrice = 0.0
 
                 userBasket.map(pos => {
                     sumPrice += parseFloat(pos.body.price)
