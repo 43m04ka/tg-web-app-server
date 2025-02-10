@@ -95,6 +95,12 @@ const start = async () => {
 app.use(express.json());
 app.use(cors());
 
+bot.on("video", async video => {
+
+    console.log(video);
+
+})
+
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
     console.log(msg);
@@ -139,25 +145,7 @@ bot.on('message', async (msg) => {
                 ]
             }
         })
-            await bot.sendMediaGroup(chatId, [
 
-                {
-
-                    type: 'video',
-                    media: './preview.mov',
-                    caption: 'Бот Геймворд — это замена PS Store и Xbox Store в России.\n' +
-                        '\n' +
-                        'Тысячи позиции в одном приложении. Игры и подписки для PlayStation и XBOX, пополнение Steam, подписки Spotify, Netflix и многое другое. Все цены в рублях. Безопасная оплата картой и чек.\n' +
-                        '\n' +
-                        'Канал в Telegram для  PlayStation — ссылка\n' +
-                        'Канал в Telegram для Xbox — ссылка\n' +
-                        'Наш сайт —  геймворд.рф\n' +
-                        '\n' +
-                        'Нажмите кнопку «Магазин», чтобы открыть каталог и оформить заказ.'
-
-                }
-
-            ]);
     }else if(text === '/request'){
         let dataRequestDatabase = {
             userName: 'Admin-bot',
