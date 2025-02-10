@@ -131,14 +131,9 @@ bot.on('message', async (msg) => {
         try {
             await UserModel.create({chatId: chatId});
             const db = await UserModel.findOne({where: {chatId: String(chatId)}})
-            console.log(db)
-            console.log(chatId)
-            db.basket = [];
             db.save();
         } catch (err) {
             const db = await UserModel.findOne({chatId: chatId})
-            console.log(chatId)
-            console.log(db)
         }
 
         await bot.sendVideo(chatId, 'BAACAgIAAxkBAAJrzWep2ne-f6_hNX8hDLRThdymgTySAAJJYAAClBxRSWOgPyykPcJCNgQ', {
@@ -305,14 +300,21 @@ app.post('/basket', async (req, res) => {
             try {
                 const {user} = req.body;
                 const chatId = String(user.id);
-                const userDb = await UserModel.findOne({where: {chatId: chatId}});
-                console.log(userDb.basket)
-                let newArray = []
-                userDb.basket.map(async el=>{
-                    let card = await CardModel.findByPk(el)
-                    newArray = [...newArray, card]
-                })
-                return res.status(200).json({body:newArray});
+                try {
+                    await UserModel.create({chatId: chatId});
+                    const userDb = await UserModel.findOne({where: {chatId: String(chatId)}})
+                    userDb.save();
+                    return res.status(200).json({body:[]});
+                } catch (err) {
+                    const userDb = await UserModel.findOne({chatId: chatId})
+                    let newArray = []
+                    userDb.basket.map(async el=>{
+                        let card = await CardModel.findByPk(el)
+                        console.log(card)
+                        newArray = [...newArray, card]
+                    })
+                    return res.status(200).json({body:newArray});
+                }
             } catch (e) {
                 console.log(e)
                 return res.status(502).json({});
