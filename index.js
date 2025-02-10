@@ -286,14 +286,14 @@ app.post('/basket', async (req, res) => {
                 const chatId = String(user.id);
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
                 let isContinue = true;
-                userDb.basket.body.map(el => {
+                userDb.basket.map(el => {
                     if (el === mainData) {
                         isContinue = false;
                         return res.status(200).json({body: true});
                     }
                 })
                 if (isContinue) {
-                    userDb.basket = [...[mainData], ...userDb.basket.body];
+                    userDb.basket = [...[mainData], ...userDb.basket];
                     await userDb.save();
                     return res.status(200).json({body: true});
                 }
@@ -321,7 +321,7 @@ app.post('/basket', async (req, res) => {
                 const {user, mainData} = req.body;
                 const chatId = String(user.id);
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
-                let userBasket = userDb.basket.body
+                let userBasket = userDb.basket
                 let deleteItem = [mainData];
                 const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A === person_B));
                 userDb.basket = result || [];
