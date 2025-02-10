@@ -16,7 +16,7 @@ const OrderModelPosition = require('./models.js').OrderPosition;
 
 const token = '6964133561:AAFsVUdvH9VhLdqeRBMKEiGiUg1GQHC4-Hg';
 const tokenAdmin = '7914083585:AAGfnycmC6mgq_YLZX1nEtykj8VzSp1ctC4';
-const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
+const webAppURL = 'https://https://www.gwstorebot.ru';
 
 const bot = new TelegramBot(token, {polling: true});
 const botAdmin = new TelegramBot(tokenAdmin, {polling: true});
