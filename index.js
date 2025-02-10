@@ -140,13 +140,6 @@ bot.on('message', async (msg) => {
             console.log(chatId)
             console.log(db)
         }
-        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
-            reply_markup: {
-                inline_keyboard: [
-                    [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}]
-                ]
-            }
-        })
         await bot.sendMediaGroup(chatId, [
 
             {
@@ -164,17 +157,15 @@ bot.on('message', async (msg) => {
                     'Нажмите кнопку «Магазин», чтобы открыть каталог и оформить заказ.</b>',
                 disable_web_page_preview: true,
                 parse_mode: "HTML",
-                reply_markup: {
-                    inline_keyboard: [
-                        [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}],
-                        [{text: 'Отзывы о нас', web_app: {url: 'https://gwstore.su/reviews'}}],
-                        [{text: 'Поддержка бота', web_app: {url: 'https://t.me/gwstore_admin'}}]
-                    ]
-                }
-
             }
 
-        ]);
+        ], {reply_markup: {
+                inline_keyboard: [
+                    [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}],
+                    [{text: 'Отзывы о нас', web_app: {url: 'https://gwstore.su/reviews'}}],
+                    [{text: 'Поддержка бота', web_app: {url: 'https://t.me/gwstore_admin'}}]
+                ]
+            }});
     } else if (text === '/request') {
         let dataRequestDatabase = {
             userName: 'Admin-bot',
