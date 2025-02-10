@@ -161,13 +161,7 @@ bot.on('message', async (msg) => {
                     [{text: 'Отзывы о нас', web_app: {url: 'https://gwstore.su/reviews'}}],
                     [{text: 'Поддержка бота', web_app: {url: 'https://t.me/gwstore_admin'}}]
                 ]
-            },{reply_markup: {
-            inline_keyboard: [
-                [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}],
-                [{text: 'Отзывы о нас', web_app: {url: 'https://gwstore.su/reviews'}}],
-                [{text: 'Поддержка бота', web_app: {url: 'https://t.me/gwstore_admin'}}]
-            ]
-        }}
+            }
         ]);
     } else if (text === '/request') {
         let dataRequestDatabase = {
