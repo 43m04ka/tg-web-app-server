@@ -153,7 +153,7 @@ bot.on('message', async (msg) => {
 
                 type: 'video',
                 media: 'BAACAgIAAxkBAAJrzWep2ne-f6_hNX8hDLRThdymgTySAAJJYAAClBxRSWOgPyykPcJCNgQ',
-                caption: `<b>Бот Геймворд — это замена PS Store и Xbox Store в России </b> .\n` +
+                caption: `<b>Бот Геймворд — это замена PS Store и Xbox Store в России.</b>\n` +
                     '\n' +
                     'Тысячи позиции в одном приложении. Игры и подписки для PlayStation и XBOX, пополнение Steam, подписки Spotify, Netflix и многое другое. Все цены в рублях. Безопасная оплата картой и чек.\n' +
                     '\n' +
