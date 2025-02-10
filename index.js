@@ -152,7 +152,7 @@ bot.on('message', async (msg) => {
             {
 
                 type: 'video',
-                media: 'AAMCAgADGQEAAmvNZ6nad75_r-E1fyEMtFOF3KaBPJIAAklgAAKUHFFJY6A_LKQ9wkIBAAdtAAM2BA',
+                media: 'BAACAgIAAxkBAAJrzWep2ne-f6_hNX8hDLRThdymgTySAAJJYAAClBxRSWOgPyykPcJCNgQ',
                 caption: '123'
             }
 
