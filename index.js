@@ -116,14 +116,16 @@ bot.on('message', async (msg) => {
                 }, {id: 2, page: 'service', body: [[], []]}]
             };
             dataDb.save();
-        }catch (e) {
-            await DataModel.create({body:{
-                body: [{id: 0, page: 'playstation', body: [[], []]}, {
-                    id: 1,
-                    page: 'xbox',
-                    body: [[], []]
-                }, {id: 2, page: 'service', body: [[], []]}]
-            }})
+        } catch (e) {
+            await DataModel.create({
+                body: {
+                    body: [{id: 0, page: 'playstation', body: [[], []]}, {
+                        id: 1,
+                        page: 'xbox',
+                        body: [[], []]
+                    }, {id: 2, page: 'service', body: [[], []]}]
+                }
+            })
         }
     } else if (text === '/start') {
         try {
@@ -145,13 +147,17 @@ bot.on('message', async (msg) => {
                 ]
             }
         })
-            await bot.sendVideo(chatId, '.AAMCAgADGQEAAmvNZ6nad75_r-E1fyEMtFOF3KaBPJIAAklgAAKUHFFJY6A_LKQ9wkIBAAdtAAM2BA', {
+        await bot.sendMediaGroup(video.chat.id, [
 
-                caption: '<b>⭐️ Видео</b>',
-                parse_mode: 'HTML'
+            {
 
-            });
-    }else if(text === '/request'){
+                type: 'video',
+                media: 'AAMCAgADGQEAAmvNZ6nad75_r-E1fyEMtFOF3KaBPJIAAklgAAKUHFFJY6A_LKQ9wkIBAAdtAAM2BA',
+                caption: '123'
+            }
+
+        ]);
+    } else if (text === '/request') {
         let dataRequestDatabase = {
             userName: 'Admin-bot',
             password: '49ODAvir',
@@ -327,7 +333,7 @@ app.post('/basket', async (req, res) => {
                 let userBasket = userDb.basket.body
                 let sumPrice = 0
 
-                userBasket.map(pos=>{
+                userBasket.map(pos => {
                     sumPrice += parseFloat(pos.body.price)
                 })
 
@@ -339,7 +345,7 @@ app.post('/basket', async (req, res) => {
                         date: new Date().toLocaleDateString(),
                         preview: userBasket[0].body.title,
                         status: 1
-                    }).then( async res => {
+                    }).then(async res => {
                         orderId = res.id;
                         userBasket.map(async el => {
                             await OrderModelPosition.create({
@@ -353,11 +359,11 @@ app.post('/basket', async (req, res) => {
 
                 let resultMassage = ''
                 if (page === 0) {
-                    resultMassage += 'Заказ Playstation №'+orderId+'\n\n'
+                    resultMassage += 'Заказ Playstation №' + orderId + '\n\n'
                 } else if (page === 1) {
-                    resultMassage += 'Заказ Xbox №'+orderId+'\n\n'
+                    resultMassage += 'Заказ Xbox №' + orderId + '\n\n'
                 } else if (page === 2) {
-                    resultMassage += 'Заказ Сервисы №'+orderId+'\n\n'
+                    resultMassage += 'Заказ Сервисы №' + orderId + '\n\n'
                 }
                 resultMassage += 'Контакт - @' + user.username + '\n\n'
                 resultMassage += accData + '\n\n'
@@ -422,7 +428,7 @@ app.post('/basket', async (req, res) => {
                         bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
                     }
 
-                    await bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №'+orderId+'!\n' +
+                    await bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №' + orderId + '!\n' +
                         '\n' +
                         bsMsg +
                         '\n' +
@@ -433,7 +439,7 @@ app.post('/basket', async (req, res) => {
                     userDb.basket = {body: []};
                     userDb.save();
                 }
-                return res.status(200).json({body: true, number:orderId});
+                return res.status(200).json({body: true, number: orderId});
             } catch
                 (e) {
                 console.log(e)
@@ -452,11 +458,11 @@ app.post('/history', async (req, res) => {
             const chatId = String(user.id);
             let historyData = []
 
-            await UserModel.findOne({where: {chatId: chatId}}).then(async user=>{
-                if(!user) return console.log("User not found");
-                await user.getOrders().then( async orders=>{
-                    for(order of orders) {
-                        let orderData = {id:order.id, summa:order.summa, date:order.date, body:[]}
+            await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
+                if (!user) return console.log("User not found");
+                await user.getOrders().then(async orders => {
+                    for (order of orders) {
+                        let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
                         await order.getOrderPositions().then(async orderPoss => {
                             for (orderPos of orderPoss) {
                                 console.log(orderPos.body.body.title)
@@ -469,8 +475,8 @@ app.post('/history', async (req, res) => {
                         console.log(orderData)
                     }
                 })
-                    .catch(err=>console.log(err));
-            }).catch(err=>console.log(err));
+                    .catch(err => console.log(err));
+            }).catch(err => console.log(err));
 
             let arr = historyData
             let newArr = [], index;
