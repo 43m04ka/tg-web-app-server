@@ -289,7 +289,6 @@ app.post('/basket', async (req, res) => {
                 })
                 if (isContinue) {
                     userDb.basket = [...[mainData], ...userDb.basket];
-                    console.log([...[mainData], ...userDb.basket])
                     await userDb.save();
                     return res.status(200).json({body: true});
                 }
@@ -306,15 +305,11 @@ app.post('/basket', async (req, res) => {
                     console.log('123')
                     return res.status(200).json({body:[]});
                 } catch (err) {
-                    const userDb = await UserModel.findOne({chatId: chatId})
-                    console.log(userDb.basket)
+                    const userDb = await UserModel.findOne({where: {chatId: chatId}});
                     let newArray = []
-                    CardData.map(async card=>{
-                        userDb.basket.map(async el=>{
-                            if(card.id===el){
-                                newArray = [...newArray, card]
-                            }
-                        })
+                    userDb.basket.map(async el=>{
+                        const card = await CardModel.findByPk(el)
+                        newArray = [...newArray, card]
                     })
                     await console.log(newArray);
                     return res.status(200).json({body:newArray});
