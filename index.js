@@ -308,10 +308,11 @@ app.post('/basket', async (req, res) => {
                 } catch (err) {
                     const userDb = await UserModel.findOne({chatId: chatId})
                     let newArray = []
-                    userDb.basket.map(async el => {
-                        newArray = [...newArray, await CardModel.findByPk(el)]
+                    await userDb.basket.map(async el=>{
+                        const card = await CardModel.findByPk(el)
+                        newArray = [...newArray, CardModel.findByPk(el)]
                     })
-                    console.log(newArray);
+                    await console.log(newArray);
                     return res.status(200).json({body:newArray});
                 }
             } catch (e) {
