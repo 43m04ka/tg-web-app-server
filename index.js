@@ -356,7 +356,7 @@ app.post('/basket', async (req, res) => {
                 let userBasket = []
                 CardData.map(card=>{
                     userDb.basket.map(el=>{
-                        if(card.id===el && card.body.tab===page){
+                        if(card.id===el && card.body.tab===page && card.body.isSale){
                             userBasket = [...userBasket, card]
                         }
                     })
