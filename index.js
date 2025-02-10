@@ -115,7 +115,7 @@ bot.on('message', async (msg) => {
                     body: [[], []]
                 }, {id: 2, page: 'service', body: [[], []]}]
             };
-            dataDb.save();
+            await dataDb.save();
         } catch (e) {
             await DataModel.create({
                 body: {
@@ -129,9 +129,7 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/start') {
         try {
-            await UserModel.create({chatId: chatId});
-            const db = await UserModel.findOne({where: {chatId: String(chatId)}})
-            db.save();
+            await UserModel.create({chatId: chatId, basket:[]});
         } catch (err) {
             const db = await UserModel.findOne({chatId: chatId})
         }
@@ -301,7 +299,7 @@ app.post('/basket', async (req, res) => {
                 const {user} = req.body;
                 const chatId = String(user.id);
                 try {
-                    await UserModel.create({chatId: chatId});
+                    await UserModel.create({chatId: chatId, basket:[]});
                     console.log('123')
                     return res.status(200).json({body:[]});
                 } catch (err) {
