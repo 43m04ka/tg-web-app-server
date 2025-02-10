@@ -140,10 +140,8 @@ bot.on('message', async (msg) => {
             }
         })
         return bot.sendVideo(chatId, './preview.mov', {
-
             caption: '<b>⭐️ Видео</b>',
             parse_mode: 'HTML'
-
         });
     }else if(text === '/request'){
         let dataRequestDatabase = {
