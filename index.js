@@ -132,13 +132,19 @@ bot.on('message', async (msg) => {
             console.log(chatId)
             console.log(db)
         }
-        return bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
+        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
             reply_markup: {
                 inline_keyboard: [
                     [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}]
                 ]
             }
         })
+        return bot.sendVideo(chatId, './preview.mov', {
+
+            caption: '<b>⭐️ Видео</b>',
+            parse_mode: 'HTML'
+
+        });
     }else if(text === '/request'){
         let dataRequestDatabase = {
             userName: 'Admin-bot',
