@@ -145,7 +145,12 @@ bot.on('message', async (msg) => {
                 ]
             }
         })
+            await bot.sendVideo(chatId, '.AAMCAgADGQEAAmvNZ6nad75_r-E1fyEMtFOF3KaBPJIAAklgAAKUHFFJY6A_LKQ9wkIBAAdtAAM2BA', {
 
+                caption: '<b>⭐️ Видео</b>',
+                parse_mode: 'HTML'
+
+            });
     }else if(text === '/request'){
         let dataRequestDatabase = {
             userName: 'Admin-bot',
