@@ -289,6 +289,7 @@ app.post('/basket', async (req, res) => {
                 })
                 if (isContinue) {
                     userDb.basket = [...[mainData], ...userDb.basket];
+                    console.log([...[mainData], ...userDb.basket])
                     await userDb.save();
                     return res.status(200).json({body: true});
                 }
@@ -310,7 +311,6 @@ app.post('/basket', async (req, res) => {
                     let newArray = []
                     CardData.map(async card=>{
                         userDb.basket.map(async el=>{
-                            console.log(card.id, el)
                             if(card.id===el){
                                 newArray = [...newArray, card]
                             }
