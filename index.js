@@ -14,7 +14,7 @@ const PromoModel = require('./models.js').Promo;
 const OrderModel = require('./models.js').Order;
 const OrderModelPosition = require('./models.js').OrderPosition;
 
-const token = '7989552745:AAFt44LwqIMbiq75yp86zEgSJMpNxb_8BWA';
+const token = '6964133561:AAFsVUdvH9VhLdqeRBMKEiGiUg1GQHC4-Hg';
 const tokenAdmin = '7914083585:AAGfnycmC6mgq_YLZX1nEtykj8VzSp1ctC4';
 const webAppURL = 'https://vermillion-cobbler-e75220.netlify.app';
 
