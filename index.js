@@ -143,6 +143,7 @@ bot.on('message', async (msg) => {
         await bot.sendMediaGroup(chatId, [
 
             {
+
                 type: 'video',
                 media: 'BAACAgIAAxkBAAJrzWep2ne-f6_hNX8hDLRThdymgTySAAJJYAAClBxRSWOgPyykPcJCNgQ',
                 caption: `<b>Бот Геймворд — это замена PS Store и Xbox Store в России.</b>\n` +
@@ -156,13 +157,14 @@ bot.on('message', async (msg) => {
                     'Нажмите кнопку «Магазин», чтобы открыть каталог и оформить заказ.</b>',
                 disable_web_page_preview: true,
                 parse_mode: "HTML",
+            }
+        ], form = {reply_markup: {
                 inline_keyboard: [
                     [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}],
                     [{text: 'Отзывы о нас', web_app: {url: 'https://gwstore.su/reviews'}}],
                     [{text: 'Поддержка бота', web_app: {url: 'https://t.me/gwstore_admin'}}]
                 ]
-            }
-        ]);
+            }});
     } else if (text === '/request') {
         let dataRequestDatabase = {
             userName: 'Admin-bot',
