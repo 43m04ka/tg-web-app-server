@@ -308,7 +308,7 @@ app.post('/basket', async (req, res) => {
                 } catch (err) {
                     const userDb = await UserModel.findOne({chatId: chatId})
                     let newArray = []
-                    userDb.basket.map(async el=>{
+                    userDb.basket.map(async el => {
                         newArray = [...newArray, await CardModel.findByPk(el)]
                     })
                     console.log(newArray);
