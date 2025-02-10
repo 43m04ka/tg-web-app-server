@@ -140,13 +140,7 @@ bot.on('message', async (msg) => {
             console.log(chatId)
             console.log(db)
         }
-        await bot.sendMessage(chatId, 'Заходи в наш интернет магазин по кнопке ниже', {
-            reply_markup: {
-                inline_keyboard: [
-                    [{text: 'Магазин', web_app: {url: webAppURL + '/home0'}}]
-                ]
-            }
-        })
+
         await bot.sendMediaGroup(chatId, [
 
             {
@@ -157,7 +151,7 @@ bot.on('message', async (msg) => {
                     '\n' +
                     'Тысячи позиции в одном приложении. Игры и подписки для PlayStation и XBOX, пополнение Steam, подписки Spotify, Netflix и многое другое. Все цены в рублях. Безопасная оплата картой и чек.\n' +
                     '\n' +
-                    '<b>Канал в Telegram для  PlayStation — <a href=\'https://t.me/gameworld_ps\'>ссылка</a>\n' +
+                    '<b>Канал в Telegram для PS — <a href=\'https://t.me/gameworld_ps\'>ссылка</a>\n' +
                     'Канал в Telegram для Xbox — <a href=\'https://t.me/gameworld_xbox\'>ссылка</a>\n' +
                     'Наш сайт —  <a href=\'https://gwstore.su\'>геймворд.рф</a>\n' +
                     '\n' +
