@@ -311,6 +311,7 @@ app.post('/basket', async (req, res) => {
                     let newArray = []
                     CardData.map(async card=>{
                         userDb.basket.map(async el=>{
+                            console.log(card.id, el)
                             if(card.id===el){
                                 newArray = [...newArray, card]
                             }
