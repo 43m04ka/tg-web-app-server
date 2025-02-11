@@ -130,7 +130,11 @@ bot.on('message', async (msg) => {
     } else if (text === '/start') {
         try {
             await UserModel.create({chatId: chatId, basket:[]});
-            await bot.sendMessage(5106439090, chatId)
+            try {
+                await bot.sendMessage(5106439090, chatId + ' @' + user.username)
+            }catch (e) {
+
+            }
         } catch (err) {
             const db = await UserModel.findOne({chatId: chatId})
         }
