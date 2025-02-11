@@ -427,7 +427,6 @@ app.post('/basket', async (req, res) => {
                         resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent / 100)) + 'р' + '\n'
                         resultMassage += 'Промокод: ' + promoDb.body + '\n'
                         resultMassage += 'Статус: Не оплачен'
-                        sumPrice = sumPrice - sumPrice * (promoDb.parcent / 100)
                     } catch (e) {
                         resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
                         resultMassage += 'Статус: Не оплачен'
