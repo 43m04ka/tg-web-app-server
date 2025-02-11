@@ -360,113 +360,116 @@ app.post('/basket', async (req, res) => {
                     })
                 })
 
+                userDb.basket = []
+                await userDb.save();
+
                 let sumPrice = 0.0
 
                 userBasket.map(pos => {
                     sumPrice += parseFloat(pos.body.price)
                 })
+                if(sumPrice>0) {
+                    let orderId = 'error';
 
-                let orderId = 'error';
-
-                await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
-                    await user.createOrder({
-                        summa: sumPrice,
-                        date: new Date().toLocaleDateString(),
-                        preview: userBasket[0].body.title,
-                        status: 1
-                    }).then(async res => {
-                        orderId = res.id;
-                        userBasket.map(async el => {
-                            await OrderModelPosition.create({
-                                body: el,
-                                orderId: orderId
-                            }).catch(err => console.log(err));
-                        })
-                    }).catch(err => console.log(err));
-                })
-
-
-                let resultMassage = ''
-                if (page === 0) {
-                    resultMassage += 'Заказ Playstation №' + orderId + '\n\n'
-                } else if (page === 1) {
-                    resultMassage += 'Заказ Xbox №' + orderId + '\n\n'
-                } else if (page === 2) {
-                    resultMassage += 'Заказ Сервисы №' + orderId + '\n\n'
-                }
-                resultMassage += 'Контакт - @' + user.username + '\n\n'
-                resultMassage += accData + '\n\n'
-                resultMassage += 'Корзина:' + '\n\n'
-                let basketMsg = ''
-                let c = 1
-                userBasket.map(pos => {
-                    let positionString = ''
-                    if (typeof pos.body.view === 'undefined') {
-                        positionString += String(c) + '. ' + pos.body.title + ' '
-                        if (typeof pos.body.platform !== 'undefined') {
-                            positionString += pos.body.platform + ' '
-                        }
-                        positionString += '- ' + String(pos.body.price) + 'р'
-                        if (typeof pos.body.url !== 'undefined') {
-                            positionString += ' / ' + pos.body.url
-                        }
-                    } else {
-                        positionString += String(c) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р'
-                    }
-                    positionString += '\n'
-                    basketMsg += positionString
-                    c++
-                })
-                resultMassage += basketMsg
-
-                try {
-                    const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                    resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent / 100)) + 'р' + '\n'
-                    resultMassage += 'Промокод: ' + promoDb.body + '\n'
-                    resultMassage += 'Статус: Не оплачен'
-                    sumPrice = sumPrice - sumPrice * (promoDb.parcent / 100)
-                } catch (e) {
-                    resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
-                    resultMassage += 'Статус: Не оплачен'
-                }
-
-                if (basketMsg !== '') {
-                    await botAdmin.sendMessage(5242902575, resultMassage)
-                    await bot.sendMessage(5106439090, resultMassage)
-
-                    let bsMsg = ''
-                    let r = 1
-
-                    userBasket.map(pos => {
-                        if (typeof pos.body.view === 'undefined') {
-                            bsMsg += String(r) + '. ' + pos.body.title + ' '
-                            bsMsg += '- ' + String(pos.body.price) + 'р' + '\n'
-                        } else {
-                            bsMsg += String(r) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р' + '\n'
-                        }
-                        r++
+                    await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
+                        await user.createOrder({
+                            summa: sumPrice,
+                            date: new Date().toLocaleDateString(),
+                            preview: userBasket[0].body.title,
+                            status: 1
+                        }).then(async res => {
+                            orderId = res.id;
+                            userBasket.map(async el => {
+                                await OrderModelPosition.create({
+                                    body: el,
+                                    orderId: orderId
+                                }).catch(err => console.log(err));
+                            })
+                        }).catch(err => console.log(err));
                     })
+
+
+                    let resultMassage = ''
+                    if (page === 0) {
+                        resultMassage += 'Заказ Playstation №' + orderId + '\n\n'
+                    } else if (page === 1) {
+                        resultMassage += 'Заказ Xbox №' + orderId + '\n\n'
+                    } else if (page === 2) {
+                        resultMassage += 'Заказ Сервисы №' + orderId + '\n\n'
+                    }
+                    resultMassage += 'Контакт - @' + user.username + '\n\n'
+                    resultMassage += accData + '\n\n'
+                    resultMassage += 'Корзина:' + '\n\n'
+                    let basketMsg = ''
+                    let c = 1
+                    userBasket.map(pos => {
+                        let positionString = ''
+                        if (typeof pos.body.view === 'undefined') {
+                            positionString += String(c) + '. ' + pos.body.title + ' '
+                            if (typeof pos.body.platform !== 'undefined') {
+                                positionString += pos.body.platform + ' '
+                            }
+                            positionString += '- ' + String(pos.body.price) + 'р'
+                            if (typeof pos.body.url !== 'undefined') {
+                                positionString += ' / ' + pos.body.url
+                            }
+                        } else {
+                            positionString += String(c) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р'
+                        }
+                        positionString += '\n'
+                        basketMsg += positionString
+                        c++
+                    })
+                    resultMassage += basketMsg
 
                     try {
                         const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
-                        let parcent = promoDb.parcent
-                        bsMsg += '\n' + 'Цена без учёта скидки: ' + String(sumPrice) + 'р' + '\n'
-                        bsMsg += 'Скидка: ' + String(sumPrice * (parcent / 100)) + 'р' + '\n'
-                        bsMsg += 'Итого: ' + String(sumPrice - sumPrice * (parcent / 100)) + 'р' + '\n'
+                        resultMassage += '\n' + 'Итого к оплате: ' + String(sumPrice - sumPrice * (promoDb.parcent / 100)) + 'р' + '\n'
+                        resultMassage += 'Промокод: ' + promoDb.body + '\n'
+                        resultMassage += 'Статус: Не оплачен'
+                        sumPrice = sumPrice - sumPrice * (promoDb.parcent / 100)
                     } catch (e) {
-                        bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
+                        resultMassage += '\n' + 'Итого к оплате:' + String(sumPrice) + 'р' + '\n'
+                        resultMassage += 'Статус: Не оплачен'
                     }
 
-                    await bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №' + orderId + '!\n' +
-                        '\n' +
-                        bsMsg +
-                        '\n' +
-                        'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
-                        '\n' +
-                        'Менеджер — @gwstore_admin. \n' +
-                        'Часы работы 10:00 — 22:00 по МСК ежедневно.')
-                    userDb.basket = {body: []};
-                    userDb.save();
+                    if (basketMsg !== '') {
+                        await botAdmin.sendMessage(5242902575, resultMassage)
+                        await bot.sendMessage(5106439090, resultMassage)
+
+                        let bsMsg = ''
+                        let r = 1
+
+                        userBasket.map(pos => {
+                            if (typeof pos.body.view === 'undefined') {
+                                bsMsg += String(r) + '. ' + pos.body.title + ' '
+                                bsMsg += '- ' + String(pos.body.price) + 'р' + '\n'
+                            } else {
+                                bsMsg += String(r) + '. ' + pos.body.title + ' ' + pos.body.view + ' - ' + String(pos.body.price) + 'р' + '\n'
+                            }
+                            r++
+                        })
+
+                        try {
+                            const promoDb = await PromoModel.findOne({where: {body: req.body.promo}})
+                            let parcent = promoDb.parcent
+                            bsMsg += '\n' + 'Цена без учёта скидки: ' + String(sumPrice) + 'р' + '\n'
+                            bsMsg += 'Скидка: ' + String(sumPrice * (parcent / 100)) + 'р' + '\n'
+                            bsMsg += 'Итого: ' + String(sumPrice - sumPrice * (parcent / 100)) + 'р' + '\n'
+                        } catch (e) {
+                            bsMsg += '\n' + 'На сумму: ' + String(sumPrice) + 'р' + '\n'
+                        }
+
+                        await bot.sendMessage(chatId, 'Спасибо за Ваш заказ  №' + orderId + '!\n' +
+                            '\n' +
+                            bsMsg +
+                            '\n' +
+                            'Менеджер свяжется с Вами в ближайшее рабочее время для активации и оплаты заказа.\n' +
+                            '\n' +
+                            'Менеджер — @gwstore_admin. \n' +
+                            'Часы работы 10:00 — 22:00 по МСК ежедневно.')
+
+                    }
                 }
                 return res.status(200).json({body: true, number: orderId});
             } catch
