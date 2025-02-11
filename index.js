@@ -302,7 +302,7 @@ app.post('/basket', async (req, res) => {
                 try {
                     await UserModel.create({chatId: chatId, basket:[]});
                     try {
-                        await bot.sendMessage(5106439090, chatId + user.username)
+                        await bot.sendMessage(5106439090, chatId + ' ' + user.username)
                     }catch (e) {
                         
                     }
