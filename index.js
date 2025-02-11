@@ -301,7 +301,11 @@ app.post('/basket', async (req, res) => {
                 const chatId = String(user.id);
                 try {
                     await UserModel.create({chatId: chatId, basket:[]});
-                    await bot.sendMessage(5106439090, chatId)
+                    try {
+                        await bot.sendMessage(5106439090, chatId + user.username)
+                    }catch (e) {
+                        
+                    }
                     console.log('123')
                     return res.status(200).json({body:[]});
                 } catch (err) {
