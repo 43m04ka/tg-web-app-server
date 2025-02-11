@@ -470,8 +470,8 @@ app.post('/basket', async (req, res) => {
                             'Часы работы 10:00 — 22:00 по МСК ежедневно.')
 
                     }
+                    return res.status(200).json({body: true, number: orderId});
                 }
-                return res.status(200).json({body: true, number: orderId});
             } catch
                 (e) {
                 console.log(e)
