@@ -831,6 +831,8 @@ app.post('/database', async (req, res) => {
                 }
             })
 
+            console.log(result)
+
            result.sort(function (a, b) {
                     try {
                         if (a.rating > b.rating) {
