@@ -787,7 +787,7 @@ app.post('/database', async (req, res) => {
             CardData.map(card => {
                 try {
                     let newCard = card
-                    newCard.rating = 0
+                    newCard.dataValues.rating = 0
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
                             newCard.rating = str.length
