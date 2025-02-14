@@ -814,8 +814,8 @@ app.post('/database', async (req, res) => {
                                     if (!card.body.title.toLowerCase().includes(s)) {
                                         flag = false
                                     }
-                                    substring += s
-                                    if (card.body.title.toLowerCase().includes(substring)) {
+                                    substring = substring + s
+                                    if (card.body.title.toLowerCase().replaceAll(' ', '').includes(substring)) {
                                         rating = substring.length
                                     }
                                 })
