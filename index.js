@@ -790,7 +790,7 @@ app.post('/database', async (req, res) => {
                     newCard.dataValues.rating = 0
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                            newCard.dataValues.rating = str.length * card.body.title.length - card.body.title.toLowerCase().indexOf(str.toLowerCase())
+                            newCard.dataValues.rating = str.length + (card.body.title.length - card.body.title.toLowerCase().indexOf(str.toLowerCase()))
                             result = [...result, newCard]
                         } else {
                             let flag = true
