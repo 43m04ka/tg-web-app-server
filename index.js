@@ -790,7 +790,7 @@ app.post('/database', async (req, res) => {
                     newCard.dataValues.rating = 0
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                            newCard.rating = str.length
+                            newCard.dataValues.rating = str.length
                             result = [...result, newCard]
                         } else {
                             let flag = true
@@ -804,7 +804,7 @@ app.post('/database', async (req, res) => {
                                 }
                             })
                             if (flag) {
-                                newCard.rating = rating
+                                newCard.dataValues.rating = rating
                                 result = [newCard, ...result]
                             } else {
                                 flag = true
@@ -820,7 +820,7 @@ app.post('/database', async (req, res) => {
                                     }
                                 })
                                 if (flag) {
-                                    newCard.rating = rating
+                                    newCard.dataValues.rating = rating
                                     result = [newCard, ...result]
                                 }
                             }
