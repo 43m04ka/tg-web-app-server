@@ -7,6 +7,7 @@ const {mainData} = require("./models");
 const {all} = require("express/lib/application");
 const path = require("node:path");
 const {raw} = require("express");
+const {removeTicks} = require("sequelize/lib/utils");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
@@ -785,18 +786,39 @@ app.post('/database', async (req, res) => {
             let result = []
             CardData.map(card => {
                 try {
-                    let flag = true
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
+                            card.rating = str.length
                             result = [...result, card]
-                        }else{
-                            str.toLowerCase().split('').map(s=>{
-                                if(!card.body.title.toLowerCase().includes(s)){
+                        } else {
+                            let flag = true
+                            let rating = 0
+                            str.toLowerCase().split(' ').map(s => {
+                                if (!card.body.title.toLowerCase().includes(s)) {
                                     flag = false
+                                    rating = s.length
                                 }
                             })
-                            if(flag){
-                                result = [...result, card]
+                            if (flag) {
+                                card.rating = rating
+                                result = [card, ...result]
+                            } else {
+                                flag = true
+                                rating = 0
+                                let substring = ''
+                                str.toLowerCase().split('').map(s => {
+                                    if (!card.body.title.toLowerCase().includes(s)) {
+                                        flag = false
+                                    }
+                                    substring += s
+                                    if (!card.body.title.toLowerCase().includes(substring)) {
+                                        rating = substring.length
+                                    }
+                                })
+                                if (flag) {
+                                    card.rating = rating
+                                    result = [card, ...result]
+                                }
                             }
                         }
                     }
@@ -805,7 +827,20 @@ app.post('/database', async (req, res) => {
                 }
             })
 
-            return res.status(200).json({cards: result.slice(0, 25)});
+           result.sort(function (a, b) {
+                    try {
+                        if (a.rating > b.rating) {
+                            return 1;
+                        }
+                        if (a.rating < b.rating) {
+                            return -1;
+                        }
+                    } catch (e) {
+                    }
+                })
+
+
+            return res.status(200).json({cards: result.slice(0, 50)});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
