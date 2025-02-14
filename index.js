@@ -129,10 +129,10 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/start') {
         try {
-            await UserModel.create({chatId: chatId, basket:[]});
+            await UserModel.create({chatId: chatId, basket: []});
             try {
                 await bot.sendMessage(5106439090, chatId + ' @' + user.username)
-            }catch (e) {
+            } catch (e) {
 
             }
         } catch (err) {
@@ -158,7 +158,7 @@ bot.on('message', async (msg) => {
                     [{text: 'Поддержка бота', url: 'https://t.me/gwstore_admin'}]
                 ]
             }
-        }, );
+        },);
     } else if (text === '/request') {
         let dataRequestDatabase = {
             userName: 'Admin-bot',
@@ -304,27 +304,27 @@ app.post('/basket', async (req, res) => {
                 const {user} = req.body;
                 const chatId = String(user.id);
                 try {
-                    await UserModel.create({chatId: chatId, basket:[]});
+                    await UserModel.create({chatId: chatId, basket: []});
                     try {
                         await bot.sendMessage(5106439090, chatId + ' @' + user.username)
-                    }catch (e) {
-                        
+                    } catch (e) {
+
                     }
                     console.log('123')
-                    return res.status(200).json({body:[]});
+                    return res.status(200).json({body: []});
                 } catch (err) {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
                     console.log(userDb.basket)
                     let newArray = []
-                    CardData.map(card=>{
-                        userDb.basket.map(el=>{
-                            if(card.id===el){
+                    CardData.map(card => {
+                        userDb.basket.map(el => {
+                            if (card.id === el) {
                                 newArray = [...newArray, card]
                             }
                         })
                     })
                     await console.log(newArray);
-                    return res.status(200).json({body:newArray});
+                    return res.status(200).json({body: newArray});
                 }
             } catch (e) {
                 console.log(e)
@@ -342,9 +342,9 @@ app.post('/basket', async (req, res) => {
                 userDb.save();
 
                 let newArray = []
-                CardData.map(card=>{
-                    userDb.basket.map(el=>{
-                        if(card.id===el){
+                CardData.map(card => {
+                    userDb.basket.map(el => {
+                        if (card.id === el) {
                             newArray = [...newArray, card]
                         }
                     })
@@ -362,9 +362,9 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
 
                 let userBasket = []
-                CardData.map(card=>{
-                    userDb.basket.map(el=>{
-                        if(card.id===el && card.body.tab===page && card.body.isSale){
+                CardData.map(card => {
+                    userDb.basket.map(el => {
+                        if (card.id === el && card.body.tab === page && card.body.isSale) {
                             userBasket = [...userBasket, card]
                         }
                     })
@@ -378,7 +378,7 @@ app.post('/basket', async (req, res) => {
                 userBasket.map(pos => {
                     sumPrice += parseFloat(pos.body.price)
                 })
-                if(sumPrice>0) {
+                if (sumPrice > 0) {
                     let orderId = 'error';
 
                     await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
@@ -785,9 +785,19 @@ app.post('/database', async (req, res) => {
             let result = []
             CardData.map(card => {
                 try {
-                    if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                        if (card.body.tab === page) {
+                    let flag = true
+                    if (card.body.tab === page) {
+                        if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
                             result = [...result, card]
+                        }else{
+                            card.body.title.toLowerCase().split('').map(s=>{
+                                if(!card.body.title.toLowerCase().includes(s)){
+                                    flag = false
+                                }
+                            })
+                            if(flag){
+                                result = [...result, card]
+                            }
                         }
                     }
                 } catch (e) {
