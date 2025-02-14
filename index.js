@@ -786,10 +786,11 @@ app.post('/database', async (req, res) => {
             let result = []
             CardData.map(card => {
                 try {
+                    let newCard = card
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                            card.rating = str.length
-                            result = [...result, card]
+                            newCard.rating = str.length
+                            result = [...result, newCard]
                         } else {
                             let flag = true
                             let rating = 0
@@ -802,8 +803,8 @@ app.post('/database', async (req, res) => {
                                 }
                             })
                             if (flag) {
-                                card.rating = rating
-                                result = [card, ...result]
+                                newCard.rating = rating
+                                result = [newCard, ...result]
                             } else {
                                 flag = true
                                 rating = 0
@@ -818,8 +819,8 @@ app.post('/database', async (req, res) => {
                                     }
                                 })
                                 if (flag) {
-                                    card.rating = rating
-                                    result = [card, ...result]
+                                    newCard.rating = rating
+                                    result = [newCard, ...result]
                                 }
                             }
                         }
