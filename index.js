@@ -790,7 +790,7 @@ app.post('/database', async (req, res) => {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
                             result = [...result, card]
                         }else{
-                            card.body.title.toLowerCase().split('').map(s=>{
+                            str.toLowerCase().split('').map(s=>{
                                 if(!card.body.title.toLowerCase().includes(s)){
                                     flag = false
                                 }
