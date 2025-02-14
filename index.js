@@ -835,10 +835,10 @@ app.post('/database', async (req, res) => {
 
            result.sort(function (a, b) {
                     try {
-                        if (a.rating < b.rating) {
+                        if (a.dataValues.rating < b.dataValues.rating) {
                             return 1;
                         }
-                        if (a.rating > b.rating) {
+                        if (a.dataValues.rating > b.dataValues.rating) {
                             return -1;
                         }
                     } catch (e) {
