@@ -790,7 +790,7 @@ app.post('/database', async (req, res) => {
                     newCard.dataValues.rating = 0
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
-                            newCard.dataValues.rating = str.length
+                            newCard.dataValues.rating = str.length * 4
                             result = [...result, newCard]
                         } else {
                             let flag = true
@@ -799,8 +799,8 @@ app.post('/database', async (req, res) => {
                                 if (!card.body.title.toLowerCase().includes(s)) {
                                     flag = false
                                 }
-                                if(s.length> rating){
-                                    rating = s.length
+                                if(s.length * 2> rating){
+                                    rating = s.length * 2
                                 }
                             })
                             if (flag) {
