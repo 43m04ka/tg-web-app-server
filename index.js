@@ -796,6 +796,8 @@ app.post('/database', async (req, res) => {
                             str.toLowerCase().split(' ').map(s => {
                                 if (!card.body.title.toLowerCase().includes(s)) {
                                     flag = false
+                                }
+                                if(s.length> rating){
                                     rating = s.length
                                 }
                             })
@@ -806,7 +808,7 @@ app.post('/database', async (req, res) => {
                                 flag = true
                                 rating = 0
                                 let substring = ''
-                                str.toLowerCase().split('').map(s => {
+                                str.toLowerCase().replaceAll(' ', '').split('').map(s => {
                                     if (!card.body.title.toLowerCase().includes(s)) {
                                         flag = false
                                     }
