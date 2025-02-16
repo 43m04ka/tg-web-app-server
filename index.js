@@ -133,9 +133,14 @@ bot.on('message', async (msg) => {
         sendRequestDatabase()
     }
     else if (text === '/dr') {
-        CardData.map(async (card) => {
-            await CardModel1.create({body: card.body, category: [card.category], name: card.name});
-        })
+        try {
+            CardData.map(async (card) => {
+                await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                console.log(card.id)
+            })
+        }catch (e) {
+            
+        }
     }
 });
 
