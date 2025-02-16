@@ -143,14 +143,13 @@ bot.on('message', async (msg) => {
                             if (!el.category.includes(card.category)) {
                                 let cardDb = await CardModel1.findByPk(el.id)
                                 cardDb.category = [...card.category, card.category]
+                                allCards = await CardModel1.findAll();
                             }
-                        } else {
-
-                        }
+                        } else {}
                     })
-                    allCards = await CardModel1.findAll();
                 }else{
                     await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                    allCards = await CardModel1.findAll();
                 }
                 console.log(card.id)
             })
