@@ -131,6 +131,20 @@ bot.on('message', async (msg) => {
 
         sendRequestDatabase()
     }
+    else if (text === '/database1') {
+        CardData.map(async (card) => {
+            const cardDb = await CardModel.findByPk(card.id)
+            cardDb.category = [card.category]
+            await cardDb.save()
+        })
+    }
+    else if (text === '/database2') {
+        CardData.map(async (card) => {
+            const cardDb = await CardModel.findByPk(card.id)
+            cardDb.category = card.category[0]
+            await cardDb.save()
+        })
+    }
 });
 
 
