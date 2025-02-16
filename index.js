@@ -34,58 +34,8 @@ const start = async () => {
     try {
         await sequelize.authenticate()
         await sequelize.sync()
-        const dataDb = await DataModel.findOne({id: 1})
-        StructureData = dataDb.body.body
-        const cardDbAll = await CardModel.findAll();
-        CardData = cardDbAll
 
-        let cartSortCategory = []
-        cardDbAll.map(el => {
-            flag = true
-            cartSortCategory.map(cat => {
-                if (cat.path === el.category) {
-                    flag = false
-                }
-            })
-            if (flag) {
-                cartSortCategory = [...cartSortCategory, {path: el.category, body: []}]
-            }
-        })
-
-        let count = 0
-        cartSortCategory.map(cat => {
-            cardDbAll.map(el => {
-                if (cat.path === el.category) {
-                    cartSortCategory[count].body = [...cartSortCategory[count].body, el]
-                }
-            })
-            count++
-        })
-
-
-        count = 0
-        cartSortCategory.map(el => {
-            let array = el.body; //массив, можно использовать массив объектов
-            let size = 20; //размер подмассива
-            let subarray = []; //массив в который будет выведен результат.
-            for (let i = 0; i < Math.ceil(array.length / size); i++) {
-                subarray[i] = array.slice((i * size), (i * size) + size);
-            }
-            cartSortCategory[count].body = subarray;
-            cartSortCategory[count].len = subarray.length;
-            count += 1;
-        })
-
-        console.log(cartSortCategory)
-        allCategoryListData = cartSortCategory
-        let cartSortCategoryPrev = []
-        count = 0
-        cartSortCategory.map(cat => {
-            cartSortCategoryPrev = [...cartSortCategoryPrev, ...cartSortCategory[count].body[0]]
-            count++
-        })
-
-        CardPreviewData = cartSortCategoryPrev
+        await reload()
 
         await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
     } catch (err) {
@@ -908,7 +858,7 @@ const reload = async () => {
     let count = 0
     cartSortCategory.map(cat => {
         cardDbAll.map(el => {
-            if (cat.path === el.category) {
+            if (el.category.includes(cat.path)) {
                 cartSortCategory[count].body = [...cartSortCategory[count].body, el]
             }
         })
