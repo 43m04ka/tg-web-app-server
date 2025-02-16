@@ -140,8 +140,8 @@ bot.on('message', async (msg) => {
                 if(allCards.length > 0) {
                     allCards.map(async el => {
                         if (card.name === el.name) {
-                            let cardDb = await CardModel1.findByPk(el.id)
-                            if (!cardDb.category.includes(card.category)) {
+                            if (!el.category.includes(card.category)) {
+                                let cardDb = await CardModel1.findByPk(el.id)
                                 cardDb.category = [...card.category, card.category]
                             }
                         } else {
