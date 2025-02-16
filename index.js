@@ -133,9 +133,20 @@ bot.on('message', async (msg) => {
         sendRequestDatabase()
     }
     else if (text === '/dr') {
+        let allCards = await CardModel1.findAll();
         try {
             CardData.map(async (card) => {
-                await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                let flag = true
+                allCards.map(async el=>{
+                    if(card.name === el.name){
+                        let cardDb = await CardModel1.findByPk(el.id)
+                        if(!cardDb.category.includes(card.category)){
+                            cardDb.category = [...card.category, card.category]
+                        }
+                    }else{
+                        await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                    }
+                })
                 console.log(card.id)
             })
 
