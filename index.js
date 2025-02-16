@@ -135,6 +135,7 @@ bot.on('message', async (msg) => {
         CardData.map(async (card) => {
             const cardDb = await CardModel.findByPk(card.id)
             cardDb.category = [card.category]
+            console.log(cardDb.category)
             await cardDb.save()
         })
     }
