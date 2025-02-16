@@ -142,7 +142,7 @@ bot.on('message', async (msg) => {
                         if (card.name === el.name) {
                             if (!el.category.includes(card.category)) {
                                 let cardDb = await CardModel1.findByPk(el.id)
-                                cardDb.category = [...card.category, card.category]
+                                cardDb.category = [...cardDb.category, card.category]
                                 await cardDb.save()
                                 allCards = await CardModel1.findAll();
                                 console.log(cardDb.category)
