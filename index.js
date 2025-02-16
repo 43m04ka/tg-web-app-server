@@ -11,6 +11,7 @@ const {removeTicks} = require("sequelize/lib/utils");
 const UserModel = require('./models.js').Users;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
+const CardModel1 = require('./models.js').CardData1;
 const PromoModel = require('./models.js').Promo;
 const OrderModel = require('./models.js').Order;
 const OrderModelPosition = require('./models.js').OrderPosition;
@@ -131,19 +132,9 @@ bot.on('message', async (msg) => {
 
         sendRequestDatabase()
     }
-    else if (text === '/database1') {
+    else if (text === '/dr') {
         CardData.map(async (card) => {
-            const cardDb = await CardModel.findByPk(card.id)
-            cardDb.category = [card.category]
-            console.log(cardDb.category)
-            await cardDb.save()
-        })
-    }
-    else if (text === '/database2') {
-        CardData.map(async (card) => {
-            const cardDb = await CardModel.findByPk(card.id)
-            cardDb.category = card.category[0]
-            await cardDb.save()
+            await CardModel1.create({body: card.body, category: [card.category], name: card.name});
         })
     }
 });

@@ -20,6 +20,14 @@ const CardData = sequelize.define('mainData', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
+const CardData1 = sequelize.define('card', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    name: {type: DataTypes.STRING, defaultValue: ''},
+    category: {type: DataTypes.STRING, defaultValue: ''},
+    hashtag: {type: DataTypes.STRING, defaultValue: ''},
+    body: {type: DataTypes.JSON, defaultValue: {}},
+})
+
 const Promo = sequelize.define('promo', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     body: {type: DataTypes.STRING, defaultValue: ''},
@@ -44,4 +52,4 @@ const OrderPosition = sequelize.define('orderPosition', {
 Users.hasMany(Order)
 Order.hasMany(OrderPosition)
 
-module.exports = {Users, Data, CardData, Promo, Order, OrderPosition};
+module.exports = {Users, Data, CardData, Promo, Order, OrderPosition, CardData1};
