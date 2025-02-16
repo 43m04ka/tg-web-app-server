@@ -137,22 +137,24 @@ bot.on('message', async (msg) => {
         try {
             CardData.map(async (card) => {
                 let flag = true
-                allCards.map(async el=>{
-                    if(card.name === el.name){
-                        let cardDb = await CardModel1.findByPk(el.id)
-                        if(!cardDb.category.includes(card.category)){
-                            cardDb.category = [...card.category, card.category]
+                if(allCards.length > 0) {
+                    allCards.map(async el => {
+                        if (card.name === el.name) {
+                            let cardDb = await CardModel1.findByPk(el.id)
+                            if (!cardDb.category.includes(card.category)) {
+                                cardDb.category = [...card.category, card.category]
+                            }
+                        } else {
+
                         }
-                    }else{
-                        await CardModel1.create({body: card.body, category: [card.category], name: card.name});
-                    }
-                })
+                    })
+                    allCards = await CardModel1.findAll();
+                }else{
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                }
                 console.log(card.id)
             })
-
-        }catch (e) {
-            
-        }
+        }catch (e) {}
     }
     else if (text === '/dr1') {
         try {
