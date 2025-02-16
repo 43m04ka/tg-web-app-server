@@ -138,8 +138,17 @@ bot.on('message', async (msg) => {
                 await CardModel1.create({body: card.body, category: [card.category], name: card.name});
                 console.log(card.id)
             })
+
         }catch (e) {
             
+        }
+    }
+    else if (text === '/dr1') {
+        try {
+            const a = await CardModel1.findAll();
+            console.log(a.length)
+        }catch (e) {
+
         }
     }
 });
