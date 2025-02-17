@@ -137,24 +137,23 @@ bot.on('message', async (msg) => {
         try {
             CardData.map(async (card) => {
                 let flag = true
-                let allCards = await CardModel1.findAll().then(async r=>{
-                    console.log(r)
-                })
-                allCards.map(async el => {
-                    if (card.name === el.name) {
-                        if (!el.category.includes(card.category)) {
-                            flag = false
-                            let cardDb = await CardModel1.findByPk(el.id)
-                            cardDb.category = [...cardDb.category, card.category]
-                            await cardDb.save()
-                            allCards = await CardModel1.findAll();
-                            await console.log(cardDb.category, cardDb.name.slice(0, 20))
-                        }else{flag = false}
+                await CardModel1.findAll().then(async r=>{
+                    r.map(async el => {
+                        if (card.name === el.name) {
+                            if (!el.category.includes(card.category)) {
+                                flag = false
+                                let cardDb = await CardModel1.findByPk(el.id)
+                                cardDb.category = [...cardDb.category, card.category]
+                                await cardDb.save()
+                                allCards = await CardModel1.findAll();
+                                await console.log(cardDb.category, cardDb.name.slice(0, 20))
+                            }else{flag = false}
+                        }
+                    })
+                    if(flag){
+                        await CardModel1.create({body: card.body, category: [card.category], name: card.name});
                     }
                 })
-                if(flag){
-                    await CardModel1.create({body: card.body, category: [card.category], name: card.name});
-                }
             })
         }catch (e) {}
     }
