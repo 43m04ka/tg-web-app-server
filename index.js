@@ -132,12 +132,11 @@ bot.on('message', async (msg) => {
 
         sendRequestDatabase()
     } else if (text === '/dr') {
-
         try {
             CardData.map(async (card) => {
                 let flag = true
-                await CardModel1.findAll().then(r => {
-                    r.map(async el => {
+                await CardModel1.findAll().then(async r => {
+                    await r.map(async el => {
                         if (card.name === el.name) {
                             if (!el.category.includes(card.category)) {
                                 flag = false
@@ -150,10 +149,10 @@ bot.on('message', async (msg) => {
                             }
                         }
                     })
+                    if (flag) {
+                        await CardModel1.create({body: card.body, category: [card.category], name: card.name})
+                    }
                 })
-                if (flag) {
-                    await CardModel1.create({body: card.body, category: [card.category], name: card.name})
-                }
             })
         } catch (e) {
         }
