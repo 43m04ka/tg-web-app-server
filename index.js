@@ -151,8 +151,8 @@ bot.on('message', async (msg) => {
                 })
                 if(flag){
                     let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
-                    console.log(newCard)
                     allCards = [...allCards, newCard];
+                    console.log(allCards.length)
                 }
             })
         }catch (e) {}
