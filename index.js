@@ -168,12 +168,11 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/dr2') {
         try {
-            let array = allCategoryListData[0].body
-            allCategoryListData[0].body.map(el => {
-                array = [...array, ...el]
-            })
-            array.map(async (card) => {
-                await CardModel1.create({body: card.body, category: [card.category], name: card.name})
+            let allCards = await CardModel1.findAll()
+            allCards.map(card=>{
+                if(card.category.length > 1){
+                    console.log(cardDb.category, cardDb.name.slice(0, 20))
+                }
             })
         } catch (e) {
 
