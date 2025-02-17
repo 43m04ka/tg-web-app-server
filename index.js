@@ -133,12 +133,11 @@ bot.on('message', async (msg) => {
         sendRequestDatabase()
     }
     else if (text === '/dr') {
-        let allCards = await CardModel1.findAll();
+
         try {
             CardData.map(async (card) => {
                 let flag = true
-
-                allCards = await CardModel1.findAll();
+                let allCards = await CardModel1.findAll();
                 allCards.map(async el => {
                     if (card.name === el.name) {
                         if (!el.category.includes(card.category)) {
@@ -152,7 +151,7 @@ bot.on('message', async (msg) => {
                     }
                 })
                 if(flag){
-                    let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name});
                 }
             })
         }catch (e) {}
