@@ -139,6 +139,7 @@ bot.on('message', async (msg) => {
                 let flag = true
                 allCards.map(async el => {
                     if (card.name === el.name) {
+                        console.log(allCards.length)
                         if (!el.category.includes(card.category)) {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
@@ -152,7 +153,6 @@ bot.on('message', async (msg) => {
                 if(flag){
                     let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
                     allCards = [...allCards, newCard];
-                    console.log(allCards.length)
                 }
             })
         }catch (e) {}
