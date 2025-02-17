@@ -159,7 +159,7 @@ bot.on('message', async (msg) => {
     else if (text === '/dr1') {
         try {
             const a = await CardModel1.findAll();
-            console.log(a.length)
+            console.log(a.length, CardData.length)
         }catch (e) {
 
         }
