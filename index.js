@@ -131,53 +131,49 @@ bot.on('message', async (msg) => {
         }, [dataRequestDatabase])
 
         sendRequestDatabase()
-    }
-    else if (text === '/dr') {
+    } else if (text === '/dr') {
 
         try {
-            let allCards =  await CardModel1.findAll()
-
-            CardData.map((card) => {
+            CardData.map(async (card) => {
                 let flag = true
-                console.log(allCards.length)
-                allCards.map(async el => {
-                    if (card.name === el.name) {
-                        if (!el.category.includes(card.category)) {
-                            flag = false
-                            let cardDb = await CardModel1.findByPk(el.id)
-                            cardDb.category = [...cardDb.category, card.category]
-                            await cardDb.save()
-                            el.category = [...cardDb.category, card.category]
-                            await console.log(cardDb.category, cardDb.name.slice(0, 20))
-                        }else{flag = false}
-                    }
-                })
-                if(flag){
-                    CardModel1.create({body: card.body, category: [card.category], name: card.name}).then(async r=>{
-                        allCards = [...allCards, r]
+                await CardModel1.findAll().then(r => {
+                    r.map(async el => {
+                        if (card.name === el.name) {
+                            if (!el.category.includes(card.category)) {
+                                flag = false
+                                let cardDb = await CardModel1.findByPk(el.id)
+                                cardDb.category = [...cardDb.category, card.category]
+                                await cardDb.save()
+                                await console.log(cardDb.category, cardDb.name.slice(0, 20))
+                            } else {
+                                flag = false
+                            }
+                        }
                     })
+                })
+                if (flag) {
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name})
                 }
             })
-        }catch (e) {}
-    }
-    else if (text === '/dr1') {
+        } catch (e) {
+        }
+    } else if (text === '/dr1') {
         try {
             const a = await CardModel1.findAll();
             console.log(a.length, CardData.length)
-        }catch (e) {
+        } catch (e) {
 
         }
-    }
-    else if (text === '/dr2') {
+    } else if (text === '/dr2') {
         try {
             let array = allCategoryListData[0].body
-            allCategoryListData[0].body.map(el=>{
+            allCategoryListData[0].body.map(el => {
                 array = [...array, ...el]
             })
             array.map(async (card) => {
                 await CardModel1.create({body: card.body, category: [card.category], name: card.name})
             })
-        }catch (e) {
+        } catch (e) {
 
         }
     }
@@ -791,7 +787,7 @@ app.post('/database', async (req, res) => {
                     if (card.body.tab === page) {
                         if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
                             let i = (10 - card.body.title.toLowerCase().indexOf(str.toLowerCase()))
-                            if(i < 0){
+                            if (i < 0) {
                                 i = 0
                             }
                             newCard.dataValues.rating = str.length + i
@@ -803,7 +799,7 @@ app.post('/database', async (req, res) => {
                                 if (!card.body.title.toLowerCase().includes(s)) {
                                     flag = false
                                 }
-                                if(s.length * 2> rating){
+                                if (s.length * 2 > rating) {
                                     rating = s.length * 2
                                 }
                             })
@@ -837,17 +833,17 @@ app.post('/database', async (req, res) => {
 
             console.log(result)
 
-           result.sort(function (a, b) {
-                    try {
-                        if (a.dataValues.rating < b.dataValues.rating) {
-                            return 1;
-                        }
-                        if (a.dataValues.rating > b.dataValues.rating) {
-                            return -1;
-                        }
-                    } catch (e) {
+            result.sort(function (a, b) {
+                try {
+                    if (a.dataValues.rating < b.dataValues.rating) {
+                        return 1;
                     }
-                })
+                    if (a.dataValues.rating > b.dataValues.rating) {
+                        return -1;
+                    }
+                } catch (e) {
+                }
+            })
 
 
             return res.status(200).json({cards: result.slice(0, 50)});
