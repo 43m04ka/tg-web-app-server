@@ -141,17 +141,22 @@ bot.on('message', async (msg) => {
                     allCards.map(async el => {
                         if (card.name === el.name) {
                             if (!el.category.includes(card.category)) {
+                                flag = false
                                 let cardDb = await CardModel1.findByPk(el.id)
                                 cardDb.category = [...cardDb.category, card.category]
                                 await cardDb.save()
                                 allCards = await CardModel1.findAll();
                                 console.log(cardDb.category, cardDb.name.slice(0, 20))
                             }else{console.log('input')}
-                        } else {}
+                        }
                     })
                 }else{
                      let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
                      allCards = [...allCards, newCard];
+                }
+                if(flag){
+                    let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                    allCards = [...allCards, newCard];
                 }
             })
         }catch (e) {}
