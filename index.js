@@ -145,7 +145,7 @@ bot.on('message', async (msg) => {
                                 cardDb.category = [...cardDb.category, card.category]
                                 await cardDb.save()
                                 allCards = await CardModel1.findAll();
-                                console.log(cardDb.category)
+                                console.log(cardDb.category, cardDb.name.slice(0, 20))
                             }else{console.log('input')}
                         } else {}
                     })
