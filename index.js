@@ -135,24 +135,31 @@ bot.on('message', async (msg) => {
     else if (text === '/dr') {
 
         try {
+            let allCards = []
+            await CardModel1.findAll().then(async r=>{
+                allCards = r
+            })
             CardData.map(async (card) => {
                 let flag = true
-                await CardModel1.findAll().then(async r=>{
-                    r.map(async el => {
-                        if (card.name === el.name) {
-                            if (!el.category.includes(card.category)) {
-                                flag = false
-                                let cardDb = await CardModel1.findByPk(el.id)
-                                cardDb.category = [...cardDb.category, card.category]
-                                await cardDb.save()
-                                await console.log(cardDb.category, cardDb.name.slice(0, 20))
-                            }else{flag = false}
-                        }
-                    })
-                    if(flag){
-                        await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                allCards.map(async el => {
+                    if (card.name === el.name) {
+                        if (!el.category.includes(card.category)) {
+                            flag = false
+                            let cardDb = await CardModel1.findByPk(el.id)
+                            cardDb.category = [...cardDb.category, card.category]
+                            await cardDb.save()
+                            await CardModel1.findAll().then(async r=>{
+                                allCards = r
+                            })
+                            await console.log(cardDb.category, cardDb.name.slice(0, 20))
+                        }else{flag = false}
                     }
                 })
+                if(flag){
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name}).then(async r=>{
+                        allCards = [...allCards, r]
+                    })
+                }
             })
         }catch (e) {}
     }
