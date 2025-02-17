@@ -141,6 +141,7 @@ bot.on('message', async (msg) => {
             })
             CardData.map(async (card) => {
                 let flag = true
+                console.log(allCards.length)
                 allCards.map(async el => {
                     if (card.name === el.name) {
                         if (!el.category.includes(card.category)) {
