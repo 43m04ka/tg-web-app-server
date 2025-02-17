@@ -146,11 +146,12 @@ bot.on('message', async (msg) => {
                             await cardDb.save()
                             allCards = await CardModel1.findAll();
                             await console.log(cardDb.category, cardDb.name.slice(0, 20))
-                        }else{console.log('input')}
+                        }else{flag = false}
                     }
                 })
                 if(flag){
                     let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                    console.log(newCard)
                     allCards = [...allCards, newCard];
                 }
             })
