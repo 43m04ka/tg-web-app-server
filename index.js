@@ -140,7 +140,6 @@ bot.on('message', async (msg) => {
 
                 allCards = await CardModel1.findAll();
                 allCards.map(async el => {
-                    console.log(el.name)
                     if (card.name === el.name) {
                         if (!el.category.includes(card.category)) {
                             flag = false
