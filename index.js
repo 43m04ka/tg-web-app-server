@@ -133,27 +133,27 @@ bot.on('message', async (msg) => {
         sendRequestDatabase()
     } else if (text === '/dr') {
         try {
-            CardData.map(async (card) => {
+            let allCards = await CardModel1.findAll()
+            for (let i = 0; i < CardData.length; i++) {
+                let card = CardData[i]
                 let flag = true
-                await CardModel1.findAll().then(async r => {
-                    await r.map(async el => {
-                        if (card.name === el.name) {
-                            if (!el.category.includes(card.category)) {
-                                flag = false
-                                let cardDb = await CardModel1.findByPk(el.id)
-                                cardDb.category = [...cardDb.category, card.category]
-                                await cardDb.save()
-                                await console.log(cardDb.category, cardDb.name.slice(0, 20))
-                            } else {
-                                flag = false
-                            }
+                allCards.map(async el => {
+                    if (card.name === el.name) {
+                        if (!el.category.includes(card.category)) {
+                            flag = false
+                            let cardDb = await CardModel1.findByPk(el.id)
+                            cardDb.category = [...cardDb.category, card.category]
+                            await cardDb.save()
+                            console.log(cardDb.category, cardDb.name.slice(0, 20))
+                        } else {
+                            flag = false
                         }
-                    })
-                    if (flag) {
-                        await CardModel1.create({body: card.body, category: [card.category], name: card.name})
                     }
                 })
-            })
+                if (flag) {
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name})
+                }
+            }
         } catch (e) {
         }
     } else if (text === '/dr1') {
