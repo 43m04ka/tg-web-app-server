@@ -150,8 +150,8 @@ bot.on('message', async (msg) => {
                         } else {}
                     })
                 }else{
-                    await CardModel1.create({body: card.body, category: [card.category], name: card.name});
-                    allCards = await CardModel1.findAll();
+                     let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
+                     allCards = [...allCards, newCard];
                 }
             })
         }catch (e) {}
