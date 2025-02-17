@@ -137,6 +137,8 @@ bot.on('message', async (msg) => {
         try {
             CardData.map(async (card) => {
                 let flag = true
+
+                allCards = await CardModel1.findAll();
                 allCards.map(async el => {
                     console.log(el.name)
                     if (card.name === el.name) {
@@ -152,7 +154,6 @@ bot.on('message', async (msg) => {
                 })
                 if(flag){
                     let newCard = await CardModel1.create({body: card.body, category: [card.category], name: card.name});
-                    allCards = [...allCards, newCard];
                 }
             })
         }catch (e) {}
