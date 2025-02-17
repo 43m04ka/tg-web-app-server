@@ -137,6 +137,7 @@ bot.on('message', async (msg) => {
             for (let i = 0; i < CardData.length; i++) {
                 let card = CardData[i]
                 let flag = true
+                console.log(allCards.length)
                 allCards.map(async el => {
                     if (card.name === el.name) {
                         if (!el.category.includes(card.category)) {
@@ -151,7 +152,9 @@ bot.on('message', async (msg) => {
                     }
                 })
                 if (flag) {
-                    await CardModel1.create({body: card.body, category: [card.category], name: card.name})
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name}).then( r=>{
+                        allCards = [...allCards, r]
+                    })
                 }
             }
         } catch (e) {
