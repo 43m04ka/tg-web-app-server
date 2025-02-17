@@ -135,10 +135,8 @@ bot.on('message', async (msg) => {
     else if (text === '/dr') {
 
         try {
-            let allCards = []
-            await CardModel1.findAll().then(async r=>{
-                allCards = r
-            })
+            let allCards =  await CardModel1.findAll()
+
             CardData.map(async (card) => {
                 let flag = true
                 console.log(allCards.length)
@@ -168,6 +166,19 @@ bot.on('message', async (msg) => {
         try {
             const a = await CardModel1.findAll();
             console.log(a.length, CardData.length)
+        }catch (e) {
+
+        }
+    }
+    else if (text === '/dr2') {
+        try {
+            let array = allCategoryListData[0].body
+            allCategoryListData[0].body.map(el=>{
+                array = [...array, ...el]
+            })
+            array.map(async (card) => {
+                await CardModel1.create({body: card.body, category: [card.category], name: card.name})
+            })
         }catch (e) {
 
         }
