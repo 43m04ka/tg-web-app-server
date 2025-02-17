@@ -781,7 +781,8 @@ app.post('/database', async (req, res) => {
 
 
             let result = []
-            CardData.map(card => {
+            let allCards = await CardModel1.findAll()
+            allCards.map(card => {
                 try {
                     let newCard = card
                     newCard.dataValues.rating = 0
