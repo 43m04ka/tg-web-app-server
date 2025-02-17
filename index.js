@@ -139,7 +139,7 @@ bot.on('message', async (msg) => {
                 let flag = true
                 console.log(allCards.length)
                 allCards.map(async el => {
-                    if (card.name === el.name && card.body.platform === el.body.platform) {
+                    if (card.name === el.name && card.body.platform === el.body.platform && card.body.img === el.body.img) {
                         if (!el.category.includes(card.category)) {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
