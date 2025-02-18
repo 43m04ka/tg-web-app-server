@@ -158,6 +158,7 @@ bot.on('message', async (msg) => {
                                 body.price = cardDb.price.min()
                                 body.oldPrice = cardDb.price.max()
                             }
+                            cardDb.body = body
                             await cardDb.save()
                             console.log(cardDb.category,cardDb.price, cardDb.name.slice(0, 20))
                         } else {
