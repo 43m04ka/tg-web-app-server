@@ -152,13 +152,12 @@ bot.on('message', async (msg) => {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.category]
-                            cardDb.price = [...cardDb.price, card.body.price]
+                            let priceArr = [...cardDb.price, card.body.price]
+                            cardDb.price = priceArr
                             let body = cardDb.body
-                            if([...cardDb.price, card.body.price].length>1){
-                                body.price = cardDb.price.min()
-                                body.oldPrice = cardDb.price.max()
-                                console.log(body)
-                                let a= '213'+{}
+                            if(priceArr.length>1){
+                                body.price = priceArr.min()
+                                body.oldPrice = priceArr.max()
                             }
 
                             cardDb.body = body
