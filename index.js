@@ -153,9 +153,7 @@ bot.on('message', async (msg) => {
                     }
                 })
                 if (flag) {
-                    let body = card.body
-                    delete body.price
-                    await CardModel1.create({body: body, category: [card.category], name: card.name, price:[card.body.price]}).then( r=>{
+                    await CardModel1.create({body: card.body, category: [card.category], name: card.name, price:[card.body.price]}).then( r=>{
                         allCards = [...allCards, r]
                     })
                 }
