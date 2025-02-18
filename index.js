@@ -186,7 +186,7 @@ bot.on('message', async (msg) => {
             let allCards = await CardModel1.findAll()
             allCards.map(card=>{
                 if(card.category.length > 1){
-                    console.log(card.category, card.name.slice(0, 20))
+                    console.log(card.category,card.price, card.name.slice(0, 20))
                 }
             })
         } catch (e) {
