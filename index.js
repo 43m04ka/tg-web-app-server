@@ -154,7 +154,7 @@ bot.on('message', async (msg) => {
                             cardDb.category = [...cardDb.category, card.category]
                             cardDb.price = [...cardDb.price, card.body.price]
                             let body = cardDb.body
-                            if(cardDb.price.length>1){
+                            if([...cardDb.price, card.body.price].length>1){
                                 body.price = cardDb.price.min()
                                 body.oldPrice = cardDb.price.max()
                             }
