@@ -30,6 +30,14 @@ let allCategoryListData = []
 
 const PORT = process.env.PORT || 8000;
 
+Array.prototype.max = function() {
+    return Math.max.apply(null, this);
+};
+
+Array.prototype.min = function() {
+    return Math.min.apply(null, this);
+};
+
 
 const start = async () => {
     try {
@@ -145,6 +153,11 @@ bot.on('message', async (msg) => {
                             let cardDb = await CardModel1.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.category]
                             cardDb.price = [...cardDb.price, card.body.price]
+                            let body = cardDb.body
+                            if(cardDb.price.length>1){
+                                body.price = cardDb.price.min()
+                                body.oldPrice = cardDb.price.max()
+                            }
                             await cardDb.save()
                             console.log(cardDb.category,cardDb.price, cardDb.name.slice(0, 20))
                         } else {
