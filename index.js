@@ -144,15 +144,18 @@ bot.on('message', async (msg) => {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.category]
+                            cardDb.price = [...cardDb.price, card.body.price]
                             await cardDb.save()
-                            console.log(cardDb.category, cardDb.name.slice(0, 20))
+                            console.log(cardDb.category,cardDb.price, cardDb.name.slice(0, 20))
                         } else {
                             flag = false
                         }
                     }
                 })
                 if (flag) {
-                    await CardModel1.create({body: card.body, category: [card.category], name: card.name}).then( r=>{
+                    let body = card.body
+                    delete body.price
+                    await CardModel1.create({body: body, category: [card.category], name: card.name, price:[card.body.price]}).then( r=>{
                         allCards = [...allCards, r]
                     })
                 }
