@@ -1032,7 +1032,7 @@ app.post('/database1', async (req, res) => {
                 const jsonFilter = req.body.data.filter;
                 let request = []
                 let len = 0
-                allCategoryListData.map(cat => {
+                allCategoryListData1.map(cat => {
                     if (cat.path === path) {
                         request = cat.body
                         len = cat.len
@@ -1126,7 +1126,7 @@ app.post('/database1', async (req, res) => {
             } else {
                 let request = []
                 let len = 0
-                allCategoryListData.map(cat => {
+                allCategoryListData1.map(cat => {
                     if (cat.path === path) {
                         request = cat.body[number - 1]
                         len = cat.len
@@ -1153,8 +1153,7 @@ app.post('/database1', async (req, res) => {
 
 
             let result = []
-            let allCards = await CardModel1.findAll()
-            allCards.map(card => {
+            CardData1.map(card => {
                 try {
                     let newCard = card
                     newCard.dataValues.rating = 0
