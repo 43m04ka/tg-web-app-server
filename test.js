@@ -1,2 +1,3 @@
-const today = new Date();
-console.log();
+let a = [1, 2]
+a.push(4)
+console.log(a)
