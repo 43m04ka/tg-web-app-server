@@ -901,7 +901,7 @@ app.post('/database', async (req, res) => {
 
 app.post('/database1', async (req, res) => {
 
-    const CardData = await CardData1.findAll();
+    const CardData1 = await CardData1.findAll();
     const method = req.body.method;
 
     if (method === 'add') {
@@ -927,7 +927,7 @@ app.post('/database1', async (req, res) => {
             let randomArray = []
             let tabArray = []
 
-            CardData.map(el => {
+            CardData1.map(el => {
                 if (el.body.tab === page) {
                     tabArray = [...tabArray, el]
                 }
