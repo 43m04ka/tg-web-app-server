@@ -1336,8 +1336,6 @@ const reload = async () => {
         count++
     })
 
-    console.log(cartSortCategory)
-
     count = 0
     cartSortCategory.map(el => {
         let array = el.body; //массив, можно использовать массив объектов
@@ -1350,6 +1348,8 @@ const reload = async () => {
         cartSortCategory[count].len = subarray.length;
         count += 1;
     })
+
+    console.log(cartSortCategory)
 
     allCategoryListData1 = cartSortCategory
 
