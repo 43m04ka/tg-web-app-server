@@ -906,7 +906,6 @@ app.post('/database', async (req, res) => {
 
 app.post('/database1', async (req, res) => {
 
-    const CardData1 = await CardModel1.findAll();
     const method = req.body.method;
 
     if (method === 'add') {
@@ -1312,7 +1311,7 @@ const reload = async () => {
 
 
     const cardDbList = await CardModel1.findAll();
-    CardData = cardDbList
+    CardData1 = cardDbList
 
     cartSortCategory = []
     let allPath = []
