@@ -34,11 +34,11 @@ let allCategoryListData1 = []
 
 const PORT = process.env.PORT || 8000;
 
-Array.prototype.max = function() {
+Array.prototype.max = function () {
     return Math.max.apply(null, this);
 };
 
-Array.prototype.min = function() {
+Array.prototype.min = function () {
     return Math.min.apply(null, this);
 };
 
@@ -151,7 +151,7 @@ bot.on('message', async (msg) => {
                 let flag = true
                 console.log(allCards.length)
                 allCards.map(async el => {
-                    if (card.name === el.name && card.body.platform === el.body.platform && card.body.img === el.body.img && card.body.category === el.body.category && card.body.view === el.body.view) {
+                    if (card.name === el.name && card.body.platform === el.body.platform && card.body.img === el.body.img && card.body.category === el.body.category && card.body.view === el.body.view && card.body.region === el.body.region) {
                         if (!el.category.includes(card.category)) {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
@@ -159,20 +159,25 @@ bot.on('message', async (msg) => {
                             let priceArr = [...cardDb.price, card.body.price]
                             cardDb.price = priceArr
                             let body = el.body
-                            if(priceArr.length>1){
+                            if (priceArr.length > 1) {
                                 body.price = priceArr.min()
                                 body.oldPrice = priceArr.max()
                             }
                             cardDb.body = body
                             await cardDb.save()
-                            console.log(cardDb.category,cardDb.price, cardDb.name.slice(0, 20))
+                            console.log(cardDb.category, cardDb.price, cardDb.name.slice(0, 20))
                         } else {
                             flag = false
                         }
                     }
                 })
                 if (flag) {
-                    await CardModel1.create({body: card.body, category: [card.category], name: card.name, price:[card.body.price]}).then( r=>{
+                    await CardModel1.create({
+                        body: card.body,
+                        category: [card.category],
+                        name: card.name,
+                        price: [card.body.price]
+                    }).then(r => {
                         allCards = [...allCards, r]
                     })
                 }
@@ -189,9 +194,9 @@ bot.on('message', async (msg) => {
     } else if (text === '/dr2') {
         try {
             let allCards = await CardModel1.findAll()
-            allCards.map(card=>{
-                if(card.category.length > 1){
-                    console.log(card.category,card.price, card.name.slice(0, 20))
+            allCards.map(card => {
+                if (card.category.length > 1) {
+                    console.log(card.category, card.price, card.name.slice(0, 20))
                 }
             })
         } catch (e) {
@@ -964,14 +969,14 @@ const reload = async () => {
     let allPath = []
     cardDbList.map(el => {
         el.category.map(elCat => {
-            if(!allPath.includes(elCat)) {
+            if (!allPath.includes(elCat)) {
                 allPath.push(elCat)
             }
         })
     })
 
-    allPath.map(path=>{
-        cartSortCategory.push({path: path, body:[]})
+    allPath.map(path => {
+        cartSortCategory.push({path: path, body: []})
     })
 
     count = 0
