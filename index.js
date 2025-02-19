@@ -1321,7 +1321,6 @@ const reload = async () => {
             }
         })
     })
-    console.log(allPath)
 
     allPath.map(path=>{
         cartSortCategory.push({path: path, body:[]})
@@ -1336,6 +1335,8 @@ const reload = async () => {
         })
         count++
     })
+
+    console.log(cartSortCategory)
 
     count = 0
     cartSortCategory.map(el => {
