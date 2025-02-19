@@ -28,7 +28,6 @@ let CardData = []
 let CardPreviewData = []
 let allCategoryListData = []
 
-let StructureData1 = {}
 let CardData1 = []
 let CardPreviewData1 = []
 let allCategoryListData1 = []
@@ -1351,6 +1350,7 @@ const reload = async () => {
     })
 
     allCategoryListData1 = cartSortCategory
+    console.log(allCategoryListData1)
     cartSortCategoryPrev = []
     count = 0
     cartSortCategory.map(cat => {
