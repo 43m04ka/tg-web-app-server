@@ -28,6 +28,11 @@ let CardData = []
 let CardPreviewData = []
 let allCategoryListData = []
 
+let StructureData1 = {}
+let CardData1 = []
+let CardPreviewData1 = []
+let allCategoryListData1 = []
+
 const PORT = process.env.PORT || 8000;
 
 Array.prototype.max = function() {
@@ -901,7 +906,7 @@ app.post('/database', async (req, res) => {
 
 app.post('/database1', async (req, res) => {
 
-    const CardData1 = await CardData1.findAll();
+    const CardData1 = await CardModel1.findAll();
     const method = req.body.method;
 
     if (method === 'add') {
@@ -917,7 +922,7 @@ app.post('/database1', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
-            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+            return res.status(200).json({cards: CardPreviewData1, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
         }
@@ -1304,6 +1309,57 @@ const reload = async () => {
     })
 
     CardPreviewData = cartSortCategoryPrev
+
+
+    const cardDbList = await CardModel1.findAll();
+    CardData = cardDbList
+
+    cartSortCategory = []
+    let allPath = []
+    cardDbList.map(el => {
+        el.category.map(elCat => {
+            if(!allPath.includes(elCat)) {
+                allPath.push(elCat)
+            }
+        })
+    })
+
+    allPath.map(path=>{
+        cartSortCategory.push({path: path, body:[]})
+    })
+
+    count = 0
+    cartSortCategory.map(cat => {
+        cardDbList.map(el => {
+            if (el.category.includes(cat.path)) {
+                cartSortCategory[count].body.push(el)
+            }
+        })
+        count++
+    })
+
+    count = 0
+    cartSortCategory.map(el => {
+        let array = el.body; //массив, можно использовать массив объектов
+        let size = 20; //размер подмассива
+        let subarray = []; //массив в который будет выведен результат.
+        for (let i = 0; i < Math.ceil(array.length / size); i++) {
+            subarray[i] = array.slice((i * size), (i * size) + size);
+        }
+        cartSortCategory[count].body = subarray;
+        cartSortCategory[count].len = subarray.length;
+        count += 1;
+    })
+
+    allCategoryListData1 = cartSortCategory
+    cartSortCategoryPrev = []
+    count = 0
+    cartSortCategory.map(cat => {
+        cartSortCategoryPrev.push(cartSortCategory[count].body[0])
+        count++
+    })
+
+    CardPreviewData1 = cartSortCategoryPrev
 }
 
 start()
