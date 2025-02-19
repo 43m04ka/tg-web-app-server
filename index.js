@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
-const {mainData} = require("./models");
+const {mainData, CardData1} = require("./models");
 const {all} = require("express/lib/application");
 const path = require("node:path");
 const {raw} = require("express");
@@ -551,6 +551,359 @@ app.post('/history', async (req, res) => {
 app.post('/database', async (req, res) => {
 
     const method = req.body.method;
+    if (method === 'add') {
+        try {
+            const data = req.body.data;
+            data.map(async card => {
+                await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
+            })
+            return res.status(200).json({answer: true});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    } else if (method === 'getPreview') {
+        try {
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+        } catch (e) {
+            return res.status(550).json({});
+        }
+    } else if (method === 'getRandom') {
+        try {
+            const page = req.body.data;
+            let randomArray = []
+            let tabArray = []
+
+            CardData.map(el => {
+                if (el.body.tab === page) {
+                    tabArray = [...tabArray, el]
+                }
+            })
+
+            let count = 0
+            let attempt = 0
+            if (tabArray.length > 10) {
+                while (count < 10) {
+                    let randomItem = tabArray[Math.floor(Math.random() * tabArray.length)];
+                    let add = true
+                    randomArray.map(el => {
+                        if (el.body.title === randomItem.body.title) {
+                            add = false
+                        }
+                    })
+                    if (add) {
+                        randomArray = [...randomArray, randomItem]
+                        count++
+                    }
+                }
+            } else {
+                randomArray = tabArray
+            }
+            console.log(randomArray);
+            return res.status(200).json({cards: randomArray});
+        } catch (e) {
+            return res.status(550).json({});
+        }
+    } else if (method === 'delCategory') {
+        const path = req.body.data;
+        try {
+            let request = []
+            let len = 0
+            allCategoryListData.map(cat => {
+                if (cat.path === path) {
+                    request = cat.body
+                    len = cat.len
+                }
+            })
+            console.log(request)
+            request.map(async el => {
+                await el.map(async el => {
+                    await CardModel.destroy({
+                        where: {
+                            id: el.id
+                        }
+                    })
+                })
+            })
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    } else if (method === 'updCategory') {
+        const path = req.body.data;
+        try {
+            let request = []
+            let len = 0
+            allCategoryListData.map(cat => {
+                if (cat.path === path) {
+                    request = cat.body
+                    len = cat.len
+                }
+            })
+
+            let bool = false
+            try {
+                const cardDb = await CardModel.findByPk(request[0][0].id);
+                bool = !cardDb.body.isSale
+            } catch (e) {
+
+            }
+            request.map(async el => {
+                el.map(async card => {
+                    const cardDb = await CardModel.findByPk(card.id);
+                    let newCard = cardDb.body;
+                    newCard.isSale = bool;
+                    cardDb.body = newCard;
+                    await CardModel.update({body: newCard}, {
+                        where: {
+                            id: card.id
+                        }
+                    })
+                })
+            })
+            await reload()
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    } else if (method === 'getList') {
+        try {
+            const path = req.body.data.path;
+            const number = req.body.data.number;
+            if (typeof req.body.data.filter !== 'undefined') {
+                const jsonFilter = req.body.data.filter;
+                let request = []
+                let len = 0
+                allCategoryListData.map(cat => {
+                    if (cat.path === path) {
+                        request = cat.body
+                        len = cat.len
+                    }
+                })
+
+                let allArray = []
+                request.map(el => {
+                    allArray = [...allArray, ...el]
+                })
+
+                request = []
+                allArray.map(card => {
+                    let add = true
+                    if (typeof jsonFilter.platform !== 'undefined') {
+                        if (jsonFilter.platform.length !== 0) {
+                            let plBol = true
+                            jsonFilter.platform.map(platform => {
+                                console.log(card.body.platform)
+                                if (card.body.platform.includes(platform)) {
+                                    plBol = false
+                                }
+                            })
+                            if (plBol) {
+                                add = false
+                            }
+                        }
+                    }
+                    if (typeof jsonFilter.languageSelector !== 'undefined') {
+                        if (jsonFilter.languageSelector.length !== 0) {
+                            let plBol = true
+                            jsonFilter.languageSelector.map(languageSelector => {
+                                console.log(card.body.languageSelector)
+                                if (card.body.languageSelector.includes(languageSelector)) {
+                                    plBol = false
+                                }
+                            })
+                            if (plBol) {
+                                add = false
+                            }
+                        }
+                    }
+                    if (typeof jsonFilter.numPlayers !== 'undefined') {
+                        if (jsonFilter.numPlayers.length !== 0) {
+                            let plBol = true
+                            jsonFilter.numPlayers.map(numPlayers => {
+                                console.log(card.body.numPlayers)
+                                if (String(card.body.numPlayers).includes(numPlayers)) {
+                                    plBol = false
+                                }
+                            })
+                            if (plBol) {
+                                add = false
+                            }
+                        }
+                    }
+                    if (typeof jsonFilter.category !== 'undefined') {
+                        if (jsonFilter.category.length !== 0) {
+                            let ctBol = true
+                            jsonFilter.category.map(cat => {
+                                console.log(card.body.category, cat)
+                                if (card.body.category.includes(cat) || card.body.category === cat) {
+                                    console.log(true)
+                                    ctBol = false
+                                }
+                            })
+                            if (ctBol) {
+                                add = false
+                            }
+                        }
+                        if (add) {
+                            request = [...request, card]
+                        }
+                    }
+                })
+
+                if (jsonFilter.price.sort) {
+                    request.sort((a, b) => (+(a.body.price - b.body.price)))
+                } else if (!jsonFilter.price.sort) {
+                    request.sort((a, b) => (+(b.body.price - a.body.price)));
+                }
+
+                let array = request; //массив, можно использовать массив объектов
+                let size = 20; //размер подмассива
+                let subarray = []; //массив в который будет выведен результат.
+                for (let i = 0; i < Math.ceil(array.length / size); i++) {
+                    subarray[i] = array.slice((i * size), (i * size) + size);
+                }
+
+                return res.status(200).json({cards: subarray[number - 1], len: subarray.length});
+            } else {
+                let request = []
+                let len = 0
+                allCategoryListData.map(cat => {
+                    if (cat.path === path) {
+                        request = cat.body[number - 1]
+                        len = cat.len
+                    }
+                })
+                return res.status(200).json({cards: request, len: len});
+            }
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    } else if (method === 'reload') {
+        try {
+            await reload()
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+        } catch (e) {
+            return res.status(550).json({});
+        }
+    } else if (method === 'getSearch') {
+        try {
+            const str = req.body.data.str;
+            console.log(str)
+            const page = req.body.data.page;
+
+
+            let result = []
+            let allCards = await CardModel1.findAll()
+            allCards.map(card => {
+                try {
+                    let newCard = card
+                    newCard.dataValues.rating = 0
+                    if (card.body.tab === page) {
+                        if (card.body.title.toLowerCase().includes(str.toLowerCase())) {
+                            let i = (10 - card.body.title.toLowerCase().indexOf(str.toLowerCase()))
+                            if (i < 0) {
+                                i = 0
+                            }
+                            newCard.dataValues.rating = str.length + i
+                            result = [...result, newCard]
+                        } else {
+                            let flag = true
+                            let rating = 0
+                            str.toLowerCase().split(' ').map(s => {
+                                if (!card.body.title.toLowerCase().includes(s)) {
+                                    flag = false
+                                }
+                                if (s.length * 2 > rating) {
+                                    rating = s.length * 2
+                                }
+                            })
+                            if (flag) {
+                                newCard.dataValues.rating = rating
+                                result = [newCard, ...result]
+                            } else {
+                                flag = true
+                                rating = 0
+                                let substring = ''
+                                str.toLowerCase().replaceAll(' ', '').split('').map(s => {
+                                    if (!card.body.title.toLowerCase().includes(s)) {
+                                        flag = false
+                                    }
+                                    substring = substring + s
+                                    if (card.body.title.toLowerCase().replaceAll(' ', '').includes(substring)) {
+                                        rating = substring.length
+                                    }
+                                })
+                                if (flag) {
+                                    newCard.dataValues.rating = rating
+                                    result = [newCard, ...result]
+                                }
+                            }
+                        }
+                    }
+                } catch (e) {
+
+                }
+            })
+
+            console.log(result)
+
+            result.sort(function (a, b) {
+                try {
+                    if (a.dataValues.rating < b.dataValues.rating) {
+                        return 1;
+                    }
+                    if (a.dataValues.rating > b.dataValues.rating) {
+                        return -1;
+                    }
+                } catch (e) {
+                }
+            })
+
+
+            return res.status(200).json({cards: result.slice(0, 50)});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    } else if (method === 'del') {
+        try {
+            await req.body.data.map(async el => {
+                await CardModel.destroy({
+                    where: {
+                        id: el.id
+                    }
+                })
+            })
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    } else if (method === 'upd') {
+        try {
+            await req.body.data.map(async el => {
+                const card = await CardModel.findByPk(el.id)
+                console.log(el, card)
+                card.body = el.body
+                await card.save();
+            })
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    }
+})
+
+app.post('/database1', async (req, res) => {
+
+    const CardData = await CardData1.findAll();
+    const method = req.body.method;
+
     if (method === 'add') {
         try {
             const data = req.body.data;
