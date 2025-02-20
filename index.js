@@ -1035,8 +1035,6 @@ const reload = async () => {
 
     allCategoryListData = cartSortCategory
 
-    console.log(cartSortCategory)
-
     let cartSortCategoryPrev = []
     count = 0
     cartSortCategory.map(cat => {
