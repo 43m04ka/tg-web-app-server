@@ -6,7 +6,7 @@
     "start": "node index.js"
   },
   "private": true,
-  "type": "module",
+  "type":"commonjs",
   "author": "",
   "license": "ISC",
   "description": "",
