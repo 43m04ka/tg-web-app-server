@@ -688,31 +688,26 @@ app.post('/database', async (req, res) => {
     } else if (method === 'updCategory') {
         const path = req.body.data;
         try {
-            let request = []
-            let len = 0
-            allCategoryListData.map(cat => {
-                if (cat.path === path) {
-                    request = cat.body
-                    len = cat.len
+            let bool = null
+            for (let i = 0; i < CardData.length; i++) {
+                let card = CardData[i]
+                if (card.category.includes(path)) {
+                    if(bool===null){
+                        if(typeof card.body.isSale === 'undefined'){
+                            bool = true
+                        }else{
+                            bool = !card.body.isSale
+                        }
+                    }
+                    const cardDb = await CardModel1.findByPk(card.id)
+                    let body = card.body
+                    body.isSale = bool
+                    cardDb.body = body
+                    cardDb.save()
                 }
-            })
-
-            let bool = false
-            try {
-                const cardDb = await CardModel.findByPk(request[0][0].id);
-                bool = !cardDb.body.isSale
-            } catch (e) {
-
             }
-            request.map(async el => {
-                el.map(async card => {
-                    const cardDb = await CardModel.findByPk(card.id);
-                    let newBody = card.body;
-                    newBody.isSale = bool;
-                    cardDb.body = newBody;
-                    await cardDb.save();
-                })
-            })
+
+
             await reload()
             return res.status(200).json({});
         } catch (e) {
