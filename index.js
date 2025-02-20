@@ -652,10 +652,9 @@ app.post('/database', async (req, res) => {
                 let card = CardData[i]
                 if (card.category.includes(path)) {
                     if (idList === 'all' || idList.includes(card.id)) {
-                        const cardDb = await CardModel1.findByPk(card.id)
-                        let category = cardDb.category
-                        console.log(category)
-                        if (category.length > 1) {
+                        if (card.category.length > 1) {
+                            const cardDb = await CardModel1.findByPk(card.id)
+                            let category = cardDb.category
                             let index = category.indexOf(path)
                             category.splice(index, 1)
                             cardDb.category = category
