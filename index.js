@@ -659,6 +659,7 @@ app.post('/database', async (req, res) => {
                             let index = category.indexOf(path)
                             category.splice(index, 1)
                             cardDb.category = category
+                            console.log(category)
                             let arrPrice = cardDb.price
                             arrPrice.splice(index, 1)
                             cardDb.price = arrPrice
