@@ -703,7 +703,7 @@ app.post('/database', async (req, res) => {
                     let body = card.body
                     body.isSale = bool
                     cardDb.body = body
-                    cardDb.save()
+                    await cardDb.save()
                 }
             }
 
