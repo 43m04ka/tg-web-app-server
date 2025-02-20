@@ -1044,7 +1044,6 @@ const reload = async () => {
         count++
     })
 
-    console.log(cartSortCategory)
 
     count = 0
     cartSortCategory.map(el => {
@@ -1069,6 +1068,8 @@ const reload = async () => {
     })
 
     CardPreviewData1 = cartSortCategoryPrev
+
+    console.log(cartSortCategoryPrev)
 }
 
 start()
