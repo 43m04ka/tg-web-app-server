@@ -654,15 +654,15 @@ app.post('/database', async (req, res) => {
                     if (idList === 'all' || idList.includes(card.id)) {
                         if (card.category.length > 1) {
                             const cardDb = await CardModel1.findByPk(card.id)
-                            let category = cardDb.category
+                            let category = card.category
                             let index = category.indexOf(path)
                             category.splice(index, 1)
                             cardDb.category = category
                             console.log(category)
-                            let arrPrice = cardDb.price
+                            let arrPrice = card.price
                             arrPrice.splice(index, 1)
                             cardDb.price = arrPrice
-                            let body = cardDb.body
+                            let body = card.body
                             if (arrPrice.length > 1) {
                                 body.price = arrPrice.min()
                                 body.oldPrice = arrPrice.max()
