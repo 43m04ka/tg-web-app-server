@@ -564,9 +564,47 @@ app.post('/database', async (req, res) => {
     if (method === 'add') {
         try {
             const data = req.body.data;
-            data.map(async card => {
-                await CardModel.create({body: card, category: card.tabCategoryPath, name: card.title});
-            })
+
+            let allCards = await CardModel1.findAll()
+
+            for (let i = 0; i < data.length; i++) {
+                let card = data[i]
+                let flag = true
+                allCards.map(async el => {
+                    if (card.title === el.name && card.platform === el.body.platform && card.img === el.body.img && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
+                        if (!el.category.includes(card.tabCategoryPath)) {
+                            flag = false
+                            let cardDb = await CardModel1.findByPk(el.id)
+                            cardDb.category = [...cardDb.category, card.tabCategoryPath]
+                            let priceArr = [...cardDb.price, card.price]
+                            cardDb.price = priceArr
+                            let body = el.body
+                            if (priceArr.length > 1) {
+                                body.price = priceArr.min()
+                                body.oldPrice = priceArr.max()
+                            }
+                            cardDb.body = body
+                            await cardDb.save()
+                            console.log(cardDb.category, cardDb.price, cardDb.name.slice(0, 20))
+                        } else {
+                            flag = false
+                        }
+                    }
+                })
+                if (flag) {
+                    await CardModel1.create({
+                        body: card,
+                        category: [card.tabCategoryPath],
+                        name: card.title,
+                        price: [card.price]
+                    }).then(r => {
+                        allCards = [...allCards, r]
+                    })
+                }
+            }
+
+            await reload()
+
             return res.status(200).json({answer: true});
         } catch (e) {
             console.log(e)
@@ -614,27 +652,60 @@ app.post('/database', async (req, res) => {
         } catch (e) {
             return res.status(550).json({});
         }
+
     } else if (method === 'delCategory') {
         const path = req.body.data;
+        const idList = req.body.idList;
         try {
-            let request = []
-            let len = 0
-            allCategoryListData.map(cat => {
-                if (cat.path === path) {
-                    request = cat.body
-                    len = cat.len
-                }
-            })
-            console.log(request)
-            request.map(async el => {
-                await el.map(async el => {
-                    await CardModel.destroy({
-                        where: {
-                            id: el.id
+            for (let i = 0; i < CardData1.length; i++) {
+                let card = CardData1[i]
+                if(card.category.includes(path)){
+                    if(idList === 'all' || idList.includes(card.id)) {
+                        const cardDb = await CardModel1.findByPk(card.id)
+                        let category = cardDb.category
+                        if(category.length > 1) {
+                            let index = category.indexOf(path)
+                            category.splice(index, 1)
+                            cardDb.category = category
+                            let arrPrice = cardDb.price
+                            arrPrice.splice(index, 1)
+                            cardDb.price = arrPrice
+                            let body = cardDb.body
+                            if (arrPrice.length > 1) {
+                                body.price = arrPrice.min()
+                                body.oldPrice = arrPrice.max()
+                            }
+                            cardDb.body = body
+                            await cardDb.save()
+                        }else{
+                            await CardModel1.destroy({
+                                where: {
+                                    id: card.id
+                                }
+                            })
                         }
-                    })
-                })
-            })
+                    }
+                }
+            }
+            //
+            // let request = []
+            // let len = 0
+            // allCategoryListData.map(cat => {
+            //     if (cat.path === path) {
+            //         request = cat.body
+            //         len = cat.len
+            //     }
+            // })
+            // console.log(request)
+            // request.map(async el => {
+            //     await el.map(async el => {
+            //         await CardModel.destroy({
+            //             where: {
+            //                 id: el.id
+            //             }
+            //         })
+            //     })
+            // })
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
@@ -874,20 +945,6 @@ app.post('/database', async (req, res) => {
 
 
             return res.status(200).json({cards: result.slice(0, 50)});
-        } catch (e) {
-            console.log(e)
-            return res.status(550).json({});
-        }
-    } else if (method === 'del') {
-        try {
-            await req.body.data.map(async el => {
-                await CardModel.destroy({
-                    where: {
-                        id: el.id
-                    }
-                })
-            })
-            return res.status(200).json({});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
