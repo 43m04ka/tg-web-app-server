@@ -20,12 +20,8 @@ const botAdmin = new TelegramBot(tokenAdmin, {polling: true});
 const app = express();
 let StructureData = {}
 let CardData = []
-let CardPreviewData = []
 let allCategoryListData = []
-
-let CardData1 = []
-let CardPreviewData1 = []
-let allCategoryListData1 = []
+let CardPreviewData = []
 
 const PORT = process.env.PORT || 8000;
 
@@ -334,7 +330,7 @@ app.post('/basket', async (req, res) => {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
                     console.log(userDb.basket)
                     let newArray = []
-                    CardData1.map(card => {
+                    CardData.map(card => {
                         userDb.basket.map(el => {
                             if (card.id === el) {
                                 newArray = [...newArray, card]
@@ -360,7 +356,7 @@ app.post('/basket', async (req, res) => {
                 userDb.save();
 
                 let newArray = []
-                CardData1.map(card => {
+                CardData.map(card => {
                     userDb.basket.map(el => {
                         if (card.id === el) {
                             newArray = [...newArray, card]
@@ -380,7 +376,7 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
 
                 let userBasket = []
-                CardData1.map(card => {
+                CardData.map(card => {
                     userDb.basket.map(el => {
                         if (card.id === el && card.body.tab === page && card.body.isSale) {
                             userBasket = [...userBasket, card]
@@ -607,7 +603,7 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
-            return res.status(200).json({cards: CardPreviewData1, structure: StructureData});
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
         }
@@ -617,7 +613,7 @@ app.post('/database', async (req, res) => {
             let randomArray = []
             let tabArray = []
 
-            CardData1.map(el => {
+            CardData.map(el => {
                 if (el.body.tab === page) {
                     tabArray = [...tabArray, el]
                 }
@@ -652,8 +648,8 @@ app.post('/database', async (req, res) => {
         const path = req.body.data;
         const idList = req.body.idList;
         try {
-            for (let i = 0; i < CardData1.length; i++) {
-                let card = CardData1[i]
+            for (let i = 0; i < CardData.length; i++) {
+                let card = CardData[i]
                 if(card.category.includes(path)){
                     if(idList === 'all' || idList.includes(card.id)) {
                         const cardDb = await CardModel1.findByPk(card.id)
@@ -755,7 +751,7 @@ app.post('/database', async (req, res) => {
                 const jsonFilter = req.body.data.filter;
                 let request = []
                 let len = 0
-                allCategoryListData1.map(cat => {
+                allCategoryListData.map(cat => {
                     if (cat.path === path) {
                         request = cat.body
                         len = cat.len
@@ -849,7 +845,7 @@ app.post('/database', async (req, res) => {
             } else {
                 let request = []
                 let len = 0
-                allCategoryListData1.map(cat => {
+                allCategoryListData.map(cat => {
                     if (cat.path === path) {
                         request = cat.body[number - 1]
                         len = cat.len
@@ -864,7 +860,7 @@ app.post('/database', async (req, res) => {
     } else if (method === 'reload') {
         try {
             await reload()
-            return res.status(200).json({cards: CardPreviewData1, structure: StructureData});
+            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
         }
@@ -876,7 +872,7 @@ app.post('/database', async (req, res) => {
 
 
             let result = []
-            CardData1.map(card => {
+            CardData.map(card => {
                 try {
                     let newCard = card
                     newCard.dataValues.rating = 0
@@ -960,6 +956,22 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
+    }else if(method === 'getDataAdmin'){
+        try {
+            let allPath = []
+            CardData.map(el => {
+                el.category.map(elCat => {
+                    if (!allPath.includes(elCat)) {
+                        allPath.push(elCat)
+                    }
+                })
+            })
+
+            return res.status(200).json({structure: StructureData, allCategory: allPath});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
     }
 })
 
@@ -967,60 +979,12 @@ app.post('/database', async (req, res) => {
 const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
-    const cardDbAll = await CardModel.findAll();
-    CardData = cardDbAll
-
-    let cartSortCategory = []
-    cardDbAll.map(el => {
-        flag = true
-        cartSortCategory.map(cat => {
-            if (cat.path === el.category) {
-                flag = false
-            }
-        })
-        if (flag) {
-            cartSortCategory = [...cartSortCategory, {path: el.category, body: []}]
-        }
-    })
-
-    let count = 0
-    cartSortCategory.map(cat => {
-        cardDbAll.map(el => {
-            if (el.category.includes(cat.path)) {
-                cartSortCategory[count].body = [...cartSortCategory[count].body, el]
-            }
-        })
-        count++
-    })
-
-    count = 0
-    cartSortCategory.map(el => {
-        let array = el.body; //массив, можно использовать массив объектов
-        let size = 20; //размер подмассива
-        let subarray = []; //массив в который будет выведен результат.
-        for (let i = 0; i < Math.ceil(array.length / size); i++) {
-            subarray[i] = array.slice((i * size), (i * size) + size);
-        }
-        cartSortCategory[count].body = subarray;
-        cartSortCategory[count].len = subarray.length;
-        count += 1;
-    })
-
-    allCategoryListData = cartSortCategory
-    let cartSortCategoryPrev = []
-    count = 0
-    cartSortCategory.map(cat => {
-        cartSortCategoryPrev = [...cartSortCategoryPrev, ...cartSortCategory[count].body[0]]
-        count++
-    })
-
-    CardPreviewData = cartSortCategoryPrev
 
 
     const cardDbList = await CardModel1.findAll();
-    CardData1 = cardDbList
+    CardData = cardDbList
 
-    cartSortCategory = []
+    let cartSortCategory = []
     let allPath = []
     cardDbList.map(el => {
         el.category.map(elCat => {
@@ -1034,7 +998,7 @@ const reload = async () => {
         cartSortCategory.push({path: path, body: []})
     })
 
-    count = 0
+    let count = 0
     cartSortCategory.map(cat => {
         cardDbList.map(el => {
             if (el.category.includes(cat.path)) {
@@ -1058,19 +1022,18 @@ const reload = async () => {
         count += 1;
     })
 
-    allCategoryListData1 = cartSortCategory
+    allCategoryListData = cartSortCategory
 
     console.log(cartSortCategory)
 
-    cartSortCategoryPrev = []
+    let cartSortCategoryPrev = []
     count = 0
     cartSortCategory.map(cat => {
         cartSortCategoryPrev.push(...cat.body[0])
         count++
     })
 
-    CardPreviewData1 = cartSortCategoryPrev
-
+    CardPreviewData = cartSortCategoryPrev
 }
 
 start()
