@@ -1070,7 +1070,7 @@ const reload = async () => {
     CardPreviewData1 = cartSortCategoryPrev
 }
 
-await start()
+start()
 
 
 
