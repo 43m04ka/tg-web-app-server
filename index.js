@@ -650,12 +650,12 @@ app.post('/database', async (req, res) => {
         try {
             for (let i = 0; i < CardData.length; i++) {
                 let card = CardData[i]
-                if(card.category.includes(path)){
-                    if(idList === 'all' || idList.includes(card.id)) {
+                if (card.category.includes(path)) {
+                    if (idList === 'all' || idList.includes(card.id)) {
                         const cardDb = await CardModel1.findByPk(card.id)
                         let category = cardDb.category
                         console.log(category)
-                        if(category.length > 1) {
+                        if (category.length > 1) {
                             let index = category.indexOf(path)
                             category.splice(index, 1)
                             cardDb.category = category
@@ -669,7 +669,7 @@ app.post('/database', async (req, res) => {
                             }
                             cardDb.body = body
                             await cardDb.save()
-                        }else{
+                        } else {
                             await CardModel1.destroy({
                                 where: {
                                     id: card.id
@@ -860,8 +860,18 @@ app.post('/database', async (req, res) => {
     } else if (method === 'reload') {
         try {
             await reload()
-            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+            let allPath = []
+            CardData.map(el => {
+                el.category.map(elCat => {
+                    if (!allPath.includes(elCat)) {
+                        allPath.push(elCat)
+                    }
+                })
+            })
+
+            return res.status(200).json({structure: StructureData, allCategory: allPath});
         } catch (e) {
+            console.log(e)
             return res.status(550).json({});
         }
     } else if (method === 'getSearch') {
@@ -956,7 +966,7 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
-    }else if(method === 'getDataAdmin'){
+    } else if (method === 'getDataAdmin') {
         try {
             let allPath = []
             CardData.map(el => {
