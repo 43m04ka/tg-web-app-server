@@ -334,7 +334,7 @@ app.post('/basket', async (req, res) => {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
                     console.log(userDb.basket)
                     let newArray = []
-                    CardData.map(card => {
+                    CardData1.map(card => {
                         userDb.basket.map(el => {
                             if (card.id === el) {
                                 newArray = [...newArray, card]
@@ -360,7 +360,7 @@ app.post('/basket', async (req, res) => {
                 userDb.save();
 
                 let newArray = []
-                CardData.map(card => {
+                CardData1.map(card => {
                     userDb.basket.map(el => {
                         if (card.id === el) {
                             newArray = [...newArray, card]
@@ -380,7 +380,7 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
 
                 let userBasket = []
-                CardData.map(card => {
+                CardData1.map(card => {
                     userDb.basket.map(el => {
                         if (card.id === el && card.body.tab === page && card.body.isSale) {
                             userBasket = [...userBasket, card]
