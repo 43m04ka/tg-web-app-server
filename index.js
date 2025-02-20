@@ -663,6 +663,7 @@ app.post('/database', async (req, res) => {
                     if(idList === 'all' || idList.includes(card.id)) {
                         const cardDb = await CardModel1.findByPk(card.id)
                         let category = cardDb.category
+                        console.log(category)
                         if(category.length > 1) {
                             let index = category.indexOf(path)
                             category.splice(index, 1)
@@ -706,6 +707,8 @@ app.post('/database', async (req, res) => {
             //         })
             //     })
             // })
+
+            await reload()
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
@@ -866,7 +869,7 @@ app.post('/database', async (req, res) => {
     } else if (method === 'reload') {
         try {
             await reload()
-            return res.status(200).json({cards: CardPreviewData, structure: StructureData});
+            return res.status(200).json({cards: CardPreviewData1, structure: StructureData});
         } catch (e) {
             return res.status(550).json({});
         }
@@ -1035,6 +1038,7 @@ const reload = async () => {
     allPath.map(path => {
         cartSortCategory.push({path: path, body: []})
     })
+    console.log(allPath)
 
     count = 0
     cartSortCategory.map(cat => {
@@ -1071,7 +1075,7 @@ const reload = async () => {
     CardPreviewData1 = cartSortCategoryPrev
 }
 
-start()
+await start()
 
 
 
