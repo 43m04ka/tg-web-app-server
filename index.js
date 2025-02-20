@@ -679,26 +679,6 @@ app.post('/database', async (req, res) => {
                     }
                 }
             }
-            //
-            // let request = []
-            // let len = 0
-            // allCategoryListData.map(cat => {
-            //     if (cat.path === path) {
-            //         request = cat.body
-            //         len = cat.len
-            //     }
-            // })
-            // console.log(request)
-            // request.map(async el => {
-            //     await el.map(async el => {
-            //         await CardModel.destroy({
-            //             where: {
-            //                 id: el.id
-            //             }
-            //         })
-            //     })
-            // })
-
             await reload()
             return res.status(200).json({});
         } catch (e) {
@@ -727,14 +707,10 @@ app.post('/database', async (req, res) => {
             request.map(async el => {
                 el.map(async card => {
                     const cardDb = await CardModel.findByPk(card.id);
-                    let newCard = cardDb.body;
-                    newCard.isSale = bool;
-                    cardDb.body = newCard;
-                    await CardModel.update({body: newCard}, {
-                        where: {
-                            id: card.id
-                        }
-                    })
+                    let newBody = card.body;
+                    newBody.isSale = bool;
+                    cardDb.body = newBody;
+                    await cardDb.save();
                 })
             })
             await reload()
