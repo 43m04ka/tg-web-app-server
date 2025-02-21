@@ -692,10 +692,10 @@ app.post('/database', async (req, res) => {
             for (let i = 0; i < CardData.length; i++) {
                 let card = CardData[i]
                 if (card.category.includes(path)) {
-                    if(bool===null){
-                        if(typeof card.body.isSale === 'undefined'){
+                    if (bool === null) {
+                        if (typeof card.body.isSale === 'undefined') {
                             bool = true
-                        }else{
+                        } else {
                             bool = !card.body.isSale
                         }
                     }
@@ -948,7 +948,21 @@ app.post('/database', async (req, res) => {
                 })
             })
 
-            return res.status(200).json({structure: StructureData, allCategory: allPath});
+            let isSaleArr = []
+            for (let j = 0; j < allPath.length; j++) {
+                let path = allPath[j]
+                isSaleArr.push(false)
+                for (let i = 0; i < CardData.length; i++) {
+                    let card = CardData[i]
+                    if(card.category.includes(path)){
+                        if(card.body.isSale){
+                            isSaleArr[j] = true
+                        }
+                    }
+                }
+            }
+
+            return res.status(200).json({structure: StructureData, allCategory: allPath, isSaleArr: isSaleArr});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
