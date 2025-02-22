@@ -644,7 +644,7 @@ app.post('/database', async (req, res) => {
             return res.status(550).json({});
         }
 
-    } else if (method === 'delCategory') {
+    } else if (method === 'delete') {
         const path = req.body.data;
         const idList = req.body.idList;
         try {
@@ -685,25 +685,28 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
-    } else if (method === 'updCategory') {
+    } else if (method === 'changeStatus') {
         const path = req.body.data;
+        const idList = req.body.idList;
         try {
             let bool = null
             for (let i = 0; i < CardData.length; i++) {
                 let card = CardData[i]
                 if (card.category.includes(path)) {
-                    if (bool === null) {
-                        if (typeof card.body.isSale === 'undefined') {
-                            bool = true
-                        } else {
-                            bool = !card.body.isSale
+                    if (idList === 'all' || idList.includes(card.id)) {
+                        if (bool === null) {
+                            if (typeof card.body.isSale === 'undefined') {
+                                bool = true
+                            } else {
+                                bool = !card.body.isSale
+                            }
                         }
+                        const cardDb = await CardModel1.findByPk(card.id)
+                        let body = card.body
+                        body.isSale = bool
+                        cardDb.body = body
+                        await cardDb.save()
                     }
-                    const cardDb = await CardModel1.findByPk(card.id)
-                    let body = card.body
-                    body.isSale = bool
-                    cardDb.body = body
-                    await cardDb.save()
                 }
             }
 
