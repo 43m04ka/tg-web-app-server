@@ -191,7 +191,7 @@ bot.on('message', async (msg) => {
                         for (order of orders) {
                             let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
                             if(order.id === 81) {
-                                console.log(order)
+                                console.log(order, user)
                             }
                             await order.getOrderPositions().then(async orderPoss => {
                                 for (orderPos of orderPoss) {
