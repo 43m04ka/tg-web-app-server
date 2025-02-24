@@ -184,7 +184,7 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/dr2') {
         try {
-            await UserModel.findAll.then(async user => {
+            await UserModel.findAll().then(async user => {
                 if (!user) return console.log("User not found");
                 await user.getOrders().then(async orders => {
                     for (order of orders) {
