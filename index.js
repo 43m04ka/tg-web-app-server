@@ -192,13 +192,11 @@ bot.on('message', async (msg) => {
                             let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
                             await order.getOrderPositions().then(async orderPoss => {
                                 for (orderPos of orderPoss) {
-                                    console.log(orderPos.body.body.title)
+                                    console.log(orderPos)
                                     orderData.body = [...orderData.body, orderPos.body]
                                 }
                             })
                                 .catch(err => console.log(err));
-                            console.log(historyData)
-                            console.log(orderData)
                         }
                     })
                         .catch(err => console.log(err));
