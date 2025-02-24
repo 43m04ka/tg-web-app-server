@@ -184,8 +184,24 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/dr2') {
         try {
-            const allOrders  = OrderModel.findAll();
-            console.log(allOrders)
+            await UserModel.findAll.then(async user => {
+                if (!user) return console.log("User not found");
+                await user.getOrders().then(async orders => {
+                    for (order of orders) {
+                        let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
+                        await order.getOrderPositions().then(async orderPoss => {
+                            for (orderPos of orderPoss) {
+                                console.log(orderPos.body.body.title)
+                                orderData.body = [...orderData.body, orderPos.body]
+                            }
+                        })
+                            .catch(err => console.log(err));
+                        console.log(historyData)
+                        console.log(orderData)
+                    }
+                })
+                    .catch(err => console.log(err));
+            }).catch(err => console.log(err));
         } catch (e) {
 
         }
