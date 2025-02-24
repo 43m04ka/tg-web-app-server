@@ -184,23 +184,25 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/dr2') {
         try {
-            await UserModel.findAll().then(async user => {
-                if (!user) return console.log("User not found");
-                await user.getOrders().then(async orders => {
-                    for (order of orders) {
-                        let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
-                        await order.getOrderPositions().then(async orderPoss => {
-                            for (orderPos of orderPoss) {
-                                console.log(orderPos.body.body.title)
-                                orderData.body = [...orderData.body, orderPos.body]
-                            }
-                        })
-                            .catch(err => console.log(err));
-                        console.log(historyData)
-                        console.log(orderData)
-                    }
+            await UserModel.findAll().then(async users => {
+                users.map(async user => {
+                    if (!user) return console.log("User not found");
+                    await user.getOrders().then(async orders => {
+                        for (order of orders) {
+                            let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
+                            await order.getOrderPositions().then(async orderPoss => {
+                                for (orderPos of orderPoss) {
+                                    console.log(orderPos.body.body.title)
+                                    orderData.body = [...orderData.body, orderPos.body]
+                                }
+                            })
+                                .catch(err => console.log(err));
+                            console.log(historyData)
+                            console.log(orderData)
+                        }
+                    })
+                        .catch(err => console.log(err));
                 })
-                    .catch(err => console.log(err));
             }).catch(err => console.log(err));
         } catch (e) {
 
@@ -862,8 +864,8 @@ app.post('/database', async (req, res) => {
                 isSaleArr.push(false)
                 for (let i = 0; i < CardData.length; i++) {
                     let card = CardData[i]
-                    if(card.category.includes(path)){
-                        if(card.body.isSale){
+                    if (card.category.includes(path)) {
+                        if (card.body.isSale) {
                             isSaleArr[j] = true
                         }
                     }
@@ -984,8 +986,8 @@ app.post('/database', async (req, res) => {
                 isSaleArr.push(false)
                 for (let i = 0; i < CardData.length; i++) {
                     let card = CardData[i]
-                    if(card.category.includes(path)){
-                        if(card.body.isSale){
+                    if (card.category.includes(path)) {
+                        if (card.body.isSale) {
                             isSaleArr[j] = true
                         }
                     }
