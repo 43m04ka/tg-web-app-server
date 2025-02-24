@@ -207,9 +207,15 @@ bot.on('message', async (msg) => {
         } catch (e) {
 
         }
+    }else if (text === '/dr3') {
+        try {
+            await botAdmin.sendMessage(869439849, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
+            await botAdmin.sendMessage(5106439090, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
+        } catch (e) {
+
+        }
     }
 });
-
 
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
