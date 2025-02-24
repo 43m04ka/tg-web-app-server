@@ -184,12 +184,8 @@ bot.on('message', async (msg) => {
         }
     } else if (text === '/dr2') {
         try {
-            let allCards = await CardModel1.findAll()
-            allCards.map(card => {
-                if (card.category.length > 1) {
-                    console.log(card.category, card.price, card.name.slice(0, 20))
-                }
-            })
+            const allOrders  = OrderModel.findAll();
+            console.log(allOrders)
         } catch (e) {
 
         }
@@ -679,6 +675,7 @@ app.post('/database', async (req, res) => {
                     }
                 }
             }
+
             await reload()
             return res.status(200).json({});
         } catch (e) {
