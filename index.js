@@ -246,9 +246,9 @@ app.post('/admin', async (req, res) => {
             if (login === 'root' && password === '0207') {
                 const dataDb = await DataModel.findOne({id: 1});
                 dataDb.body = req.body.data;
-                dataDb.save();
-                console.log(dataDb.body)
-                return res.status(200).json(dataDb.body);
+                await dataDb.save();
+                await reload()
+                return res.status(200).json(req.body.data);
             } else {
                 return res.status(412).json({});
             }
