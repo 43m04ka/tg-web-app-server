@@ -591,6 +591,9 @@ app.post('/database', async (req, res) => {
                             if(typeof card.oldPrice !== 'undefined'){
                                 body.oldPrice = card.oldPrice
                             }
+                            if(typeof card.endDate  !== 'undefined'){
+                                body.endDate = card.endDate
+                            }
                             if (priceArr.length > 1) {
                                 body.price = priceArr.min()
                                 body.priceMax = priceArr.max()
@@ -690,6 +693,7 @@ app.post('/database', async (req, res) => {
                             }else{
                                 body.price = arrPrice[0]
                                 delete body.oldPrice
+                                delete body.endDate
                             }
                             cardDb.body = body
                             await cardDb.save()
