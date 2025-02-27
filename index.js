@@ -580,7 +580,7 @@ app.post('/database', async (req, res) => {
                 let card = data[i]
                 let flag = true
                 allCards.map(async el => {
-                    if (card.title === el.name && card.platform === el.body.platform && card.img === el.body.img && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
+                    if (card.title === el.name && card.platform === el.body.platform && card.url === el.body.url && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
                         if (!el.category.includes(card.tabCategoryPath)) {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
