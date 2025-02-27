@@ -118,7 +118,6 @@ bot.on('message', async (msg) => {
         let dataRequestDatabase = {
             userName: 'Admin-bot',
             password: '49ODAvir',
-
         }
 
         const sendRequestDatabase = useCallback(() => {
@@ -686,6 +685,9 @@ app.post('/database', async (req, res) => {
                             if (arrPrice.length > 1) {
                                 body.price = arrPrice.min()
                                 body.oldPrice = arrPrice.max()
+                            }else{
+                                body.price = arrPrice[0]
+                                delete body.oldPrice
                             }
                             cardDb.body = body
                             await cardDb.save()
