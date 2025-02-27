@@ -527,7 +527,6 @@ app.post('/history', async (req, res) => {
     const method = req.body.method;
     if (method === 'get') {
         try {
-            console.log(123)
             const {user} = req.body;
             const chatId = String(user.id);
             let historyData = []
@@ -1003,6 +1002,38 @@ app.post('/database', async (req, res) => {
             }
 
             return res.status(200).json({structure: StructureData, allCategory: allPath, isSaleArr: isSaleArr});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
+    }else if(method==='getOrderHistory'){
+        try {
+            let allOrders = []
+            await UserModel.findAll().then(async users => {
+                users.map(async user => {
+                    if (!user) return console.log("User not found");
+                    await user.getOrders().then(async orders => {
+                        for (order of orders) {
+                            allOrders.push(order)
+                        }
+                    })
+                        .catch(err => console.log(err));
+                })
+            }).catch(err => console.log(err));
+
+            allOrders.sort(function (a, b) {
+                try {
+                    if (a.id < b.id) {
+                        return 1;
+                    }
+                    if (a.id > b.id) {
+                        return -1;
+                    }
+                } catch (e) {
+                }
+            })
+
+            return res.status(200).json({allOrders:allOrders.slice(0, 50)});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
