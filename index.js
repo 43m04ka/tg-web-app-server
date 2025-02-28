@@ -1180,13 +1180,23 @@ const reload = async () => {
     allCategoryListData = cartSortCategory
 
     let cartSortCategoryPrev = []
-    count = 0
     cartSortCategory.map(cat => {
         cartSortCategoryPrev.push(...cat.body[0])
-        count++
     })
 
-    CardPreviewData = cartSortCategoryPrev
+    CardPreviewData = []
+
+    cartSortCategoryPrev.map(card =>{
+        let flag = true
+        CardPreviewData.map(card1 => {
+            if(card.id === card1.id){
+                flag = false
+            }
+        })
+        if(flag){
+            CardPreviewData.push(card)
+        }
+    })
 }
 
 start()
