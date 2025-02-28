@@ -3,7 +3,7 @@ const TelegramBot = require('node-telegram-bot-api');
 const express = require('express');
 const cors = require('cors');
 const sequelize = require('./db.js')
-const UserModel = require('./models.js').Users;
+const UserModel = require('./models.js').User;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
 const CardModel1 = require('./models.js').CardData1;
@@ -370,7 +370,7 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
                 let userBasket = userDb.basket
                 let deleteItem = [mainData];
-                const result = userBasket.filter(person_A => !deleteItem.some(person_B => person_A === person_B));
+                const result = userBasket.filter(a => !deleteItem.some(b => a === b));
                 userDb.basket = result || [];
                 userDb.save();
 
@@ -645,8 +645,8 @@ app.post('/database', async (req, res) => {
 
             let count = 0
             let attempt = 0
-            if (tabArray.length > 10) {
-                while (count < 10) {
+            if (tabArray.length > 30) {
+                while (count < 30) {
                     let randomItem = tabArray[Math.floor(Math.random() * tabArray.length)];
                     let add = true
                     randomArray.map(el => {

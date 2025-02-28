@@ -7,6 +7,13 @@ const Users = sequelize.define('users', {
     basket: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
 })
 
+const User = sequelize.define('userData', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    chatId: {type: DataTypes.STRING, unique: true},
+    basket: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    favorites: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+})
+
 const Data = sequelize.define('data', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     body: {type: DataTypes.JSON, defaultValue: {}},
@@ -53,4 +60,4 @@ const OrderPosition = sequelize.define('orderPosition', {
 Users.hasMany(Order)
 Order.hasMany(OrderPosition)
 
-module.exports = {Users, Data, CardData, Promo, Order, OrderPosition, CardData1};
+module.exports = {Users, Data, CardData, Promo, Order, OrderPosition, CardData1, User};
