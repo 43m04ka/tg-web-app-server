@@ -523,6 +523,88 @@ app.post('/basket', async (req, res) => {
     }
 )
 
+
+app.post('/favorites', async (req, res) => {
+        const method = req.body.method;
+        if (method === 'add') {
+            try {
+                const {mainData, user} = req.body;
+                const chatId = String(user.id);
+                const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                let isContinue = true;
+                userDb.favorites.map(el => {
+                    if (el === mainData) {
+                        isContinue = false;
+                        return res.status(200).json({body: true});
+                    }
+                })
+                if (isContinue) {
+                    userDb.favorites = [...[mainData], ...userDb.favorites];
+                    await userDb.save();
+                    return res.status(200).json({body: true});
+                }
+            } catch (e) {
+                console.log(e)
+                return res.status(501).json({body: false});
+            }
+        } else if (method === 'get') {
+            try {
+                const {user} = req.body;
+                const chatId = String(user.id);
+                try {
+                    await UserModel.create({chatId: chatId, basket: []});
+                    try {
+                        await bot.sendMessage(5106439090, chatId + ' @' + user.username)
+                    } catch (e) {
+
+                    }
+                    console.log('123')
+                    return res.status(200).json({body: []});
+                } catch (err) {
+                    const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                    let newArray = []
+                    CardData.map(card => {
+                        userDb.favorites.map(el => {
+                            if (card.id === el) {
+                                newArray = [...newArray, card]
+                            }
+                        })
+                    })
+                    await console.log(newArray);
+                    return res.status(200).json({body: newArray});
+                }
+            } catch (e) {
+                console.log(e)
+                return res.status(502).json({});
+            }
+        } else if (method === 'del') {
+            try {
+                const {user, mainData} = req.body;
+                const chatId = String(user.id);
+                const userDb = await UserModel.findOne({where: {chatId: chatId}});
+                let userBasket = userDb.favorites
+                let deleteItem = [mainData];
+                const result = userBasket.filter(a => !deleteItem.some(b => a === b));
+                userDb.favorites = result || [];
+                userDb.save();
+
+                let newArray = []
+                CardData.map(card => {
+                    userDb.favorites.map(el => {
+                        if (card.id === el) {
+                            newArray = [...newArray, card]
+                        }
+                    })
+                })
+                return res.status(200).json({body: newArray});
+            } catch (e) {
+                console.log(e)
+                return res.status(503).json({});
+            }
+        }
+    }
+)
+
 app.post('/history', async (req, res) => {
     const method = req.body.method;
     if (method === 'get') {
