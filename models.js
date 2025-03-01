@@ -57,7 +57,7 @@ const OrderPosition = sequelize.define('orderPosition', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-Users.hasMany(Order)
+User.hasMany(Order)
 Order.hasMany(OrderPosition)
 
 module.exports = {Users, Data, CardData, Promo, Order, OrderPosition, CardData1, User};
