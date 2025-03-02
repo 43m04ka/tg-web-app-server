@@ -1100,6 +1100,7 @@ app.post('/database', async (req, res) => {
             let allOrders = []
             await UserModel.findAll().then(async users => {
                 for ( let i=  0;i<users.length; i++){
+                    let user = users[i]
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
                             allOrders.push(order)
