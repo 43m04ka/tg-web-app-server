@@ -189,7 +189,7 @@ bot.on('message', async (msg) => {
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
                             let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
-                            if(order.id === 83) {
+                            if (order.id === 83) {
                                 console.log(order, user)
                             }
                             await order.getOrderPositions().then(async orderPoss => {
@@ -206,7 +206,7 @@ bot.on('message', async (msg) => {
         } catch (e) {
 
         }
-    }else if (text === '/dr3') {
+    } else if (text === '/dr3') {
         try {
             await bot.sendMessage(1962567079, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
             await bot.sendMessage(5106439090, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
@@ -253,6 +253,12 @@ app.post('/admin', async (req, res) => {
             }
         } catch (err) {
             return res.status(512).json({});
+        }
+    } else if (method === 'sendMessage') {
+        try {
+            await bot.sendMessage(req.body.data.chatId, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
+        } catch (e) {
+
         }
     }
 });
@@ -670,10 +676,10 @@ app.post('/database', async (req, res) => {
                             let priceArr = [...cardDb.price, card.price]
                             cardDb.price = priceArr
                             let body = el.body
-                            if(typeof card.oldPrice !== 'undefined'){
+                            if (typeof card.oldPrice !== 'undefined') {
                                 body.oldPrice = card.oldPrice
                             }
-                            if(typeof card.endDate  !== 'undefined'){
+                            if (typeof card.endDate !== 'undefined') {
                                 body.endDate = card.endDate
                             }
                             if (priceArr.length > 1) {
@@ -772,7 +778,7 @@ app.post('/database', async (req, res) => {
                             if (arrPrice.length > 1) {
                                 body.price = arrPrice.min()
                                 body.priceMax = arrPrice.max()
-                            }else{
+                            } else {
                                 body.price = arrPrice[0]
                                 delete body.oldPrice
                                 delete body.endDate
@@ -1095,11 +1101,11 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
-    }else if(method==='getOrderHistory'){
+    } else if (method === 'getOrderHistory') {
         try {
             let allOrders = []
             await UserModel.findAll().then(async users => {
-                for ( let i=  0;i<users.length; i++){
+                for (let i = 0; i < users.length; i++) {
                     let user = users[i]
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
@@ -1127,7 +1133,7 @@ app.post('/database', async (req, res) => {
                 }
             })
 
-            return res.status(200).json({allOrders:allOrders.slice(0, 50)});
+            return res.status(200).json({allOrders: allOrders.slice(0, 50)});
         } catch (e) {
             console.log(e)
             return res.status(550).json({});
@@ -1191,14 +1197,14 @@ const reload = async () => {
 
     CardPreviewData = []
 
-    cartSortCategoryPrev.map(card =>{
+    cartSortCategoryPrev.map(card => {
         let flag = true
         CardPreviewData.map(card1 => {
-            if(card.id === card1.id){
+            if (card.id === card1.id) {
                 flag = false
             }
         })
-        if(flag){
+        if (flag) {
             CardPreviewData.push(card)
         }
     })
