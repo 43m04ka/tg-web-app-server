@@ -1104,7 +1104,7 @@ app.post('/database', async (req, res) => {
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
                             let order1 = order
-                            order1.chatId = user.chatId
+                            order1.dataValues.chatId = user.chatId
                             allOrders.push(order1)
                         }
                     })
