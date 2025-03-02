@@ -1100,7 +1100,6 @@ app.post('/database', async (req, res) => {
             let allOrders = []
             await UserModel.findAll().then(async users => {
                 users.map(async user => {
-                    if (!user) return console.log("User not found");
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
                             allOrders.push(order)
@@ -1109,6 +1108,9 @@ app.post('/database', async (req, res) => {
                         .catch(err => console.log(err));
                 })
             }).catch(err => console.log(err));
+
+            console.log(allOrders.length);
+
 
             allOrders.sort(function (a, b) {
                 try {
