@@ -1099,14 +1099,14 @@ app.post('/database', async (req, res) => {
         try {
             let allOrders = []
             await UserModel.findAll().then(async users => {
-                users.map(async user => {
+                for ( let i=  0;i<users.length; i++){
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
                             allOrders.push(order)
                         }
                     })
                         .catch(err => console.log(err));
-                })
+                }
             }).catch(err => console.log(err));
 
             console.log(allOrders.length);
