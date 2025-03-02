@@ -257,8 +257,9 @@ app.post('/admin', async (req, res) => {
     } else if (method === 'sendMessage') {
         try {
             await bot.sendMessage(req.body.data.chatId, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
+            return res.status(200).json({answer:true});
         } catch (e) {
-
+            return res.status(200).json({answer:false});
         }
     }
 });
