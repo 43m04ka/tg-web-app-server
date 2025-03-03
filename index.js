@@ -633,8 +633,6 @@ app.post('/history', async (req, res) => {
                         })
                             .catch(err => console.log(err));
                         historyData = [...historyData, orderData]
-                        console.log(historyData)
-                        console.log(orderData)
                     }
                 })
                     .catch(err => console.log(err));
@@ -1110,9 +1108,16 @@ app.post('/database', async (req, res) => {
                     let user = users[i]
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
-                            let order1 = order
-                            order1.dataValues.chatId = user.chatId
-                            allOrders.push(order1)
+                            let orderData = order
+                            orderData.body = []
+                            orderData.chatId = user.chatId
+                            await order.getOrderPositions().then(async orderPoss => {
+                                for (orderPos of orderPoss) {
+                                    orderData.body = [...orderData.body, orderPos.body]
+                                }
+                            })
+                                .catch(err => console.log(err));
+                            allOrders.push(orderData)
                         }
                     })
                         .catch(err => console.log(err));
