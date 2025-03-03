@@ -1107,16 +1107,17 @@ app.post('/database', async (req, res) => {
                 for (let i = 0; i < users.length; i++) {
                     let user = users[i]
                     await user.getOrders().then(async orders => {
-                        for (order of orders) {
+                        for (let order of orders) {
                             let orderData = order
                             orderData.body = []
                             orderData.chatId = user.chatId
                             await order.getOrderPositions().then(async orderPoss => {
-                                for (orderPos of orderPoss) {
+                                for (let orderPos of orderPoss) {
                                     orderData.body = [...orderData.body, orderPos.body]
                                 }
                             })
                                 .catch(err => console.log(err));
+                            console.log(orderData)
                             allOrders.push(orderData)
                         }
                     })
