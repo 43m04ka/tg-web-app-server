@@ -1145,6 +1145,23 @@ app.post('/database', async (req, res) => {
             console.log(e)
             return res.status(550).json({});
         }
+    } else if (method === 'editPriceCard') {
+        try {
+            const id = req.body.data.id;
+            const priceArr = req.body.data.priceArray;
+
+            const card = await CardModel.findByPk(id);
+            let newBody = card.dataValues.body
+            card.price = priceArr
+            newBody.price = priceArr.min()
+            card.body = newBody
+            await card.save()
+
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(550).json({});
+        }
     }
 })
 
