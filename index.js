@@ -1152,7 +1152,7 @@ app.post('/database', async (req, res) => {
             let newBody = card.body
             card.price = priceArr
             newBody.price = priceArr.min()
-            console.log(newBody)
+            console.log(newBody, priceArr.min(), priceArr)
             card.body = newBody
             await card.save()
 
