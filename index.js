@@ -981,7 +981,6 @@ app.post('/database', async (req, res) => {
     } else if (method === 'getSearch') {
         try {
             const str = req.body.data.str;
-            console.log(str)
             const page = req.body.data.page;
 
 
@@ -1037,7 +1036,6 @@ app.post('/database', async (req, res) => {
                 }
             })
 
-            console.log(result)
 
             result.sort(function (a, b) {
                 try {
@@ -1151,6 +1149,7 @@ app.post('/database', async (req, res) => {
             const priceArr = req.body.data.priceArray;
 
             const card = await CardModel.findByPk(id);
+            console.log(card)
             let newBody = card.body
             card.price = priceArr
             newBody.price = priceArr.min()
