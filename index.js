@@ -1148,7 +1148,7 @@ app.post('/database', async (req, res) => {
             const id = req.body.data.id;
             const priceArr = req.body.data.priceArray;
 
-            const card = await CardModel.findByPk(id);
+            const card = await CardModel1.findByPk(id);
             console.log(card)
             let newBody = card.body
             card.price = priceArr
