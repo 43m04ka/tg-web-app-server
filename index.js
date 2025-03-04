@@ -1150,7 +1150,7 @@ app.post('/database', async (req, res) => {
 
             const card = await CardModel1.findByPk(id);
             console.log(card)
-            let newBody = card.body
+            let newBody = card.defaultValue.body
             card.price = priceArr
             newBody.price = priceArr.min()
             card.body = newBody
