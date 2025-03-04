@@ -1156,6 +1156,8 @@ app.post('/database', async (req, res) => {
             card.body = newBody
             await card.save()
 
+            await reload()
+
             return res.status(200).json({});
         } catch (e) {
             console.log(e)
