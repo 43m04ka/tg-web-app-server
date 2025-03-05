@@ -447,7 +447,7 @@ app.post('/basket', async (req, res) => {
                     } else if (page === 2) {
                         resultMassage += 'Заказ Сервисы №' + orderId + '\n\n'
                     }
-                    resultMassage += 'Контакт - @' + user.username + '\n\n'
+                    resultMassage += 'Контакт - ' + user.username + '\n\n'
                     resultMassage += accData + '\n\n'
                     resultMassage += 'Корзина:' + '\n\n'
                     let basketMsg = ''
