@@ -776,9 +776,8 @@ app.post('/database', async (req, res) => {
                             let body = card.body
                             if (arrPrice.length > 1) {
                                 body.price = arrPrice.min()
-                                body.priceMax = arrPrice.max()
                             } else {
-                                body.price = arrPrice[0]
+                                body.price = body.oldPrice
                                 delete body.oldPrice
                                 delete body.endDate
                             }
