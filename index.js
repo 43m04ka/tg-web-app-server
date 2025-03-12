@@ -1275,7 +1275,7 @@ const reload = async () => {
 start()
 
 setInterval(() => {
-    console.log(listDeleteData)
+    console.log(listDeleteData, Date.now())
     listDeleteData.map(cat=>{
         if(Date.parse(cat.deleteData) <= Date.now()){
             console.log(cat.path)
