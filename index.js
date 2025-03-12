@@ -1206,7 +1206,7 @@ const reload = async () => {
 
     let allDeleteData = []
     allCategoryStructure.map(category =>{
-        if(typeof category.deleteData !== 'undefined'){
+        if(typeof category.deleteData !== 'undefined' && category.deleteData !== 'none'){
             let flag = true
             allDeleteData.map(cat=>{
                 if(cat.path === category.path){
@@ -1289,7 +1289,7 @@ const reload = async () => {
 start()
 
 setInterval(() => {
-    console.log('Ещё минута пролетела 😮')
+    console.log(listDeleteData)
     console.log(Date.now())
 }, 1000);
 
