@@ -1290,7 +1290,7 @@ start()
 setInterval(() => {
     console.log('Ещё минута пролетела 😮')
     console.log(Date.now())
-}, 60000);
+}, 1000);
 
 
 
