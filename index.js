@@ -1142,7 +1142,6 @@ app.post('/database', async (req, res) => {
             const priceArr = req.body.data.priceArray;
 
 
-
             const card = await CardModel1.findByPk(id);
             let newBody = card.dataValues.body
             card.price = priceArr
@@ -1151,7 +1150,7 @@ app.post('/database', async (req, res) => {
 
             const card1 = await CardModel1.findByPk(id);
             newBody.price = priceArr.min()
-            if(typeof req.body.data.oldPrice !== 'undefined'){
+            if (typeof req.body.data.oldPrice !== 'undefined') {
                 newBody.oldPrice = req.body.data.oldPrice;
             }
             card1.body = newBody
@@ -1174,33 +1173,27 @@ const reload = async () => {
 
     let count = 0
     let allCategoryStructure = []
-    StructureData[0].body[1].map(el => {
-        allCategoryStructure.push(StructureData[0].body[1][count])
-        count++
-    })
-    count = 0
-    StructureData[1].body[1].map(el => {
-        allCategoryStructure.push(StructureData[1].body[1][count])
-        count++
-    })
-    count = 0
-    StructureData[2].body[1].map(el => {
-        allCategoryStructure.push(StructureData[2].body[1][count])
+    StructureData.map(el1 => {
+        el1.body[1].map(el => {
+            let newEl = el
+            newEl.tab = count
+            allCategoryStructure.push(newEl)
+        })
         count++
     })
     console.log(allCategoryStructure)
 
     let allDeleteData = []
-    allCategoryStructure.map(category =>{
-        if(typeof category.deleteData !== 'undefined' && category.deleteData !== 'none'){
+    allCategoryStructure.map(category => {
+        if (typeof category.deleteData !== 'undefined' && category.deleteData !== 'none') {
             let flag = true
-            allDeleteData.map(cat=>{
-                if(cat.path === category.path){
+            allDeleteData.map(cat => {
+                if (cat.path === category.path) {
                     flag = false
                 }
             })
-            if(flag){
-                allDeleteData.push({path:category.path, deleteData:category.deleteData})
+            if (flag) {
+                allDeleteData.push({path: category.path, deleteData: category.deleteData, id: category.id, tab:category.tab})
             }
         }
     })
@@ -1274,10 +1267,25 @@ const reload = async () => {
 
 start()
 
-setInterval(() => {
+setInterval(async () => {
     console.log(listDeleteData, Date.now())
-    listDeleteData.map(cat=>{
-        if(cat.deleteData <= Date.now()){
+    listDeleteData.map(async cat => {
+        if (cat.deleteData <= Date.now()) {
+            let newArray = []
+            let StructureData1 = StructureData
+            StructureData1[cat.tab].body[1].map(el => {
+                if (el.id !== cat.id) {
+                    newArray = [...newArray, ...[el]]
+                }
+            })
+
+            StructureData1[cat.tab].body[1] = newArray
+
+            const dataDb = await DataModel.findOne({id: 1});
+            dataDb.body = StructureData1;
+            await dataDb.save();
+            await reload()
+
             console.log(cat.path, new Date(cat.deleteData))
         }
     })
