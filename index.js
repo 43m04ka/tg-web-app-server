@@ -1179,18 +1179,8 @@ const reload = async () => {
         count++
     })
     count = 0
-    StructureData[0].body[0].map(el => {
-        allCategoryStructure.push(StructureData[0].body[0][count].body)
-        count++
-    })
-    count = 0
     StructureData[1].body[1].map(el => {
         allCategoryStructure.push(StructureData[1].body[1][count].body)
-        count++
-    })
-    count = 0
-    StructureData[1].body[0].map(el => {
-        allCategoryStructure.push(StructureData[1].body[0][count].body)
         count++
     })
     count = 0
@@ -1198,11 +1188,7 @@ const reload = async () => {
         allCategoryStructure.push(StructureData[2].body[1][count].body)
         count++
     })
-    count = 0
-    StructureData[2].body[0].map(el => {
-        allCategoryStructure.push(StructureData[2].body[0][count].body)
-        count++
-    })
+    console.log(allCategoryStructure)
 
     let allDeleteData = []
     allCategoryStructure.map(category =>{
