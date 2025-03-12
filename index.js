@@ -1278,7 +1278,7 @@ setInterval(() => {
     console.log(listDeleteData, Date.now())
     listDeleteData.map(cat=>{
         if(cat.deleteData <= Date.now()){
-            console.log(cat.path)
+            console.log(cat.path, new Date(cat.deleteData))
         }
     })
 }, 1000);
