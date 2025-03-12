@@ -22,6 +22,7 @@ let StructureData = {}
 let CardData = []
 let allCategoryListData = []
 let CardPreviewData = []
+let listDeleteData = []
 
 const PORT = process.env.PORT || 8000;
 
@@ -660,7 +661,7 @@ app.post('/database', async (req, res) => {
                 let card = data[i]
                 let flag = true
                 allCards.map(async el => {
-                    if (card.title === el.name && card.platform === el.body.platform && (card.url === el.body.url || card.img.slice(0, newMainData.body.img.indexOf('?w=') + 1) === el.body.img.slice(0, newMainData.body.img.indexOf('?w=') + 1)) && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
+                    if (card.title === el.name && card.platform === el.body.platform && (card.url === el.body.url || card.img.slice(0, card.img.indexOf('?w=') + 1) === el.body.img.slice(0, card.img.indexOf('?w=') + 1)) && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
                         if (!el.category.includes(card.tabCategoryPath)) {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
@@ -1171,6 +1172,54 @@ const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
 
+    let allCategoryStructure = []
+    StructureData[0].body[1].map(el => {
+        allCategoryStructure.push(StructureData[0].body[1][count].body)
+        count++
+    })
+    count = 0
+    StructureData[0].body[0].map(el => {
+        allCategoryStructure.push(StructureData[0].body[0][count].body)
+        count++
+    })
+    count = 0
+    StructureData[1].body[1].map(el => {
+        allCategoryStructure.push(StructureData[1].body[1][count].body)
+        count++
+    })
+    count = 0
+    StructureData[1].body[0].map(el => {
+        allCategoryStructure.push(StructureData[1].body[0][count].body)
+        count++
+    })
+    count = 0
+    StructureData[2].body[1].map(el => {
+        allCategoryStructure.push(StructureData[2].body[1][count].body)
+        count++
+    })
+    count = 0
+    StructureData[2].body[0].map(el => {
+        allCategoryStructure.push(StructureData[2].body[0][count].body)
+        count++
+    })
+
+    let allDeleteData = []
+    allCategoryStructure.map(category =>{
+        if(typeof category.deleteData !== 'undefined'){
+            let flag = true
+            allDeleteData.map(cat=>{
+                if(cat.path === category.path){
+                    flag = false
+                }
+            })
+            if(flag){
+                allDeleteData.push({path:category.path, deleteData:category.deleteData})
+            }
+        }
+    })
+
+    listDeleteData = allDeleteData
+
 
     const cardDbList = await CardModel1.findAll();
     CardData = cardDbList
@@ -1188,6 +1237,7 @@ const reload = async () => {
     allPath.map(path => {
         cartSortCategory.push({path: path, body: []})
     })
+
 
     let count = 0
     cartSortCategory.map(cat => {
@@ -1236,6 +1286,11 @@ const reload = async () => {
 }
 
 start()
+
+setInterval(() => {
+    console.log('Ещё минута пролетела 😮')
+    console.log(Date.now())
+}, 60000);
 
 
 
