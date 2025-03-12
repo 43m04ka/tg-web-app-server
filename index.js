@@ -1172,6 +1172,7 @@ const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
 
+    let count = 0
     let allCategoryStructure = []
     StructureData[0].body[1].map(el => {
         allCategoryStructure.push(StructureData[0].body[1][count].body)
@@ -1239,7 +1240,7 @@ const reload = async () => {
     })
 
 
-    let count = 0
+    count = 0
     cartSortCategory.map(cat => {
         cardDbList.map(el => {
             if (el.category.includes(cat.path)) {
@@ -1287,10 +1288,10 @@ const reload = async () => {
 
 start()
 
-// setInterval(() => {
-//     console.log('Ещё минута пролетела 😮')
-//     console.log(Date.now())
-// }, 1000);
+setInterval(() => {
+    console.log('Ещё минута пролетела 😮')
+    console.log(Date.now())
+}, 1000);
 
 
 
