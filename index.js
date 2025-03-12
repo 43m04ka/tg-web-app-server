@@ -133,7 +133,7 @@ bot.on('message', async (msg) => {
         }, [dataRequestDatabase])
 
         sendRequestDatabase()
-    } else if (text === '/dr') {
+    } else if (text === '/dr9j8j98ejw9e8fj-=91f8') {
         try {
             let allCards = await CardModel1.findAll()
             for (let i = 0; i < CardData.length; i++) {
@@ -174,14 +174,7 @@ bot.on('message', async (msg) => {
             }
         } catch (e) {
         }
-    } else if (text === '/dr1') {
-        try {
-            const a = await CardModel1.findAll();
-            console.log(a.length, CardData.length)
-        } catch (e) {
-
-        }
-    } else if (text === '/dr2') {
+    } else if (text === '/dr28-=7128e7128e') {
         try {
             await UserModel.findAll().then(async users => {
                 users.map(async user => {
@@ -206,7 +199,7 @@ bot.on('message', async (msg) => {
         } catch (e) {
 
         }
-    } else if (text === '/dr3') {
+    } else if (text === '/dr3182e8129e812-=e9') {
         try {
             await bot.sendMessage(1962567079, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
             await bot.sendMessage(5106439090, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
@@ -667,7 +660,7 @@ app.post('/database', async (req, res) => {
                 let card = data[i]
                 let flag = true
                 allCards.map(async el => {
-                    if (card.title === el.name && card.platform === el.body.platform && (card.url === el.body.url || card.img === el.body.img) && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
+                    if (card.title === el.name && card.platform === el.body.platform && (card.url === el.body.url || card.img.slice(0, newMainData.body.img.indexOf('?w=') + 1) === el.body.img.slice(0, newMainData.body.img.indexOf('?w=') + 1)) && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
                         if (!el.category.includes(card.tabCategoryPath)) {
                             flag = false
                             let cardDb = await CardModel1.findByPk(el.id)
