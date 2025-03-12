@@ -1175,17 +1175,17 @@ const reload = async () => {
     let count = 0
     let allCategoryStructure = []
     StructureData[0].body[1].map(el => {
-        allCategoryStructure.push(StructureData[0].body[1][count].body)
+        allCategoryStructure.push(StructureData[0].body[1][count])
         count++
     })
     count = 0
     StructureData[1].body[1].map(el => {
-        allCategoryStructure.push(StructureData[1].body[1][count].body)
+        allCategoryStructure.push(StructureData[1].body[1][count])
         count++
     })
     count = 0
     StructureData[2].body[1].map(el => {
-        allCategoryStructure.push(StructureData[2].body[1][count].body)
+        allCategoryStructure.push(StructureData[2].body[1][count])
         count++
     })
     console.log(allCategoryStructure)
