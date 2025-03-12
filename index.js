@@ -1287,10 +1287,10 @@ const reload = async () => {
 
 start()
 
-setInterval(() => {
-    console.log('Ещё минута пролетела 😮')
-    console.log(Date.now())
-}, 1000);
+// setInterval(() => {
+//     console.log('Ещё минута пролетела 😮')
+//     console.log(Date.now())
+// }, 1000);
 
 
 
