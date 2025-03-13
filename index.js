@@ -1170,7 +1170,7 @@ app.post('/database', async (req, res) => {
 const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
-    console.log(StructureDatas)
+    console.log(StructureData)
 
     let count = 0
     let allCategoryStructure = []
