@@ -1282,12 +1282,12 @@ setInterval(async () => {
 
             StructureData1[cat.tab].body[1] = newArray
 
-            console.log(StructureData1)
-
-            // const dataDb = await DataModel.findOne({id: 1});
-            // dataDb.body = StructureData1;
-            // await dataDb.save();
-            // await reload()
+            if(typeof StructureData1 !== 'undefined') {
+                const dataDb = await DataModel.findOne({id: 1});
+                dataDb.body = StructureData1;
+                await dataDb.save();
+                await reload()
+            }
 
             console.log(cat.path, new Date(cat.deleteData))
         }
