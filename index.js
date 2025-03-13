@@ -1284,7 +1284,7 @@ setInterval(async () => {
 
             if(typeof StructureData1 !== 'undefined') {
                 const dataDb = await DataModel.findOne({id: 1});
-                dataDb.body = {body : StructureData1};s
+                dataDb.body = {body : StructureData1};
                 await dataDb.save();
                 await reload()
             }
