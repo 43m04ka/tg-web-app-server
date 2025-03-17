@@ -670,7 +670,7 @@ app.post('/database', async (req, res) => {
                             let priceArr = [...cardDb.price, card.price]
                             if(addToAll && typeof card.oldPrice !== 'undefined'){
                                 cardDb.category = [...cardDb.category, '*all_cards_'+card.tab]
-                                priceArr = [...cardDb.price, card.oldPrice]
+                                priceArr = [...priceArr, card.oldPrice]
                             }
                             cardDb.price = priceArr
                             let body = el.body
