@@ -693,11 +693,17 @@ app.post('/database', async (req, res) => {
                     }
                 })
                 if (flag) {
+                    let category = [card.tabCategoryPath]
+                    let priceArr = [card.price]
+                    if(addToAll && typeof card.oldPrice !== 'undefined'){
+                        category = [card.tabCategoryPath, '*all_cards_'+card.tab]
+                        priceArr = [card.price, card.oldPrice]
+                    }
                     await CardModel1.create({
                         body: card,
-                        category: [card.tabCategoryPath],
+                        category: category,
                         name: card.title,
-                        price: [card.price]
+                        price: priceArr
                     }).then(r => {
                         allCards = [...allCards, r]
                     })
