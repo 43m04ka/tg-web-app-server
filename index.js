@@ -654,6 +654,7 @@ app.post('/database', async (req, res) => {
     if (method === 'add') {
         try {
             const data = req.body.data;
+            const addToAll = req.body.addToAll;
 
             let allCards = await CardModel1.findAll()
 
@@ -667,6 +668,10 @@ app.post('/database', async (req, res) => {
                             let cardDb = await CardModel1.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.tabCategoryPath]
                             let priceArr = [...cardDb.price, card.price]
+                            if(addToAll && typeof card.oldPrice !== 'undefined'){
+                                cardDb.category = [...cardDb.category, '*all_cards_'+card.tab]
+                                priceArr = [...cardDb.price, card.oldPrice]
+                            }
                             cardDb.price = priceArr
                             let body = el.body
                             if (typeof card.oldPrice !== 'undefined') {
