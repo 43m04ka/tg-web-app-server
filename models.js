@@ -1,17 +1,12 @@
 const sequelize = require('./db');
 const {DataTypes} = require('sequelize');
 
-const Users = sequelize.define('users', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
-    chatId: {type: DataTypes.STRING, unique: true},
-    basket: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
-})
-
 const User = sequelize.define('userData', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     chatId: {type: DataTypes.STRING, unique: true},
     basket: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
     favorites: {type: DataTypes.ARRAY(DataTypes.INTEGER), defaultValue: []},
+    freeGameId:{type: DataTypes.INTEGER},
 })
 
 const Data = sequelize.define('data', {
@@ -19,15 +14,7 @@ const Data = sequelize.define('data', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
-const CardData = sequelize.define('mainData', {
-    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
-    name: {type: DataTypes.STRING, defaultValue: ''},
-    category: {type: DataTypes.STRING, defaultValue: ''},
-    hashtag: {type: DataTypes.STRING, defaultValue: ''},
-    body: {type: DataTypes.JSON, defaultValue: {}},
-})
-
-const CardData1 = sequelize.define('card', {
+const CardData = sequelize.define('card', {
     id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
     name: {type: DataTypes.STRING, defaultValue: ''},
     category: {type: DataTypes.ARRAY(DataTypes.STRING), defaultValue: []},
@@ -57,7 +44,15 @@ const OrderPosition = sequelize.define('orderPosition', {
     body: {type: DataTypes.JSON, defaultValue: {}},
 })
 
+const FreeGameCards = sequelize.define('freeGameCards', {
+    id: {type: DataTypes.INTEGER, primaryKey: true, unique: true, autoIncrement: true},
+    name: {type: DataTypes.STRING},
+    img: {type: DataTypes.STRING},
+})
+
+
+
 User.hasMany(Order)
 Order.hasMany(OrderPosition)
 
-module.exports = {Users, Data, CardData, Promo, Order, OrderPosition, CardData1, User};
+module.exports = {Data, Promo, Order, OrderPosition, CardData, User, FreeGameCards};

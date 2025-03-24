@@ -6,9 +6,8 @@ const sequelize = require('./db.js')
 const UserModel = require('./models.js').User;
 const DataModel = require('./models.js').Data;
 const CardModel = require('./models.js').CardData;
-const CardModel1 = require('./models.js').CardData1;
 const PromoModel = require('./models.js').Promo;
-const OrderModel = require('./models.js').Order;
+const FreeGameModel = require('./models.js').FreeGameCards;
 const OrderModelPosition = require('./models.js').OrderPosition;
 
 const token = '6964133561:AAFsVUdvH9VhLdqeRBMKEiGiUg1GQHC4-Hg';
@@ -136,7 +135,7 @@ bot.on('message', async (msg) => {
         sendRequestDatabase()
     } else if (text === '/dr9j8j98ejw9e8fj-=91f8') {
         try {
-            let allCards = await CardModel1.findAll()
+            let allCards = await CardModel.findAll()
             for (let i = 0; i < CardData.length; i++) {
                 let card = CardData[i]
                 let flag = true
@@ -145,7 +144,7 @@ bot.on('message', async (msg) => {
                     if (card.name === el.name && card.body.platform === el.body.platform && card.body.img === el.body.img && card.body.category === el.body.category && card.body.view === el.body.view && card.body.region === el.body.region) {
                         if (!el.category.includes(card.category)) {
                             flag = false
-                            let cardDb = await CardModel1.findByPk(el.id)
+                            let cardDb = await CardModel.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.category]
                             let priceArr = [...cardDb.price, card.body.price]
                             cardDb.price = priceArr
@@ -163,7 +162,7 @@ bot.on('message', async (msg) => {
                     }
                 })
                 if (flag) {
-                    await CardModel1.create({
+                    await CardModel.create({
                         body: card.body,
                         category: [card.category],
                         name: card.name,
@@ -344,11 +343,9 @@ app.post('/basket', async (req, res) => {
                     } catch (e) {
 
                     }
-                    console.log('123')
                     return res.status(200).json({body: []});
                 } catch (err) {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
-                    console.log(userDb.basket)
                     let newArray = []
                     CardData.map(card => {
                         userDb.basket.map(el => {
@@ -357,8 +354,11 @@ app.post('/basket', async (req, res) => {
                             }
                         })
                     })
-                    await console.log(newArray);
-                    return res.status(200).json({body: newArray});
+
+                    let freeGame = 'none'
+                    let gameId = userDb.freeGameId;
+
+                    return res.status(200).json({body: newArray, freeGame: freeGame});
                 }
             } catch (e) {
                 console.log(e)
@@ -656,7 +656,7 @@ app.post('/database', async (req, res) => {
             const data = req.body.data;
             const addToAll = req.body.addToAll;
 
-            let allCards = await CardModel1.findAll()
+            let allCards = await CardModel.findAll()
 
             for (let i = 0; i < data.length; i++) {
                 let card = data[i]
@@ -665,7 +665,7 @@ app.post('/database', async (req, res) => {
                     if (card.title === el.name && card.platform === el.body.platform && (card.url === el.body.url || card.img.slice(0, card.img.indexOf('?w=') + 1) === el.body.img.slice(0, card.img.indexOf('?w=') + 1)) && card.category === el.body.category && card.view === el.body.view && card.region === el.body.region) {
                         if (!el.category.includes(card.tabCategoryPath)) {
                             flag = false
-                            let cardDb = await CardModel1.findByPk(el.id)
+                            let cardDb = await CardModel.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.tabCategoryPath]
                             let priceArr = [...cardDb.price, card.price]
                             if(addToAll && typeof card.oldPrice !== 'undefined'){
@@ -699,7 +699,7 @@ app.post('/database', async (req, res) => {
                         category = [card.tabCategoryPath, '*all_cards_'+card.tab]
                         priceArr = [card.price, card.oldPrice]
                     }
-                    await CardModel1.create({
+                    await CardModel.create({
                         body: card,
                         category: category,
                         name: card.title,
@@ -769,7 +769,7 @@ app.post('/database', async (req, res) => {
                 if (card.category.includes(path)) {
                     if (idList === 'all' || idList.includes(card.id)) {
                         if (card.category.length > 1) {
-                            const cardDb = await CardModel1.findByPk(card.id)
+                            const cardDb = await CardModel.findByPk(card.id)
                             let category = card.category
                             let index = category.indexOf(path)
                             category.splice(index, 1)
@@ -789,7 +789,7 @@ app.post('/database', async (req, res) => {
                             cardDb.body = body
                             await cardDb.save()
                         } else {
-                            await CardModel1.destroy({
+                            await CardModel.destroy({
                                 where: {
                                     id: card.id
                                 }
@@ -821,7 +821,7 @@ app.post('/database', async (req, res) => {
                                 bool = !card.body.isSale
                             }
                         }
-                        const cardDb = await CardModel1.findByPk(card.id)
+                        const cardDb = await CardModel.findByPk(card.id)
                         let body = card.body
                         body.isSale = bool
                         cardDb.body = body
@@ -1153,13 +1153,13 @@ app.post('/database', async (req, res) => {
             const priceArr = req.body.data.priceArray;
 
 
-            const card = await CardModel1.findByPk(id);
+            const card = await CardModel.findByPk(id);
             let newBody = card.dataValues.body
             card.price = priceArr
             await card.save()
             console.log(newBody)
 
-            const card1 = await CardModel1.findByPk(id);
+            const card1 = await CardModel.findByPk(id);
             newBody.price = priceArr.min()
             if (typeof req.body.data.oldPrice !== 'undefined') {
                 newBody.oldPrice = req.body.data.oldPrice;
@@ -1213,7 +1213,7 @@ const reload = async () => {
     listDeleteData = allDeleteData
 
 
-    const cardDbList = await CardModel1.findAll();
+    const cardDbList = await CardModel.findAll();
     CardData = cardDbList
 
     let cartSortCategory = []
