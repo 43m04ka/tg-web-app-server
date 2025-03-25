@@ -524,6 +524,34 @@ app.post('/basket', async (req, res) => {
     }
 )
 
+app.post('/freegame', async (req, res) => {
+    const method = req.body.method;
+    if (method === 'set') {
+        try {
+            const table = req.body.date()
+            await FreeGameModel.findAll().then(async pos=>{
+                await FreeGameModel.destroy({where: {id: pos.id}})
+            })
+            table.map(async el =>{
+                await FreeGameModel.create({title:el.title, img:el.img})
+            })
+            return res.status(200).json({});
+        } catch (e) {
+            console.log(e)
+            return res.status(503).json({});
+        }
+    }
+    if (method === 'get') {
+        try {
+            let all = await FreeGameModel.findAll();
+            return res.status(200).json({body:all});
+        } catch (e) {
+            console.log(e)
+            return res.status(503).json({});
+        }
+    }
+})
+
 
 app.post('/favorites', async (req, res) => {
         const method = req.body.method;
@@ -668,8 +696,8 @@ app.post('/database', async (req, res) => {
                             let cardDb = await CardModel.findByPk(el.id)
                             cardDb.category = [...cardDb.category, card.tabCategoryPath]
                             let priceArr = [...cardDb.price, card.price]
-                            if(addToAll && typeof card.oldPrice !== 'undefined'){
-                                cardDb.category = [...cardDb.category, '*all_cards_'+card.tab]
+                            if (addToAll && typeof card.oldPrice !== 'undefined') {
+                                cardDb.category = [...cardDb.category, '*all_cards_' + card.tab]
                                 priceArr = [...priceArr, card.oldPrice]
                             }
                             cardDb.price = priceArr
@@ -695,8 +723,8 @@ app.post('/database', async (req, res) => {
                 if (flag) {
                     let category = [card.tabCategoryPath]
                     let priceArr = [card.price]
-                    if(addToAll && typeof card.oldPrice !== 'undefined'){
-                        category = [card.tabCategoryPath, '*all_cards_'+card.tab]
+                    if (addToAll && typeof card.oldPrice !== 'undefined') {
+                        category = [card.tabCategoryPath, '*all_cards_' + card.tab]
                         priceArr = [card.price, card.oldPrice]
                     }
                     await CardModel.create({
@@ -1205,7 +1233,12 @@ const reload = async () => {
                 }
             })
             if (flag) {
-                allDeleteData.push({path: category.path, deleteData: category.deleteData, id: category.id, tab:category.tab})
+                allDeleteData.push({
+                    path: category.path,
+                    deleteData: category.deleteData,
+                    id: category.id,
+                    tab: category.tab
+                })
             }
         }
     })
@@ -1293,9 +1326,9 @@ setInterval(async () => {
 
             StructureData1[cat.tab].body[1] = newArray
 
-            if(typeof StructureData1 !== 'undefined') {
+            if (typeof StructureData1 !== 'undefined') {
                 const dataDb = await DataModel.findOne({id: 1});
-                dataDb.body = {body : StructureData1};
+                dataDb.body = {body: StructureData1};
                 await dataDb.save();
                 await reload()
             }
