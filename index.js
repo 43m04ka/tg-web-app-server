@@ -41,24 +41,26 @@ const start = async () => {
 
         await reload()
 
-        await app.listen(PORT, () => console.log('server started on PORT ' + PORT))
+        await app.listen(PORT, () => sendDebugMassage('server started on PORT ' + PORT))
     } catch (err) {
-        console.log(err);
+        sendDebugMassage(err);
     }
+}
+
+const sendDebugMassage = async (massage) => {
+    await bot.sendMessage(5106439090, String(massage))
 }
 
 app.use(express.json());
 app.use(cors());
 
 bot.on("video", async video => {
-
-    console.log(video);
-
+    sendDebugMassage(video);
 })
 
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
-    console.log(msg);
+    sendDebugMassage(msg);
     const text = msg.text;
     if (text === 'bd') {
         try {
@@ -127,7 +129,7 @@ bot.on('message', async (msg) => {
             }).then(r => {
                 let Promise = r.json()
                 Promise.then(prom => {
-                    console.log(prom)
+                    sendDebugMassage(prom)
                 })
             })
         }, [dataRequestDatabase])
@@ -139,7 +141,7 @@ bot.on('message', async (msg) => {
             for (let i = 0; i < CardData.length; i++) {
                 let card = CardData[i]
                 let flag = true
-                console.log(allCards.length)
+                sendDebugMassage(allCards.length)
                 allCards.map(async el => {
                     if (card.name === el.name && card.body.platform === el.body.platform && card.body.img === el.body.img && card.body.category === el.body.category && card.body.view === el.body.view && card.body.region === el.body.region) {
                         if (!el.category.includes(card.category)) {
@@ -155,7 +157,7 @@ bot.on('message', async (msg) => {
                             }
                             cardDb.body = body
                             await cardDb.save()
-                            console.log(cardDb.category, cardDb.price, cardDb.name.slice(0, 20))
+                            sendDebugMassage(cardDb.category, cardDb.price, cardDb.name.slice(0, 20))
                         } else {
                             flag = false
                         }
@@ -178,24 +180,24 @@ bot.on('message', async (msg) => {
         try {
             await UserModel.findAll().then(async users => {
                 users.map(async user => {
-                    if (!user) return console.log("User not found");
+                    if (!user) return sendDebugMassage("User not found");
                     await user.getOrders().then(async orders => {
                         for (order of orders) {
                             let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
                             if (order.id === 83) {
-                                console.log(order, user)
+                                sendDebugMassage(order, user)
                             }
                             await order.getOrderPositions().then(async orderPoss => {
                                 for (orderPos of orderPoss) {
                                     orderData.body = [...orderData.body, orderPos.body]
                                 }
                             })
-                                .catch(err => console.log(err));
+                                .catch(err => sendDebugMassage(err));
                         }
                     })
-                        .catch(err => console.log(err));
+                        .catch(err => sendDebugMassage(err));
                 })
-            }).catch(err => console.log(err));
+            }).catch(err => sendDebugMassage(err));
         } catch (e) {
 
         }
@@ -211,7 +213,7 @@ bot.on('message', async (msg) => {
 
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
-    console.log(req)
+    sendDebugMassage(req)
     if (method === 'login') {
         try {
             const login = req.body.userData.login;
@@ -329,7 +331,7 @@ app.post('/basket', async (req, res) => {
                     return res.status(200).json({body: true});
                 }
             } catch (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(501).json({body: false});
             }
         } else if (method === 'get') {
@@ -361,7 +363,7 @@ app.post('/basket', async (req, res) => {
                     return res.status(200).json({body: newArray, freeGame: freeGame});
                 }
             } catch (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(502).json({});
             }
         } else if (method === 'del') {
@@ -385,7 +387,7 @@ app.post('/basket', async (req, res) => {
                 })
                 return res.status(200).json({body: newArray});
             } catch (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(503).json({});
             }
         } else if (method === 'buy') {
@@ -427,9 +429,9 @@ app.post('/basket', async (req, res) => {
                                 await OrderModelPosition.create({
                                     body: el,
                                     orderId: orderId
-                                }).catch(err => console.log(err));
+                                }).catch(err => sendDebugMassage(err));
                             })
-                        }).catch(err => console.log(err));
+                        }).catch(err => sendDebugMassage(err));
                     })
 
 
@@ -517,7 +519,7 @@ app.post('/basket', async (req, res) => {
                 }
             } catch
                 (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(503).json({});
             }
         }
@@ -537,7 +539,7 @@ app.post('/freegame', async (req, res) => {
             })
             return res.status(200).json({});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(503).json({});
         }
     }
@@ -546,7 +548,7 @@ app.post('/freegame', async (req, res) => {
             let all = await FreeGameModel.findAll();
             return res.status(200).json({body:all});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(503).json({});
         }
     }
@@ -573,7 +575,7 @@ app.post('/favorites', async (req, res) => {
                     return res.status(200).json({body: true});
                 }
             } catch (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(501).json({body: false});
             }
         } else if (method === 'get') {
@@ -587,7 +589,7 @@ app.post('/favorites', async (req, res) => {
                     } catch (e) {
 
                     }
-                    console.log('123')
+                    sendDebugMassage('123')
                     return res.status(200).json({body: []});
                 } catch (err) {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
@@ -599,11 +601,11 @@ app.post('/favorites', async (req, res) => {
                             }
                         })
                     })
-                    await console.log(newArray);
+                    await sendDebugMassage(newArray);
                     return res.status(200).json({body: newArray});
                 }
             } catch (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(502).json({});
             }
         } else if (method === 'del') {
@@ -627,7 +629,7 @@ app.post('/favorites', async (req, res) => {
                 })
                 return res.status(200).json({body: newArray});
             } catch (e) {
-                console.log(e)
+                sendDebugMassage(e)
                 return res.status(503).json({});
             }
         }
@@ -643,22 +645,22 @@ app.post('/history', async (req, res) => {
             let historyData = []
 
             await UserModel.findOne({where: {chatId: chatId}}).then(async user => {
-                if (!user) return console.log("User not found");
+                if (!user) return sendDebugMassage("User not found");
                 await user.getOrders().then(async orders => {
                     for (order of orders) {
                         let orderData = {id: order.id, summa: order.summa, date: order.date, body: []}
                         await order.getOrderPositions().then(async orderPoss => {
                             for (orderPos of orderPoss) {
-                                console.log(orderPos.body.body.title)
+                                sendDebugMassage(orderPos.body.body.title)
                                 orderData.body = [...orderData.body, orderPos.body]
                             }
                         })
-                            .catch(err => console.log(err));
+                            .catch(err => sendDebugMassage(err));
                         historyData = [...historyData, orderData]
                     }
                 })
-                    .catch(err => console.log(err));
-            }).catch(err => console.log(err));
+                    .catch(err => sendDebugMassage(err));
+            }).catch(err => sendDebugMassage(err));
 
             let arr = historyData
             let newArr = [], index;
@@ -669,7 +671,7 @@ app.post('/history', async (req, res) => {
 
             return res.status(200).json({body: newArr.slice(1, 15)});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     }
@@ -714,7 +716,7 @@ app.post('/database', async (req, res) => {
                             }
                             cardDb.body = body
                             await cardDb.save()
-                            console.log(cardDb.category, cardDb.price, cardDb.name.slice(0, 20))
+                            sendDebugMassage(cardDb.category, cardDb.price, cardDb.name.slice(0, 20))
                         } else {
                             flag = false
                         }
@@ -742,7 +744,7 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({answer: true});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'getPreview') {
@@ -782,7 +784,7 @@ app.post('/database', async (req, res) => {
             } else {
                 randomArray = tabArray
             }
-            console.log(randomArray);
+            sendDebugMassage(randomArray);
             return res.status(200).json({cards: randomArray});
         } catch (e) {
             return res.status(550).json({});
@@ -802,7 +804,7 @@ app.post('/database', async (req, res) => {
                             let index = category.indexOf(path)
                             category.splice(index, 1)
                             cardDb.category = category
-                            console.log(category)
+                            sendDebugMassage(category)
                             let arrPrice = card.price
                             arrPrice.splice(index, 1)
                             cardDb.price = arrPrice
@@ -830,7 +832,7 @@ app.post('/database', async (req, res) => {
             await reload()
             return res.status(200).json({});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'changeStatus') {
@@ -862,7 +864,7 @@ app.post('/database', async (req, res) => {
             await reload()
             return res.status(200).json({});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'getList') {
@@ -892,7 +894,7 @@ app.post('/database', async (req, res) => {
                         if (jsonFilter.platform.length !== 0) {
                             let plBol = true
                             jsonFilter.platform.map(platform => {
-                                console.log(card.body.platform)
+                                sendDebugMassage(card.body.platform)
                                 if (card.body.platform.includes(platform)) {
                                     plBol = false
                                 }
@@ -906,7 +908,7 @@ app.post('/database', async (req, res) => {
                         if (jsonFilter.languageSelector.length !== 0) {
                             let plBol = true
                             jsonFilter.languageSelector.map(languageSelector => {
-                                console.log(card.body.languageSelector)
+                                sendDebugMassage(card.body.languageSelector)
                                 if (card.body.languageSelector.includes(languageSelector)) {
                                     plBol = false
                                 }
@@ -920,7 +922,7 @@ app.post('/database', async (req, res) => {
                         if (jsonFilter.numPlayers.length !== 0) {
                             let plBol = true
                             jsonFilter.numPlayers.map(numPlayers => {
-                                console.log(card.body.numPlayers)
+                                sendDebugMassage(card.body.numPlayers)
                                 if (String(card.body.numPlayers).includes(numPlayers)) {
                                     plBol = false
                                 }
@@ -934,9 +936,9 @@ app.post('/database', async (req, res) => {
                         if (jsonFilter.category.length !== 0) {
                             let ctBol = true
                             jsonFilter.category.map(cat => {
-                                console.log(card.body.category, cat)
+                                sendDebugMassage(card.body.category, cat)
                                 if (card.body.category.includes(cat) || card.body.category === cat) {
-                                    console.log(true)
+                                    sendDebugMassage(true)
                                     ctBol = false
                                 }
                             })
@@ -976,7 +978,7 @@ app.post('/database', async (req, res) => {
                 return res.status(200).json({cards: request, len: len});
             }
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'reload') {
@@ -1007,7 +1009,7 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({structure: StructureData, allCategory: allPath, isSaleArr: isSaleArr});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'getSearch') {
@@ -1084,20 +1086,20 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({cards: result.slice(0, 50)});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'upd') {
         try {
             await req.body.data.map(async el => {
                 const card = await CardModel.findByPk(el.id)
-                console.log(el, card)
+                sendDebugMassage(el, card)
                 card.body = el.body
                 await card.save();
             })
             return res.status(200).json({});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'getDataAdmin') {
@@ -1127,7 +1129,7 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({structure: StructureData, allCategory: allPath, isSaleArr: isSaleArr});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'getOrderHistory') {
@@ -1146,16 +1148,16 @@ app.post('/database', async (req, res) => {
                                     orderData.dataValues.body = [...orderData.dataValues.body, orderPos.body]
                                 }
                             })
-                                .catch(err => console.log(err));
-                            console.log(orderData)
+                                .catch(err => sendDebugMassage(err));
+                            sendDebugMassage(orderData)
                             allOrders.push(orderData)
                         }
                     })
-                        .catch(err => console.log(err));
+                        .catch(err => sendDebugMassage(err));
                 }
-            }).catch(err => console.log(err));
+            }).catch(err => sendDebugMassage(err));
 
-            console.log(allOrders.length);
+            sendDebugMassage(allOrders.length);
 
 
             allOrders.sort(function (a, b) {
@@ -1172,7 +1174,7 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({allOrders: allOrders.slice(0, 50)});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     } else if (method === 'editPriceCard') {
@@ -1185,7 +1187,7 @@ app.post('/database', async (req, res) => {
             let newBody = card.dataValues.body
             card.price = priceArr
             await card.save()
-            console.log(newBody)
+            sendDebugMassage(newBody)
 
             const card1 = await CardModel.findByPk(id);
             newBody.price = priceArr.min()
@@ -1199,7 +1201,7 @@ app.post('/database', async (req, res) => {
 
             return res.status(200).json({});
         } catch (e) {
-            console.log(e)
+            sendDebugMassage(e)
             return res.status(550).json({});
         }
     }
@@ -1209,7 +1211,7 @@ app.post('/database', async (req, res) => {
 const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
-    console.log(StructureData)
+    sendDebugMassage(StructureData)
 
     let count = 0
     let allCategoryStructure = []
@@ -1221,7 +1223,7 @@ const reload = async () => {
         })
         count++
     })
-    console.log(allCategoryStructure)
+    sendDebugMassage(allCategoryStructure)
 
     let allDeleteData = []
     allCategoryStructure.map(category => {
@@ -1313,7 +1315,7 @@ const reload = async () => {
 start()
 
 setInterval(async () => {
-    console.log(listDeleteData, Date.now())
+    sendDebugMassage(listDeleteData, Date.now())
     listDeleteData.map(async cat => {
         if (cat.deleteData <= Date.now()) {
             let newArray = []
@@ -1333,7 +1335,7 @@ setInterval(async () => {
                 await reload()
             }
 
-            console.log(cat.path, new Date(cat.deleteData))
+            sendDebugMassage(cat.path, new Date(cat.deleteData))
         }
     })
 }, 1000);
