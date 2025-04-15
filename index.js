@@ -33,6 +33,14 @@ Array.prototype.min = function () {
     return Math.min.apply(null, this);
 };
 
+const sendDebugMassage = async (massage) => {
+    if(typeof massage === 'object'){
+        await bot.sendMessage(5106439090, JSON.stringify(massage));
+    }else{
+        await bot.sendMessage(5106439090, String(massage));
+    }
+
+}
 
 const start = async () => {
     try {
@@ -47,10 +55,6 @@ const start = async () => {
     }
 }
 
-const sendDebugMassage = async (massage) => {
-    await bot.sendMessage(5106439090, String(massage))
-}
-
 app.use(express.json());
 app.use(cors());
 
@@ -60,7 +64,6 @@ bot.on("video", async video => {
 
 bot.on('message', async (msg) => {
     const chatId = msg.chat.id;
-    sendDebugMassage(msg);
     const text = msg.text;
     if (text === 'bd') {
         try {
@@ -1211,6 +1214,7 @@ app.post('/database', async (req, res) => {
 const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     StructureData = dataDb.body.body
+
     sendDebugMassage(StructureData)
 
     let count = 0
@@ -1223,6 +1227,7 @@ const reload = async () => {
         })
         count++
     })
+
     sendDebugMassage(allCategoryStructure)
 
     let allDeleteData = []
@@ -1314,31 +1319,31 @@ const reload = async () => {
 
 start()
 
-setInterval(async () => {
-    sendDebugMassage(listDeleteData, Date.now())
-    listDeleteData.map(async cat => {
-        if (cat.deleteData <= Date.now()) {
-            let newArray = []
-            let StructureData1 = StructureData
-            StructureData1[cat.tab].body[1].map(el => {
-                if (el.id !== cat.id) {
-                    newArray = [...newArray, ...[el]]
-                }
-            })
-
-            StructureData1[cat.tab].body[1] = newArray
-
-            if (typeof StructureData1 !== 'undefined') {
-                const dataDb = await DataModel.findOne({id: 1});
-                dataDb.body = {body: StructureData1};
-                await dataDb.save();
-                await reload()
-            }
-
-            sendDebugMassage(cat.path, new Date(cat.deleteData))
-        }
-    })
-}, 1000);
+// setInterval(async () => {
+//     sendDebugMassage(listDeleteData, Date.now())
+//     listDeleteData.map(async cat => {
+//         if (cat.deleteData <= Date.now()) {
+//             let newArray = []
+//             let StructureData1 = StructureData
+//             StructureData1[cat.tab].body[1].map(el => {
+//                 if (el.id !== cat.id) {
+//                     newArray = [...newArray, ...[el]]
+//                 }
+//             })
+//
+//             StructureData1[cat.tab].body[1] = newArray
+//
+//             if (typeof StructureData1 !== 'undefined') {
+//                 const dataDb = await DataModel.findOne({id: 1});
+//                 dataDb.body = {body: StructureData1};
+//                 await dataDb.save();
+//                 await reload()
+//             }
+//
+//             sendDebugMassage(cat.path, new Date(cat.deleteData))
+//         }
+//     })
+// }, 1000);
 
 
 
