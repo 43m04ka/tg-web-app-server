@@ -33,7 +33,7 @@ Array.prototype.min = function () {
     return Math.min.apply(null, this);
 };
 
-const console.log = async (massage) => {
+const sendDebugMassage = async (massage) => {
     if(typeof massage === 'object'){
         await bot.sendMessage(5106439090, JSON.stringify(massage));
     }else{
