@@ -19,53 +19,23 @@ const botAdmin = new TelegramBot(tokenAdmin, {polling: true});
 const app = express();
 
 let DataStructure = {}
+
 let getAllCards = async () => {
     return await CardModel.findAll();
 }
-let getAllPages = async () =>{
-    let cartSortCategory = []
-    let allPath = []
+
+let getCardsByPath = async (path ) =>{
     let allCards = await getAllCards()
-    allCards.map(el => {
-        el.category.map(elCat => {
-            if (!allPath.includes(elCat)) {
-                allPath.push(elCat)
-            }
-        })
-    })
-
-    allPath.map(path => {
-        cartSortCategory.push({path: path, body: []})
-    })
-
-
-    let count = 0
-    cartSortCategory.map(cat => {
-        allCards.map(el => {
-            if (el.category.includes(cat.path)) {
-                cartSortCategory[count].body.push(el)
-            }
-        })
-        count++
-    })
-
-
-    count = 0
-    cartSortCategory.map(el => {
-        let array = el.body; //массив, можно использовать массив объектов
-        let size = 20; //размер подмассива
-        let subarray = []; //массив в который будет выведен результат.
-        for (let i = 0; i < Math.ceil(array.length / size); i++) {
-            subarray[i] = array.slice((i * size), (i * size) + size);
+    let cardsPage = []
+    allCards.map(card=>{
+        if(card.category.includes(path)){
+            cardsPage.push(card)
         }
-        cartSortCategory[count].body = subarray;
-        cartSortCategory[count].len = subarray.length;
-        count += 1;
     })
-
-    return cartSortCategory
+    return cardsPage
 }
-let DataCardPreview = []
+
+let listPreviewCards = []
 let listDeleteData = []
 
 const PORT = process.env.PORT || 8000;
@@ -808,7 +778,7 @@ app.post('/database', async (req, res) => {
         }
     } else if (method === 'getPreview') {
         try {
-            return res.status(200).json({cards: DataCardPreview, structure: DataStructure});
+            return res.status(200).json({cards: listPreviewCards, structure: DataStructure});
         } catch (e) {
             return res.status(550).json({});
         }
@@ -938,22 +908,9 @@ app.post('/database', async (req, res) => {
             if (typeof req.body.data.filter !== 'undefined') {
                 const jsonFilter = req.body.data.filter;
                 let request = []
-                let len = 0
-                let allPages = await getAllPages()
-                allPages.map(cat => {
-                    if (cat.path === path) {
-                        request = cat.body
-                        len = cat.len
-                    }
-                })
-
-                let allArray = []
-                request.map(el => {
-                    allArray = [...allArray, ...el]
-                })
-
+                let page = await getCardsByPath(path)
                 request = []
-                allArray.map(card => {
+                page.map(card => {
                     let add = true
                     if (typeof jsonFilter.platform !== 'undefined') {
                         if (jsonFilter.platform.length !== 0) {
@@ -1032,16 +989,8 @@ app.post('/database', async (req, res) => {
 
                 return res.status(200).json({cards: subarray[number - 1], len: subarray.length});
             } else {
-                let request = []
-                let len = 0
-                let allPages = await getAllPages()
-                allPages.map(cat => {
-                    if (cat.path === path) {
-                        request = cat.body[number - 1]
-                        len = cat.len
-                    }
-                })
-                return res.status(200).json({cards: request, len: len});
+                let page = await getCardsByPath(path)
+                return res.status(200).json({cards: page[number], len: page.length});
             }
         } catch (e) {
             console.log(e)
@@ -1319,26 +1268,19 @@ const reload = async () => {
 
     listDeleteData = allDeleteData
 
-    let cartSortCategory = await getAllPages()
-
-    let cartSortCategoryPrev = []
-    cartSortCategory.map(cat => {
-        cartSortCategoryPrev.push(...cat.body[0])
-    })
-
-    DataCardPreview = []
-
-    cartSortCategoryPrev.map(card => {
-        let flag = true
-        DataCardPreview.map(card1 => {
-            if (card.id === card1.id) {
-                flag = false
+    let returnPrevData = []
+    let allPath = []
+    let allCards = await getAllCards()
+    allCards.map(el => {
+        el.category.map(async elCat => {
+            if (!allPath.includes(elCat)) {
+                allPath.push(elCat)
+                let page = await getCardsByPath(elCat)
+                returnPrevData.push(page[0].splice(0, 7))
             }
         })
-        if (flag) {
-            DataCardPreview.push(card)
-        }
     })
+    listPreviewCards = returnPrevData
 }
 
 start()
