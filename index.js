@@ -24,7 +24,7 @@ let getAllCards = async () => {
     return await CardModel.findAll();
 }
 
-let getCardsByPath = async (path ) =>{
+let getCardsByPath = async (path) =>{
     let allCards = await getAllCards()
     let cardsPage = []
     allCards.map(card=>{
@@ -32,6 +32,7 @@ let getCardsByPath = async (path ) =>{
             cardsPage.push(card)
         }
     })
+    console.log(cardsPage)
     return cardsPage
 }
 
@@ -1280,6 +1281,8 @@ const reload = async () => {
             }
         })
     })
+
+
     listPreviewCards = returnPrevData
 }
 
