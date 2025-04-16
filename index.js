@@ -636,7 +636,8 @@ app.post('/favorites', async (req, res) => {
                 userDb.save();
 
                 let newArray = []
-                (await getAllCards()).map(card => {
+                let allCards = await getAllCards()
+                allCards.map(card => {
                     userDb.favorites.map(el => {
                         if (card.id === el) {
                             newArray = [...newArray, card]
@@ -775,7 +776,9 @@ app.post('/database', async (req, res) => {
             let randomArray = []
             let tabArray = []
 
-            (await getAllCards()).map(el => {
+            let allCards = await getAllCards()
+
+            allCards.map(el => {
                 if (el.body.tab === page) {
                     tabArray = [...tabArray, el]
                 }
@@ -809,9 +812,12 @@ app.post('/database', async (req, res) => {
     } else if (method === 'delete') {
         const path = req.body.data;
         const idList = req.body.idList;
+
+        let allCards = await getAllCards()
+
         try {
-            for (let i = 0; i < await getAllCards().length; i++) {
-                let card = await getAllCards()[i]
+            for (let i = 0; i < allCards.length; i++) {
+                let card =  allCards[i]
                 if (card.category.includes(path)) {
                     if (idList === 'all' || idList.includes(card.id)) {
                         if (card.category.length > 1) {
@@ -856,8 +862,8 @@ app.post('/database', async (req, res) => {
         const idList = req.body.idList;
         try {
             let bool = null
-            for (let i = 0; i < await getAllCards().length; i++) {
-                let card = await getAllCards()[i]
+            for (let i = 0; i < allCards.length; i++) {
+                let card = allCards[i]
                 if (card.category.includes(path)) {
                     if (idList === 'all' || idList.includes(card.id)) {
                         if (bool === null) {
@@ -1001,7 +1007,8 @@ app.post('/database', async (req, res) => {
         try {
             await reload()
             let allPath = []
-            await getAllCards().map(el => {
+            let allCards = await getAllCards()
+            allCards.map(el => {
                 el.category.map(elCat => {
                     if (!allPath.includes(elCat)) {
                         allPath.push(elCat)
@@ -1013,8 +1020,8 @@ app.post('/database', async (req, res) => {
             for (let j = 0; j < allPath.length; j++) {
                 let path = allPath[j]
                 isSaleArr.push(false)
-                for (let i = 0; i < await getAllCards().length; i++) {
-                    let card = await getAllCards()[i]
+                for (let i = 0; i < allCards.length; i++) {
+                    let card = allCards[i]
                     if (card.category.includes(path)) {
                         if (card.body.isSale) {
                             isSaleArr[j] = true
@@ -1033,9 +1040,9 @@ app.post('/database', async (req, res) => {
             const str = req.body.data.str;
             const page = req.body.data.page;
 
-
+            let allCards = await getAllCards()
             let result = []
-            await getAllCards().map(card => {
+            allCards.map(card => {
                 try {
                     let newCard = card
                     newCard.dataValues.rating = 0
@@ -1121,7 +1128,10 @@ app.post('/database', async (req, res) => {
     } else if (method === 'getDataAdmin') {
         try {
             let allPath = []
-            await getAllCards().map(el => {
+
+            let allCards = await getAllCards()
+
+            allCards.map(el => {
                 el.category.map(elCat => {
                     if (!allPath.includes(elCat)) {
                         allPath.push(elCat)
@@ -1133,8 +1143,8 @@ app.post('/database', async (req, res) => {
             for (let j = 0; j < allPath.length; j++) {
                 let path = allPath[j]
                 isSaleArr.push(false)
-                for (let i = 0; i < await getAllCards().length; i++) {
-                    let card = await getAllCards()[i]
+                for (let i = 0; i < allCards.length; i++) {
+                    let card = allCards[i]
                     if (card.category.includes(path)) {
                         if (card.body.isSale) {
                             isSaleArr[j] = true
