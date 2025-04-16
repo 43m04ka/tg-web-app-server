@@ -22,7 +22,49 @@ let DataStructure = {}
 let getAllCards = async () => {
     return await CardModel.findAll();
 }
-let DataPageAllCategory = []
+let getAllPages = async () =>{
+    let cartSortCategory = []
+    let allPath = []
+    let allCards = await getAllCards()
+    allCards.map(el => {
+        el.category.map(elCat => {
+            if (!allPath.includes(elCat)) {
+                allPath.push(elCat)
+            }
+        })
+    })
+
+    allPath.map(path => {
+        cartSortCategory.push({path: path, body: []})
+    })
+
+
+    let count = 0
+    cartSortCategory.map(cat => {
+        allCards.map(el => {
+            if (el.category.includes(cat.path)) {
+                cartSortCategory[count].body.push(el)
+            }
+        })
+        count++
+    })
+
+
+    count = 0
+    cartSortCategory.map(el => {
+        let array = el.body; //массив, можно использовать массив объектов
+        let size = 20; //размер подмассива
+        let subarray = []; //массив в который будет выведен результат.
+        for (let i = 0; i < Math.ceil(array.length / size); i++) {
+            subarray[i] = array.slice((i * size), (i * size) + size);
+        }
+        cartSortCategory[count].body = subarray;
+        cartSortCategory[count].len = subarray.length;
+        count += 1;
+    })
+
+    return cartSortCategory
+}
 let DataCardPreview = []
 let listDeleteData = []
 
@@ -897,7 +939,8 @@ app.post('/database', async (req, res) => {
                 const jsonFilter = req.body.data.filter;
                 let request = []
                 let len = 0
-                DataPageAllCategory.map(cat => {
+                let allPages = await getAllPages()
+                allPages.map(cat => {
                     if (cat.path === path) {
                         request = cat.body
                         len = cat.len
@@ -991,7 +1034,8 @@ app.post('/database', async (req, res) => {
             } else {
                 let request = []
                 let len = 0
-                DataPageAllCategory.map(cat => {
+                let allPages = await getAllPages()
+                allPages.map(cat => {
                     if (cat.path === path) {
                         request = cat.body[number - 1]
                         len = cat.len
@@ -1275,47 +1319,7 @@ const reload = async () => {
 
     listDeleteData = allDeleteData
 
-    let cartSortCategory = []
-    let allPath = []
-    let allCards = await getAllCards()
-    allCards.map(el => {
-        el.category.map(elCat => {
-            if (!allPath.includes(elCat)) {
-                allPath.push(elCat)
-            }
-        })
-    })
-
-    allPath.map(path => {
-        cartSortCategory.push({path: path, body: []})
-    })
-
-
-    count = 0
-    cartSortCategory.map(cat => {
-        allCards.map(el => {
-            if (el.category.includes(cat.path)) {
-                cartSortCategory[count].body.push(el)
-            }
-        })
-        count++
-    })
-
-
-    count = 0
-    cartSortCategory.map(el => {
-        let array = el.body; //массив, можно использовать массив объектов
-        let size = 20; //размер подмассива
-        let subarray = []; //массив в который будет выведен результат.
-        for (let i = 0; i < Math.ceil(array.length / size); i++) {
-            subarray[i] = array.slice((i * size), (i * size) + size);
-        }
-        cartSortCategory[count].body = subarray;
-        cartSortCategory[count].len = subarray.length;
-        count += 1;
-    })
-
-    DataPageAllCategory = cartSortCategory
+    let cartSortCategory = await getAllPages()
 
     let cartSortCategoryPrev = []
     cartSortCategory.map(cat => {
