@@ -19,7 +19,7 @@ const botAdmin = new TelegramBot(tokenAdmin, {polling: true});
 const app = express();
 
 let DataStructure = {}
-let await await getAllCards()() = async () => {
+let getAllCards = async () => {
     return await CardModel.findAll();
 }
 let DataPageAllCategory = []
