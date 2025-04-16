@@ -775,7 +775,7 @@ app.post('/database', async (req, res) => {
             let randomArray = []
             let tabArray = []
 
-            await getAllCards().map(el => {
+            (await getAllCards()).map(el => {
                 if (el.body.tab === page) {
                     tabArray = [...tabArray, el]
                 }
