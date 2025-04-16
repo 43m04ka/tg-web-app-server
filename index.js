@@ -991,7 +991,7 @@ app.post('/database', async (req, res) => {
                 return res.status(200).json({cards: subarray[number - 1], len: subarray.length});
             } else {
                 let page = await getCardsByPath(path)
-                return res.status(200).json({cards: page[number], len: page.length});
+                return res.status(200).json({cards: page.slice(20*(number-1), 20*number), len: page.length});
             }
         } catch (e) {
             console.log(e)
