@@ -37,9 +37,9 @@ Array.prototype.min = function () {
 };
 
 const sendDebugMassage = async (massage) => {
-    if(typeof massage === 'object'){
+    if (typeof massage === 'object') {
         await bot.sendMessage(5106439090, JSON.stringify(massage));
-    }else{
+    } else {
         await bot.sendMessage(5106439090, String(massage));
     }
 }
@@ -220,30 +220,31 @@ bot.on('message', async (msg) => {
 
 app.post('/admin', async (req, res) => {
     const method = req.body.method;
-    console.log(req)
+    const login = req.body.userData.login;
+    const password = req.body.userData.password;
     if (method === 'login') {
         try {
-            const login = req.body.userData.login;
-            const password = req.body.userData.password;
             if (login === 'root' && password === '0207') {
-                return res.status(200).json({});
+                return res.status(200).json({answer: 'OK'});
             } else {
-                return res.status(410).json({});
+                return res.status(401).json({error: 'wrong password or login'});
             }
         } catch (err) {
-            return res.status(510).json({});
+            return res.status(404).json({error: 'errorAdmin >>> operation login'});
         }
     } else if (method === 'get') {
         try {
-            const dataDb = await DataModel.findOne({id: 1})
-            return res.status(200).json(dataDb.body);
+            if (login === 'root' && password === '0207') {
+                const dataDb = await DataModel.findOne({id: 1})
+                return res.status(200).json(dataDb.body);
+            } else {
+                return res.status(401).json({error: 'wrong password or login'});
+            }
         } catch (err) {
-            return res.status(411).json({});
+            return res.status(404).json({error: 'errorAdmin >>> operation get'});
         }
     } else if (method === 'set') {
         try {
-            const login = req.body.userData.login;
-            const password = req.body.userData.password;
             if (login === 'root' && password === '0207') {
                 const dataDb = await DataModel.findOne({id: 1});
                 dataDb.body = req.body.data;
@@ -251,17 +252,21 @@ app.post('/admin', async (req, res) => {
                 await reload()
                 return res.status(200).json(req.body.data);
             } else {
-                return res.status(412).json({});
+                return res.status(401).json({error: 'wrong password or login'});
             }
         } catch (err) {
-            return res.status(512).json({});
+            return res.status(404).json({error: 'errorAdmin >>> operation set'});
         }
     } else if (method === 'sendMessage') {
         try {
-            await bot.sendMessage(req.body.data.chatId, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
-            return res.status(201).json();
+            if (login === 'root' && password === '0207') {
+                await bot.sendMessage(req.body.data.chatId, 'Добрый день! К сожалению Ваш аккаунт Telegram закрытый и мы не можем написать первыми. Напишите, пожалуйста, администратору @gwstore_admin.')
+                return res.status(200).json({answer: 'OK'});
+            } else {
+                return res.status(401).json({error: 'wrong password or login'});
+            }
         } catch (e) {
-            return res.status(400).json();
+            return res.status(400).json({error: 'errorAdmin >>> operation sendMessage'});
         }
     }
 });
@@ -356,7 +361,8 @@ app.post('/basket', async (req, res) => {
                 } catch (err) {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
                     let newArray = []
-                    await getAllCards().map(card => {
+                    let allCards = await getAllCards()
+                    allCards.map(card => {
                         userDb.basket.map(el => {
                             if (card.id === el) {
                                 newArray = [...newArray, card]
@@ -385,7 +391,8 @@ app.post('/basket', async (req, res) => {
                 userDb.save();
 
                 let newArray = []
-                await getAllCards().map(card => {
+                let allCards = await getAllCards()
+                allCards.map(card => {
                     userDb.basket.map(el => {
                         if (card.id === el) {
                             newArray = [...newArray, card]
@@ -405,7 +412,8 @@ app.post('/basket', async (req, res) => {
                 const userDb = await UserModel.findOne({where: {chatId: chatId}});
 
                 let userBasket = []
-                await getAllCards().map(card => {
+                let allCards = await getAllCards()
+                allCards.map(card => {
                     userDb.basket.map(el => {
                         if (card.id === el && card.body.tab === page && card.body.isSale) {
                             userBasket = [...userBasket, card]
@@ -538,11 +546,11 @@ app.post('/freegame', async (req, res) => {
     if (method === 'set') {
         try {
             const table = req.body.date()
-            await FreeGameModel.findAll().then(async pos=>{
+            await FreeGameModel.findAll().then(async pos => {
                 await FreeGameModel.destroy({where: {id: pos.id}})
             })
-            table.map(async el =>{
-                await FreeGameModel.create({title:el.title, img:el.img})
+            table.map(async el => {
+                await FreeGameModel.create({title: el.title, img: el.img})
             })
             return res.status(200).json({});
         } catch (e) {
@@ -553,7 +561,7 @@ app.post('/freegame', async (req, res) => {
     if (method === 'get') {
         try {
             let all = await FreeGameModel.findAll();
-            return res.status(200).json({body:all});
+            return res.status(200).json({body: all});
         } catch (e) {
             console.log(e)
             return res.status(503).json({});
@@ -601,7 +609,8 @@ app.post('/favorites', async (req, res) => {
                 } catch (err) {
                     const userDb = await UserModel.findOne({where: {chatId: chatId}});
                     let newArray = []
-                    await getAllCards().map(card => {
+                    let allCards = await getAllCards()
+                    allCards.map(card => {
                         userDb.favorites.map(el => {
                             if (card.id === el) {
                                 newArray = [...newArray, card]
@@ -627,7 +636,7 @@ app.post('/favorites', async (req, res) => {
                 userDb.save();
 
                 let newArray = []
-                await getAllCards().map(card => {
+                (await getAllCards()).map(card => {
                     userDb.favorites.map(el => {
                         if (card.id === el) {
                             newArray = [...newArray, card]
