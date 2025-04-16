@@ -1258,6 +1258,7 @@ const reload = async () => {
 
     let cartSortCategory = []
     let allPath = []
+    console.log(await getAllCards())
     await getAllCards().map(el => {
         el.category.map(elCat => {
             if (!allPath.includes(elCat)) {
