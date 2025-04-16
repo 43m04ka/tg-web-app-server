@@ -1258,8 +1258,8 @@ const reload = async () => {
 
     let cartSortCategory = []
     let allPath = []
-    console.log(await getAllCards())
-    await getAllCards().map(el => {
+    let allCards = await getAllCards()
+    allCards.map(el => {
         el.category.map(elCat => {
             if (!allPath.includes(elCat)) {
                 allPath.push(elCat)
@@ -1274,7 +1274,7 @@ const reload = async () => {
 
     count = 0
     cartSortCategory.map(cat => {
-        cardDbList.map(el => {
+        allCards.map(el => {
             if (el.category.includes(cat.path)) {
                 cartSortCategory[count].body.push(el)
             }
