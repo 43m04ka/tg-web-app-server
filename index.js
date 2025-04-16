@@ -1277,7 +1277,7 @@ const reload = async () => {
             if (!allPath.includes(elCat)) {
                 allPath.push(elCat)
                 let page = await getCardsByPath(elCat)
-                returnPrevData.push(page.slice(0, 7))
+                returnPrevData.push(...page.slice(0, 7))
             }
         })
     })
