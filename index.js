@@ -1251,8 +1251,6 @@ const reload = async () => {
         count++
     })
 
-    console.log(allCategoryStructure)
-
     let allDeleteData = []
     allCategoryStructure.map(category => {
         if (typeof category.deleteData !== 'undefined' && category.deleteData !== 'none') {
