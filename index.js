@@ -1291,7 +1291,7 @@ const reload = async () => {
     return 'OK'
 }
 
-start()
+// start()
 
 // setInterval(async () => {
 //     listDeleteData.map(async cat => {
