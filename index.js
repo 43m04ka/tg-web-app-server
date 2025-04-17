@@ -282,6 +282,7 @@ app.post('/admin', async (req, res) => {
             return res.status(400).json({error: 'errorAdmin >>> operation sendMessage'});
         }
     }
+    return 'error >>> method not found'
 });
 
 app.post('/promo', async (req, res) => {
@@ -334,6 +335,7 @@ app.post('/promo', async (req, res) => {
             return res.status(510).json({});
         }
     }
+    return 'error >>> method not found'
 });
 
 app.post('/basket', async (req, res) => {
@@ -551,6 +553,7 @@ app.post('/basket', async (req, res) => {
                 return res.status(503).json({});
             }
         }
+    return 'error >>> method not found'
     }
 )
 
@@ -580,6 +583,7 @@ app.post('/freegame', async (req, res) => {
             return res.status(503).json({});
         }
     }
+    return 'error >>> method not found'
 })
 
 
@@ -663,6 +667,7 @@ app.post('/favorites', async (req, res) => {
                 return res.status(503).json({});
             }
         }
+    return 'error >>> method not found'
     }
 )
 
@@ -705,6 +710,7 @@ app.post('/history', async (req, res) => {
             return res.status(550).json({});
         }
     }
+    return 'error >>> method not found'
 });
 
 app.post('/database', async (req, res) => {
@@ -1226,14 +1232,14 @@ app.post('/database', async (req, res) => {
             return res.status(550).json({});
         }
     }
+    return 'error >>> method not found'
+
 })
 
 
 const reload = async () => {
     const dataDb = await DataModel.findOne({id: 1})
     DataStructure = dataDb.body.body
-
-    console.log(DataStructure)
 
     let count = 0
     let allCategoryStructure = []
@@ -1285,35 +1291,35 @@ const reload = async () => {
 
 
     listPreviewCards = returnPrevData
+    return 'OK'
 }
 
 start()
 
-setInterval(async () => {
-    console.log(listDeleteData)
-    listDeleteData.map(async cat => {
-        if (cat.deleteData <= Date.now()) {
-            let newArray = []
-            let StructureData1 = DataStructure
-            StructureData1[cat.tab].body[1].map(el => {
-                if (el.id !== cat.id) {
-                    newArray = [...newArray, ...[el]]
-                }
-            })
-
-            StructureData1[cat.tab].body[1] = newArray
-
-            if (typeof StructureData1 !== 'undefined') {
-                const dataDb = await DataModel.findOne({id: 1});
-                dataDb.body = {body: StructureData1};
-                await dataDb.save();
-                await reload()
-            }
-
-            console.log(cat.path, new Date(cat.deleteData))
-        }
-    })
-}, 1000);
+// setInterval(async () => {
+//     listDeleteData.map(async cat => {
+//         if (cat.deleteData <= Date.now()) {
+//             let newArray = []
+//             let StructureData1 = DataStructure
+//             StructureData1[cat.tab].body[1].map(el => {
+//                 if (el.id !== cat.id) {
+//                     newArray = [...newArray, ...[el]]
+//                 }
+//             })
+//
+//             StructureData1[cat.tab].body[1] = newArray
+//
+//             if (typeof StructureData1 !== 'undefined') {
+//                 const dataDb = await DataModel.findOne({id: 1});
+//                 dataDb.body = {body: StructureData1};
+//                 await dataDb.save();
+//                 await reload()
+//             }
+//
+//             console.log(cat.path, new Date(cat.deleteData))
+//         }
+//     })
+// }, 1000);
 
 
 
