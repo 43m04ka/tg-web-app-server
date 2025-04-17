@@ -32,7 +32,6 @@ let getCardsByPath = async (path) =>{
             cardsPage.push(card)
         }
     })
-    console.log(cardsPage)
     return cardsPage
 }
 
