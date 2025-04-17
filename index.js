@@ -1290,7 +1290,6 @@ const reload = async () => {
     listPreviewCards = returnPrevData
     return 'OK'
 }
-
 start()
 
 // setInterval(async () => {
