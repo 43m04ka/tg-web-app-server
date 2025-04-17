@@ -874,6 +874,7 @@ app.post('/database', async (req, res) => {
         const path = req.body.data;
         const idList = req.body.idList;
         try {
+            let allCards = await getAllCards()
             let bool = null
             for (let i = 0; i < allCards.length; i++) {
                 let card = allCards[i]
