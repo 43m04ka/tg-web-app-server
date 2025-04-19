@@ -10,7 +10,7 @@ const PromoModel = require('./models.js').Promo;
 const FreeGameModel = require('./models.js').FreeGameCards;
 const OrderModelPosition = require('./models.js').OrderPosition;
 
-const token = '6964133561:AAFsVUdvH9VhLdqeRBMKEiGiUg1GQHC4-Hg';
+const token = '6964133561:AAHggZeITlXkg4mD-xzyVfUkc2Mx17xptQM';
 const tokenAdmin = '7914083585:AAGfnycmC6mgq_YLZX1nEtykj8VzSp1ctC4';
 const webAppURL = 'https://www.gwstorebot.ru';
 
